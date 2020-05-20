@@ -4,12 +4,15 @@ const express = require('express')
 const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
 const fitbit = require('./adapters/fitbit')
-const elastic = require('./adapters/elastic')
+const db = require('./adapters/db')
 const fs = require('fs')
 const uuid = require('uuid').v4
 const cors = require('cors')
+const moment = require('moment')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
+
+db.createIndex()
 
 const app = express()
 app.use(cors())
@@ -29,42 +32,28 @@ app.get('/register', async (req, res) => {
   })
 })
 app.post('/health-data', async (req, res) => {
-  fs.writeFileSync('./data.json', JSON.stringify(req.body, null, 2))
-  await elastic.save(req.body)
+  await db.save(req.body)
 
   res.send({
     ok: true,
   })
 })
-app.get('/:id/health-data', async (req, res) => {
-  const { from, to } = req.query
-  const { id } = req.params
-  console.log(`GET ${id}, from: ${from}, to: ${to}`)
-  const data = await elastic.get({})
-  res.send(data)
-})
 app.get('/:id/weeks', async (req, res) => {
-  const { from, to, weekDays } = req.query
+  const {
+    from = moment().subtract('6', 'months').format(),
+    to = moment().format(),
+    weekDays = true,
+  } = req.query
   const { id } = req.params
   console.log(`GET ${id}, from: ${from}, to: ${to}, weekDays: ${weekDays}`)
-  const data = await elastic.getAverageHour({
+
+  const data = await db.getAverageHour({
     id,
     from,
     to,
     weekDays: weekDays === 'true',
   })
-  res.send(data)
-})
-app.get('/:id/weeks_bucket', async (req, res) => {
-  const { from, to, weekDays } = req.query
-  const { id } = req.params
-  console.log(`GET BKT ${id}, from: ${from}, to: ${to}, weekDays: ${weekDays}`)
-  const data = await elastic.getAverageBucketHour({
-    id,
-    from,
-    to,
-    weekDays: weekDays === 'true',
-  })
+
   res.send(data)
 })
 app.post('/ping', async (req, res) => {
@@ -73,7 +62,5 @@ app.post('/ping', async (req, res) => {
 })
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`))
-
-elastic.createIndex('steps')
 
 module.exports.handler = serverless(app)
