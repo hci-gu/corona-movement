@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
+const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
 const fitbit = require('./adapters/fitbit')
 const elastic = require('./adapters/elastic')
@@ -47,6 +48,7 @@ app.get('/:id/weeks', async (req, res) => {
   const { id } = req.params
   console.log(`GET ${id}, from: ${from}, to: ${to}, weekDays: ${weekDays}`)
   const data = await elastic.getAverageHour({
+    id,
     from,
     to,
     weekDays: weekDays === 'true',
@@ -58,6 +60,7 @@ app.get('/:id/weeks_bucket', async (req, res) => {
   const { id } = req.params
   console.log(`GET BKT ${id}, from: ${from}, to: ${to}, weekDays: ${weekDays}`)
   const data = await elastic.getAverageBucketHour({
+    id,
     from,
     to,
     weekDays: weekDays === 'true',
@@ -72,3 +75,5 @@ app.post('/ping', async (req, res) => {
 app.listen(PORT, () => console.log(`listening on ${PORT}`))
 
 elastic.createIndex('steps')
+
+module.exports.handler = serverless(app)

@@ -57,6 +57,7 @@ const save = async ({ id, dataPoints, offset }) => {
     index: 'steps',
     body: dataPoints
       .map(transformHealthData)
+      .map((d) => ({ ...d, id }))
       .flatMap((doc, index) => [
         { index: { _index: 'steps', _id: `${id}_${offset + index}` } },
         doc,
@@ -90,6 +91,10 @@ const dayFilter = (weekDays = true) => {
   }
 }
 
+const idFilter = (id) => {
+  return {}
+}
+
 const getAverageHour = async ({
   id,
   from = moment().subtract('6', 'months').format(),
@@ -98,7 +103,7 @@ const getAverageHour = async ({
 }) => {
   const res = await elastic.search({
     index: 'steps',
-    body: averageForHourQuery({ from, to, dayFilter: dayFilter(weekDays) }),
+    body: averageForHourQuery({ id, from, to, dayFilter: dayFilter(weekDays) }),
   })
 
   try {
@@ -124,6 +129,7 @@ const getAverageBucketHour = async ({
   const res = await elastic.search({
     index: 'steps',
     body: averageSumBucketForHourQuery({
+      id,
       from,
       to,
       dayFilter: dayFilter(weekDays),
