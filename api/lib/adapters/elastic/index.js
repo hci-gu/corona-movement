@@ -5,18 +5,20 @@ const weeklyQuery = require('./queries/weekly')
 const averageForHourQuery = require('./queries/averageForHour')
 const averageSumBucketForHourQuery = require('./queries/averageSumBucketForHour')
 
-const indexExists = async (index) => {
-  const res = await elastic.indices.exists({ index })
+const INDEX_NAME = 'steps'
+
+const indexExists = async () => {
+  const res = await elastic.indices.exists({ index: INDEX_NAME })
   return res.body
 }
 
-const createIndex = async (index) => {
-  if (await indexExists(index)) {
+const createIndex = async () => {
+  if (await indexExists()) {
     return
   }
-  await elastic.indices.create({ index })
+  await elastic.indices.create({ index: INDEX_NAME })
   const res = await elastic.indices.putMapping({
-    index,
+    index: INDEX_NAME,
     body: {
       properties: {
         value: { type: 'integer' },
@@ -31,37 +33,15 @@ const createIndex = async (index) => {
       },
     },
   })
-  console.log('mapped', res)
-}
-
-const transformHealthData = (healthDataPoint) => {
-  const duration = Math.round(
-    healthDataPoint.date_to - healthDataPoint.date_from
-  )
-  const date = Math.round(healthDataPoint.date_from + duration / 2)
-  const rounded = Math.round(moment(date).minute() / 15) * 15
-  const time = moment(date).minute(rounded)
-
-  return {
-    ...healthDataPoint,
-    date,
-    duration,
-    day: moment(date).day(),
-    time: time.hours() * 60 + time.minutes(),
-  }
 }
 
 const save = async ({ id, dataPoints, offset }) => {
-  console.log(`save ${id}, ${dataPoints.length}, ${offset}`)
   await elastic.bulk({
-    index: 'steps',
-    body: dataPoints
-      .map(transformHealthData)
-      .map((d) => ({ ...d, id }))
-      .flatMap((doc, index) => [
-        { index: { _index: 'steps', _id: `${id}_${offset + index}` } },
-        doc,
-      ]),
+    index: INDEX_NAME,
+    body: dataPoints.flatMap((doc, index) => [
+      { index: { _index: INDEX_NAME, _id: `${id}_${offset + index}` } },
+      doc,
+    ]),
   })
 }
 
@@ -71,7 +51,7 @@ const get = async ({
   to = moment().format(),
 }) => {
   const res = await elastic.search({
-    index: 'steps',
+    index: INDEX_NAME,
     body: weeklyQuery({ from, to }),
   })
 
@@ -95,39 +75,9 @@ const idFilter = (id) => {
   return {}
 }
 
-const getAverageHour = async ({
-  id,
-  from = moment().subtract('6', 'months').format(),
-  to = moment().format(),
-  weekDays = true,
-}) => {
+const getAverageHour = async ({ id, from, to, weekDays }) => {
   const res = await elastic.search({
-    index: 'steps',
-    body: averageForHourQuery({ id, from, to, dayFilter: dayFilter(weekDays) }),
-  })
-
-  try {
-    return {
-      from,
-      to,
-      result: res.body.aggregations['2'].buckets.map((val) => ({
-        value: val['1'].value ? val['1'].value : 0,
-        key: val.key,
-      })),
-    }
-  } catch (e) {
-    return []
-  }
-}
-
-const getAverageBucketHour = async ({
-  id,
-  from = moment().subtract('6', 'months').format(),
-  to = moment().format(),
-  weekDays = true,
-}) => {
-  const res = await elastic.search({
-    index: 'steps',
+    index: INDEX_NAME,
     body: averageSumBucketForHourQuery({
       id,
       from,
@@ -151,10 +101,8 @@ const getAverageBucketHour = async ({
 }
 
 module.exports = {
-  transformHealthData,
   createIndex,
   save,
   get,
   getAverageHour,
-  getAverageBucketHour,
 }
