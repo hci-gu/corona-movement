@@ -92,7 +92,7 @@ const getAverageHour = async ({ id, from, to, weekDays }) => {
       to,
       result: res.body.aggregations['2'].buckets.map((val) => ({
         value: val['1'].value ? val['1'].value : 0,
-        key: val.key,
+        key: val.key / 60,
       })),
     }
   } catch (e) {

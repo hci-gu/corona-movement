@@ -32,7 +32,7 @@ const Heading = styled.h2`
 `
 
 const formatKey = (value) =>
-  moment().startOf('day').add(value, 'minutes').format('HH:mm')
+  moment().startOf('day').add(value, 'hours').format('HH:mm')
 
 const useSteps = (from, to, weekDays) => {
   const [steps, setSteps] = useState({ result: [] })
@@ -40,8 +40,9 @@ const useSteps = (from, to, weekDays) => {
     const getSteps = async () => {
       const id = '8c7d373c-af55-4fbd-9da2-50d158b171b3'
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/${id}/weeks_bucket?from=${from}&to=${to}&weekDays=${weekDays}`
+        `${process.env.REACT_APP_API}/${id}/weeks?from=${from}&to=${to}&weekDays=${weekDays}`
       )
+      console.log(response)
       setSteps(response.data)
     }
     getSteps()
