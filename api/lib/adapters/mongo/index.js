@@ -20,27 +20,63 @@ const createIndex = async () => {
 }
 
 const insert = async (collection, { id, dataPoints, offset }) => {
-  await collection.insertMany(dataPoints)
+  await collection.insertMany(
+    dataPoints.map((point) => ({
+      ...point,
+      date: new Date(point.date),
+      date_from: new Date(point.date_from),
+      date_to: new Date(point.date_to),
+    }))
+  )
 }
 
 const getAverageHour = async (collection, { id, from, to, weekDays }) => {
-  const result = await collection
-    .aggregate([
-      {
-        $bucketAuto: {
-          groupBy: '$time',
-          buckets: 24,
-          output: {
+  const result = (
+    await collection
+      .aggregate([
+        {
+          $match: {
+            id,
+            date: {
+              $gte: new Date(from),
+              $lte: new Date(to),
+            },
+            day: { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $hour: '$date',
+            },
             value: { $avg: '$value' },
           },
         },
-      },
-    ])
-    .toArray()
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .toArray()
+  ).map((o) => {
+    return {
+      ...o,
+      key: o._id,
+    }
+  })
+
   return {
     from,
     to,
-    result,
+    result: Array.from({ length: 24 }).map((_, i) => {
+      const match = result.find((o) => o.key === i)
+      if (match) {
+        return match
+      }
+      return {
+        key: i,
+        value: 0,
+      }
+    }),
   }
 }
 

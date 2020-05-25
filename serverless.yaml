@@ -8,6 +8,7 @@ api:
     handler: ./lib/index.handler
     env:
       CONNECT_TO: mongodb://sebastian:cyklatillmorgonkaffet@docdb-2020-05-19-20-51-39.cluster-ctm90t68evai.eu-central-1.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false
+      DB: mongo
     region: eu-central-1
     memory: 512
     timeout: 15
@@ -19,6 +20,12 @@ apiGateway:
       - path: /
         method: GET
         function: ${api.arn}
-      - path: /ping
+      - path: /register
         method: GET
+        function: ${api.arn}
+      - path: /health-data
+        method: POST
+        function: ${api.arn}
+      - path: /ping
+        method: POST
         function: ${api.arn}
