@@ -29,3 +29,13 @@ apiGateway:
       - path: /ping
         method: POST
         function: ${api.arn}
+web:
+  component: '@serverless/website'
+  inputs:
+    code:
+      root: ./web
+      src: ./build
+      hook: npm run build
+    region: eu-central-1
+    bucketName: coronamovement
+    domain: coronamovement.sebastianandreasson.com

@@ -38,7 +38,7 @@ const useSteps = (from, to, weekDays) => {
   const [steps, setSteps] = useState({ result: [] })
   useEffect(() => {
     const getSteps = async () => {
-      const id = '8c7d373c-af55-4fbd-9da2-50d158b171b3'
+      const id = window.location.pathname.replace('/', '')
       const response = await axios.get(
         `${process.env.REACT_APP_API}/${id}/weeks?from=${from}&to=${to}&weekDays=${weekDays}`
       )

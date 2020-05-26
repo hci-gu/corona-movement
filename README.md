@@ -35,6 +35,14 @@ EOF
 
 ## Deploy
 
+### WEB
+
+```
+cat << EOF > .env
+REACT_APP_API=http://localhost:4000
+EOF
+```
+
 ### API
 
 ```
