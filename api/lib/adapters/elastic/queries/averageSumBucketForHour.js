@@ -61,6 +61,11 @@ module.exports = ({ from, to, dayFilter }) => ({
       filter: [
         dayFilter,
         {
+          match_phrase: {
+            id,
+          },
+        },
+        {
           range: {
             duration: {
               gte: 0,

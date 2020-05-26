@@ -71,10 +71,6 @@ const dayFilter = (weekDays = true) => {
   }
 }
 
-const idFilter = (id) => {
-  return {}
-}
-
 const getAverageHour = async ({ id, from, to, weekDays }) => {
   const res = await elastic.search({
     index: INDEX_NAME,
