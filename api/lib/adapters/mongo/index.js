@@ -1,19 +1,35 @@
+const fs = require('fs')
 const { MongoClient } = require('mongodb')
+const moment = require('moment')
+const { getBusinessDaysBetween } = require('../../utils/date')
 
+let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 const DB_NAME = 'coronamovement'
 const COLLECTION_NAME = 'steps'
+const options =
+  process.env.NODE_ENV === 'production'
+    ? {
+        ssl: true,
+        sslCA: caBundle,
+      }
+    : {}
+
+let cachedConnection
 
 const run = async (func, data) => {
-  const client = await MongoClient.connect(process.env.CONNECT_TO)
+  let client = cachedConnection ? cachedConnection : null
+  if (!client) {
+    client = await MongoClient.connect(process.env.CONNECT_TO, options)
+    cachedConnection = client
+  }
   const collection = client.db(DB_NAME).collection(COLLECTION_NAME)
 
   const res = await func(collection, data)
-  client.close()
   return res
 }
 
 const createIndex = async () => {
-  const client = await MongoClient.connect(process.env.CONNECT_TO)
+  const client = await MongoClient.connect(process.env.CONNECT_TO, options)
   const db = client.db(DB_NAME)
   await db.createCollection(COLLECTION_NAME)
   client.close()
@@ -31,6 +47,11 @@ const insert = async (collection, { id, dataPoints, offset }) => {
 }
 
 const getAverageHour = async (collection, { id, from, to, weekDays }) => {
+  const daysDiff = moment(to).diff(moment(from), 'days')
+  const weekdayDiff = getBusinessDaysBetween(from, to)
+  const weekendDiff = daysDiff - weekdayDiff
+  console.log('numDaysForRange', from, to, daysDiff, weekdayDiff, weekendDiff)
+
   const result = (
     await collection
       .aggregate([
@@ -49,7 +70,7 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
             _id: {
               $hour: '$date',
             },
-            value: { $avg: '$value' },
+            value: { $sum: '$value' },
           },
         },
         {
@@ -60,6 +81,7 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
   ).map((o) => {
     return {
       ...o,
+      value: o.value / (weekDays ? weekdayDiff : weekendDiff),
       key: o._id,
     }
   })

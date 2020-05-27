@@ -12,12 +12,13 @@ const moment = require('moment')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
-db.createIndex()
+if (process.env.NODE_ENV !== 'production') db.createIndex()
 
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 
+app.get('/init', () => db.createIndex())
 app.get('/auth', (_, res) => fitbit.redirect(res))
 app.get('/callback', (req, res) =>
   fitbit.handleCallback(req).then((token) => res.send({ token }))
@@ -61,6 +62,7 @@ app.post('/ping', async (req, res) => {
   res.send({ ok: true })
 })
 
-app.listen(PORT, () => console.log(`listening on ${PORT}`))
+if (process.env.NODE_ENV !== 'production')
+  app.listen(PORT, () => console.log(`listening on ${PORT}`))
 
 module.exports.handler = serverless(app)
