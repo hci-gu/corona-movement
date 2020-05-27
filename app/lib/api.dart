@@ -2,7 +2,7 @@ import 'package:health/health.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const API_URL = 'http://192.168.0.32:4000';
+const API_URL = 'https://api.mycoronamovement.com';
 
 Future postData(
     String userId, int offset, List<HealthDataPoint> healthData) async {
@@ -35,6 +35,18 @@ class User {
   }
 }
 
+class ChartData {
+  List<Map<String, int>> data;
+
+  ChartData(Map<String, dynamic> json) {
+    data = json['result'];
+  }
+
+  factory ChartData.fromJson(Map<String, dynamic> json) {
+    return ChartData(json);
+  }
+}
+
 Future<String> register() async {
   const url = '$API_URL/register';
   var response = await http.get(
@@ -46,6 +58,19 @@ Future<String> register() async {
   User user = User.fromJson(json.decode(response.body));
 
   return user.id;
+}
+
+Future<ChartData> getSteps(String userId, DateTime from, DateTime to) async {
+  var url = '$API_URL/$userId/weeks';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  ChartData steps = ChartData.fromJson(json.decode(response.body));
+
+  return steps;
 }
 
 Future<bool> ping() async {
