@@ -50,7 +50,6 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
   const daysDiff = moment(to).diff(moment(from), 'days')
   const weekdayDiff = getBusinessDaysBetween(from, to)
   const weekendDiff = daysDiff - weekdayDiff
-  console.log('numDaysForRange', from, to, daysDiff, weekdayDiff, weekendDiff)
 
   const result = (
     await collection
@@ -68,7 +67,7 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
         {
           $group: {
             _id: {
-              $hour: '$date',
+              $hour: { date: '$date', timezone: 'Europe/Stockholm' },
             },
             value: { $sum: '$value' },
           },
