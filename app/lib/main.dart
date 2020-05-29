@@ -1,16 +1,16 @@
-// import 'package:activity_fetcher/providers.dart';
-import 'package:activity_fetcher/recoil.dart';
-import 'package:activity_fetcher/user_model.dart';
+import 'package:activity_fetcher/models/user_model.dart';
+import 'package:activity_fetcher/pages/charts.dart';
+import 'package:activity_fetcher/pages/home.dart';
+import 'package:activity_fetcher/models/recoil.dart';
+import 'package:activity_fetcher/pages/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 
 void callbackDispatcher() {
   Workmanager.executeTask((task, inputData) async {
-    print(
-        "Native called background task: $task"); //simpleTask will be emitted here.
+    print("Native called background task: $task");
     return Future.value(true);
   });
 }
@@ -21,10 +21,9 @@ void main() async {
   runApp(MyApp());
 
   Workmanager.initialize(
-      callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-      );
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,55 +40,37 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
         ),
         debugShowCheckedModeBanner: false,
-        home: Home(),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('Coronamovement'),
+          ),
+          body: ScreenSelector(),
+        ),
       ),
     );
   }
 }
 
-class Home extends HookWidget {
+class ScreenSelector extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    var userId = useModel(userIdSelector);
-    var pendingHealthDataPoints = useModel(pendingDataPointsSelector);
+    var userState = useModel(userStateSelector);
     var init = useAction(initAction);
-    var getSteps = useAction(getStepsAction);
     useMemoized(() {
       init();
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Coronamovement'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(25),
-              child: SvgPicture.asset(
-                'assets/svg/activity.svg',
-                height: 150,
-              ),
-            ),
-            Text(
-              'Logged in as: $userId',
-              textAlign: TextAlign.center,
-            ),
-            if (pendingHealthDataPoints != null)
-              Text(
-                'Syncing data, ${pendingHealthDataPoints.length} chunks left...',
-                textAlign: TextAlign.center,
-              )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => getSteps(),
-        tooltip: 'Increment',
-        child: Icon(Icons.cloud_upload),
-      ),
-    );
+    switch (userState) {
+      case 'home':
+        return Home();
+      case 'sync-data':
+        return SyncData();
+      case 'charts':
+        return Charts();
+      default:
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+    }
   }
 }

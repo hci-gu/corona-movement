@@ -1,13 +1,16 @@
-import 'package:activity_fetcher/user_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:activity_fetcher/api.dart' as api;
+import 'package:activity_fetcher/models/user_model.dart';
+import 'package:activity_fetcher/models/recoil.dart';
 
-import 'recoil.dart';
-import 'api.dart' as api;
-
-var stepsChartAtom = Atom('steps-chart', {
-  'from': DateTime.utc(2020, 04, 01),
-  'to': DateTime.now().toUtc(),
-  'data': [],
-});
+var stepsChartAtom = Atom(
+  'steps-chart',
+  ValueNotifier({
+    'from': DateTime.utc(2020, 04, 01),
+    'to': DateTime.now().toUtc(),
+    'data': [],
+  }),
+);
 
 Selector fromDateSelector = Selector('steps-chart-from', (GetStateValue get) {
   var chart = get(stepsChartAtom);
@@ -17,6 +20,11 @@ Selector fromDateSelector = Selector('steps-chart-from', (GetStateValue get) {
 Selector toDateSelector = Selector('steps-chart-to', (GetStateValue get) {
   var chart = get(stepsChartAtom);
   return chart.value['to'];
+});
+
+Selector chartDataSelector = Selector('steps-chart-data', (GetStateValue get) {
+  var chart = get(stepsChartAtom);
+  return chart.value['data'];
 });
 
 Action setFromDate = (get) {
