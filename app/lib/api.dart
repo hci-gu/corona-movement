@@ -39,7 +39,8 @@ class ChartData {
   List<Map<String, int>> data;
 
   ChartData(Map<String, dynamic> json) {
-    data = json['result'];
+    var result = json['result'];
+    data = result.map(() {});
   }
 
   factory ChartData.fromJson(Map<String, dynamic> json) {
