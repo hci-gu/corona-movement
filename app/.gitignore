@@ -45,3 +45,5 @@ app.*.map.json
 
 # fastlane
 android/playstore.json
+ios/fastlane/Appfile
+**/fastlane/report.xml
