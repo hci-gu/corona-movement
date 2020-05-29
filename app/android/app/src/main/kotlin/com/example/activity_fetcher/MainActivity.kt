@@ -1,4 +1,4 @@
-package com.example.activity_fetcher
+package com.mycoronamovement.mycoronamovement
 
 import io.flutter.embedding.android.FlutterActivity
 
