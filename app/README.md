@@ -1,4 +1,4 @@
-# activity_fetcher
+# mycoronamovement
 
 A new Flutter project.
 

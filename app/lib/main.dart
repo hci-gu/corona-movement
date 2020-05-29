@@ -1,8 +1,8 @@
-import 'package:activity_fetcher/models/user_model.dart';
-import 'package:activity_fetcher/pages/charts.dart';
-import 'package:activity_fetcher/pages/home.dart';
-import 'package:activity_fetcher/models/recoil.dart';
-import 'package:activity_fetcher/pages/sync-data.dart';
+import 'package:mycoronamovement/models/user_model.dart';
+import 'package:mycoronamovement/pages/charts.dart';
+import 'package:mycoronamovement/pages/home.dart';
+import 'package:mycoronamovement/models/recoil.dart';
+import 'package:mycoronamovement/pages/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';

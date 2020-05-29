@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:activity_fetcher/models/recoil.dart';
-import 'package:activity_fetcher/api.dart' as api;
+import 'package:mycoronamovement/models/recoil.dart';
+import 'package:mycoronamovement/api.dart' as api;
 
 int chunkSize = 500;
 var userAtom = Atom(
