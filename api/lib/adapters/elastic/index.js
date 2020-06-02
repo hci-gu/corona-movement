@@ -35,27 +35,14 @@ const createIndex = async () => {
   })
 }
 
-const save = async ({ id, dataPoints }) => {
+const save = async (dataPoints) => {
   await elastic.bulk({
     index: INDEX_NAME,
     body: dataPoints.flatMap((doc) => [
-      { index: { _index: INDEX_NAME, _id: `${id}_${doc.date}` } },
+      { index: { _index: INDEX_NAME, _id: `${doc.id}_${doc.date}` } },
       doc,
     ]),
   })
-}
-
-const get = async ({
-  id,
-  from = moment().subtract('3', 'months').format(),
-  to = moment().format(),
-}) => {
-  const res = await elastic.search({
-    index: INDEX_NAME,
-    body: weeklyQuery({ from, to }),
-  })
-
-  return res.body
 }
 
 const dayFilter = (weekDays = true) => {
@@ -99,6 +86,5 @@ const getAverageHour = async ({ id, from, to, weekDays }) => {
 module.exports = {
   createIndex,
   save,
-  get,
   getAverageHour,
 }
