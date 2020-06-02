@@ -4,8 +4,7 @@ import 'package:http/http.dart' as http;
 
 const API_URL = 'https://api.mycoronamovement.com';
 
-Future postData(
-    String userId, int offset, List<HealthDataPoint> healthData) async {
+Future postData(String userId, List<HealthDataPoint> healthData) async {
   var url = '$API_URL/health-data';
   var response = await http.post(
     url,
@@ -14,7 +13,6 @@ Future postData(
     },
     body: jsonEncode({
       'id': userId,
-      'offset': offset,
       'dataPoints': healthData.map((point) => point.toJson()).toList(),
     }),
   );
@@ -35,16 +33,35 @@ class User {
   }
 }
 
-class ChartData {
-  List<Map<String, int>> data;
+class ChartResult {
+  String from;
+  String to;
 
-  ChartData(Map<String, dynamic> json) {
-    var result = json['result'];
-    data = result.map(() {});
+  List<dynamic> result;
+
+  ChartResult(Map<String, dynamic> json) {
+    from = json['from'];
+    to = json['to'];
+
+    result = json['result'];
   }
 
-  factory ChartData.fromJson(Map<String, dynamic> json) {
-    return ChartData(json);
+  factory ChartResult.fromJson(Map<String, dynamic> json) {
+    return ChartResult(json);
+  }
+}
+
+class HealthData {
+  int key;
+  double value;
+
+  HealthData(Map<String, dynamic> json) {
+    key = json['key'];
+    value = json['value'].toDouble();
+  }
+
+  factory HealthData.fromJson(Map<String, dynamic> json) {
+    return HealthData(json);
   }
 }
 
@@ -61,15 +78,20 @@ Future<String> register() async {
   return user.id;
 }
 
-Future<ChartData> getSteps(String userId, DateTime from, DateTime to) async {
-  var url = '$API_URL/$userId/weeks';
+Future<List<HealthData>> getSteps(
+    String userId, DateTime from, DateTime to) async {
+  var url =
+      '$API_URL/$userId/weeks?from=${from.toIso8601String()}&to=${to.toIso8601String()}';
   var response = await http.get(
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
   );
-  ChartData steps = ChartData.fromJson(json.decode(response.body));
+  ChartResult chart = ChartResult.fromJson(json.decode(response.body));
+
+  List<HealthData> steps =
+      chart.result.map((d) => HealthData.fromJson(d)).toList();
 
   return steps;
 }

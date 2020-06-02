@@ -35,7 +35,7 @@ const createIndex = async () => {
   client.close()
 }
 
-const insert = async (collection, { id, dataPoints, offset }) => {
+const insert = async (collection, { dataPoints }) => {
   await collection.insertMany(
     dataPoints.map((point) => ({
       ...point,

@@ -11,6 +11,12 @@ var stepsChartAtom = Atom(
     'data': [],
   }),
 );
+var chartOffsetAtom = Atom('chart-offset', ValueNotifier(0));
+Selector chartOffsetSelector =
+    Selector('steps-chart-offset', (GetStateValue get) {
+  var offset = get(chartOffsetAtom);
+  return offset;
+});
 
 Selector fromDateSelector = Selector('steps-chart-from', (GetStateValue get) {
   var chart = get(stepsChartAtom);
@@ -39,10 +45,17 @@ Action setToDate = (get) {
   chart.value['to'].value = '';
 };
 
-Action getStepsData = (get) async {
-  var userId = get(userIdSelector);
-  var from = get(fromDateSelector);
-  var to = get(toDateSelector);
+Action getStepsChartAction = (get) async {
+  ValueNotifier chart = get(stepsChartAtom);
+  ValueNotifier chartOffset = get(chartOffsetSelector);
 
-  var data = await api.getSteps(userId, from, to);
+  var userId = get(userIdSelector);
+  DateTime from = get(fromDateSelector);
+  DateTime to = get(toDateSelector);
+  print(from.add(Duration(days: chartOffset.value)));
+  var data = await api.getSteps(
+      userId, from.add(Duration(days: chartOffset.value)), to);
+
+  chart.value['data'] = data;
+  chart.notifyListeners();
 };

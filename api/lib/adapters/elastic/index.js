@@ -35,11 +35,11 @@ const createIndex = async () => {
   })
 }
 
-const save = async ({ id, dataPoints, offset }) => {
+const save = async ({ id, dataPoints }) => {
   await elastic.bulk({
     index: INDEX_NAME,
-    body: dataPoints.flatMap((doc, index) => [
-      { index: { _index: INDEX_NAME, _id: `${id}_${offset + index}` } },
+    body: dataPoints.flatMap((doc) => [
+      { index: { _index: INDEX_NAME, _id: `${id}_${doc.date}` } },
       doc,
     ]),
   })
