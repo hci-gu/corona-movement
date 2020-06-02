@@ -57,6 +57,22 @@ app.get('/:id/weeks', async (req, res) => {
 
   res.send(data)
 })
+app.get('/:id/hours', async (req, res) => {
+  const {
+    from = moment().subtract('6', 'months').format(),
+    to = moment().format(),
+  } = req.query
+  const { id } = req.params
+  console.log(`GET hours ${id}, from: ${from}, to: ${to}`)
+
+  const data = await db.getHours({
+    id,
+    from,
+    to,
+  })
+
+  res.send(data)
+})
 app.post('/ping', async (req, res) => {
   console.log('PING', req.body)
   res.send({ ok: true })
