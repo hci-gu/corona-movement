@@ -70,28 +70,32 @@ Action initAction = (get) async {
 
 Action getHealthAuthorization = (get) async {
   ValueNotifier user = get(userAtom);
-  bool _isAuthorized = await Health.requestAuthorization();
-  if (_isAuthorized) {
-    String userId = await api.register();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('id', userId);
-    user.value['userId'] = userId;
-    user.value['lastFetch'] = DateTime.utc(2018, 01, 01);
-  } else {
-    user.value['authorizationFailed'] = true;
+  try {
+    bool _isAuthorized = await Health.requestAuthorization();
+    if (_isAuthorized) {
+      String userId = await api.register();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('id', userId);
+      user.value['userId'] = userId;
+      user.value['lastFetch'] = DateTime.utc(2018, 01, 01);
+    } else {
+      user.value['authorizationFailed'] = true;
+    }
+    user.notifyListeners();
+  } catch (e) {
+    print(e);
   }
-  user.notifyListeners();
 };
 
-Future syncHealthData(ValueNotifier user, int offset) async {
-  await api.postData(user.value['userId'], offset * chunkSize,
-      user.value['pendingHealthDataPoints'][0]);
+Future syncHealthData(ValueNotifier user) async {
+  await api.postData(
+      user.value['userId'], user.value['pendingHealthDataPoints'][0]);
 
   user.value['pendingHealthDataPoints'].removeAt(0);
   user.notifyListeners();
 
   if (user.value['pendingHealthDataPoints'].length > 0) {
-    return syncHealthData(user, offset + 1);
+    return syncHealthData(user);
   }
 }
 
@@ -110,7 +114,7 @@ Action getStepsAction = (get) async {
       steps.removeRange(0, steps.length > chunkSize ? chunkSize : steps.length);
     }
 
-    await syncHealthData(user, 0);
+    await syncHealthData(user);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('lastFetch', endDate.toIso8601String());
     user.value['lastFetch'] = endDate;
