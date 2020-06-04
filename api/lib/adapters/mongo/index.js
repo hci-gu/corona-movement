@@ -7,7 +7,7 @@ let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 const DB_NAME = 'coronamovement'
 const COLLECTION_NAME = 'steps'
 const options =
-  process.env.NODE_ENV === 'production' || true
+  process.env.NODE_ENV === 'production'
     ? {
       ssl: true,
       sslValidate: false,
