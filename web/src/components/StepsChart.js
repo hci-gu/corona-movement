@@ -10,7 +10,7 @@ import {
   YAxis,
   Tooltip,
 } from 'recharts'
-import { useSteps } from '../hooks'
+import { useSteps, useAllSteps } from '../hooks'
 
 const Heading = styled.h2`
   text-align: center;
@@ -41,18 +41,60 @@ const datesForOption = (option, start) => {
   }
 }
 
+const group = (array, keyFn) => {
+  const obj = array.reduce((obj, x) => {
+    const key = keyFn(x)
+    if (!obj[key]) {
+      obj[key] = []
+    }
+    obj[key].push(x)
+    return obj
+  }, {})
+  return Object.keys(obj).map(key => ({
+    key: key,
+    values: obj[key]
+  }))
+}
+
+const putDataInBuckets = data =>
+  Array.from({ length: 24 }).map((_, i) => {
+    const match = data.find((o) => o.key == i)
+    if (match) {
+      return match
+    }
+    return {
+      key: i,
+      value: 0,
+    }
+  })
+
+const filterDataIntoBuckets = (data, filter, days) => putDataInBuckets(group(data
+  .filter(filter),
+  ({ hours }) => hours)
+  .map(({ key, values }) => ({
+    key,
+    value: values
+      .filter(({ weekday }) => days.includes(weekday))
+      .reduce((sum, x) => sum + x.value, 0) / [...new Set(values.filter(({ weekday }) => days.includes(weekday)))].length
+  })))
+
 const StepsChart = ({ title, start, option, weekDays = true }) => {
-  // compare with 3 months back
   const preCoronaDates = datesForOption(option, start)
-  const preCoronaSteps = useSteps(
-    preCoronaDates[0],
-    preCoronaDates[1],
-    weekDays
+  const data = useAllSteps(
+    moment(start).subtract(1, 'years').format('YYYY-MM-DD'),
+    moment().format('YYYY-MM-DD'),
   )
-  const postCoronaSteps = useSteps(
-    moment(start).format('YYYY-MM-DDTHH:MM'),
-    moment().format('YYYY-MM-DDTHH:MM'),
-    weekDays
+  const days = weekDays ? [1, 2, 3, 4, 5] : [0, 6]
+
+  const preCoronaSteps = filterDataIntoBuckets(
+    data,
+    ({ date }) => date >= preCoronaDates[0] && date < preCoronaDates[1],
+    days
+  )
+  const postCoronaSteps = filterDataIntoBuckets(
+    data,
+    ({ date }) => date >= moment(start).format('YYYY-MM-DD'),
+    days
   )
 
   if (!preCoronaSteps.length || !postCoronaSteps.length)
