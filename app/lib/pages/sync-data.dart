@@ -34,7 +34,7 @@ class SyncData extends HookWidget {
             if (pendingHealthDataPoints != null &&
                 pendingHealthDataPoints.length > 0)
               Text(
-                'Synkar: ${pendingHealthDataPoints.length} datapunkter kvar',
+                'Synkar: ${pendingHealthDataPoints.length} uppladdningar kvar',
                 textAlign: TextAlign.center,
               )
           ],
