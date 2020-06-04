@@ -9,9 +9,10 @@ const COLLECTION_NAME = 'steps'
 const options =
   process.env.NODE_ENV === 'production'
     ? {
-        ssl: true,
-        sslCA: caBundle,
-      }
+      ssl: true,
+      sslValidate: false,
+      sslCA: caBundle,
+    }
     : {}
 
 let cachedConnection
@@ -101,8 +102,64 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
   }
 }
 
+const getHours = async (collection, { id, from, to }) => {
+  const daysDiff = moment(to).diff(moment(from), 'days')
+  const weekdayDiff = getBusinessDaysBetween(from, to)
+  const weekendDiff = daysDiff - weekdayDiff
+
+  const result = (
+    await collection
+      .aggregate([
+        {
+          $match: {
+            id,
+            date: {
+              $gte: new Date(from),
+              $lte: new Date(to),
+            },
+            // day: { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d %H', date: '$date', timezone: 'Europe/Stockholm' },
+            },
+            value: { $sum: '$value' },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .toArray()
+  ).map((o) => {
+    return {
+      ...o,
+      key: o._id,
+    }
+  })
+
+  return {
+    from,
+    to,
+    result: result
+    // Array.from({ length: 24 }).map((_, i) => {
+    //   const match = result.find((o) => o.key === i)
+    //   if (match) {
+    //     return match
+    //   }
+    //   return {
+    //     key: i,
+    //     value: 0,
+    //   }
+    // }),
+  }
+}
+
 module.exports = {
   createIndex,
   save: (payload) => run(insert, payload),
   getAverageHour: (payload) => run(getAverageHour, payload),
+  getHours: (payload) => run(getHours, payload),
 }
