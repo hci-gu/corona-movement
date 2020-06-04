@@ -38,6 +38,7 @@ class Charts extends HookWidget {
             ),
             Text(
               'Din data är nu synkad! Besök hemsidan för att se resultatet.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
               ),

@@ -12,9 +12,16 @@ var userAtom = Atom(
     'authorizationFailed': false,
     'userId': null,
     'lastFetch': null,
+    'availableData': [],
     'pendingHealthDataPoints': [],
   }),
 );
+var dataDateAtom =
+    Atom('data-date', ValueNotifier(DateTime.parse('2020-01-01')));
+Selector dataDateSelector = Selector('data-date-selector', (GetStateValue get) {
+  var date = get(dataDateAtom);
+  return date;
+});
 
 Selector userIdSelector =
     Selector('user-selector-user-id', (GetStateValue get) {
@@ -26,6 +33,12 @@ Selector pendingDataPointsSelector =
     Selector('user-selector-pending-data', (GetStateValue get) {
   var user = get(userAtom);
   return user.value['pendingHealthDataPoints'];
+});
+
+Selector availableDataSelector =
+    Selector('user-selector-available-data', (GetStateValue get) {
+  var user = get(userAtom);
+  return user.value['availableData'];
 });
 
 Selector lastFetchSelector =
@@ -46,7 +59,10 @@ Selector userStateSelector =
   if (userId == null) {
     return 'home';
   }
-  if (lastFetch != null && DateTime.now().difference(lastFetch).inDays < 10) {
+  if (lastFetch == null) {
+    return 'pick-data-range';
+  }
+  if (DateTime.now().difference(lastFetch).inDays < 10) {
     return 'charts';
   }
   return 'sync-data';
@@ -77,7 +93,6 @@ Action getHealthAuthorization = (get) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('id', userId);
       user.value['userId'] = userId;
-      user.value['lastFetch'] = DateTime.utc(2018, 01, 01);
     } else {
       user.value['authorizationFailed'] = true;
     }
@@ -122,4 +137,30 @@ Action getStepsAction = (get) async {
   } catch (exception) {
     print(exception.toString());
   }
+};
+
+Action getAvailableStepsForDateAction = (get) async {
+  ValueNotifier user = get(userAtom);
+  ValueNotifier date = get(dataDateSelector);
+  DateTime startDate = date.value;
+  DateTime endDate = DateTime.now();
+  try {
+    List<HealthDataPoint> steps = await Health.getHealthDataFromType(
+      startDate,
+      endDate,
+      HealthDataType.STEPS,
+    );
+    user.value['availableData'] = steps;
+    user.notifyListeners();
+  } catch (exception) {
+    print(exception.toString());
+  }
+};
+
+Action setLastFetchAction = (get) async {
+  ValueNotifier user = get(userAtom);
+  ValueNotifier date = get(dataDateSelector);
+
+  user.value['lastFetch'] = date.value;
+  user.notifyListeners();
 };
