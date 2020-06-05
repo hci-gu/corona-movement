@@ -2,14 +2,17 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import Select from 'react-select'
-import Slider from 'rc-slider'
-import 'rc-slider/assets/index.css'
 
+import { useSteps } from '../hooks'
+import { fetchFrom } from '../state'
+import DaysSlider from './DaysSlider'
+import BarChart from './BarChart'
 import StepsChart from './StepsChart'
+import ScatterChart from './ScatterChart'
 
 const Container = styled.div`
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
 
   @media (max-width: 540px) {
     width: 95%;
@@ -27,9 +30,10 @@ const options = [
 ]
 
 const User = () => {
-  const [days, setDays] = useState(0)
   const [selectedOption, setSelectedOption] = useState(options[0])
-  const fromDate = moment('2020-04-01').add(days, 'days').format('YYYY-MM-DD')
+  const fromDate = fetchFrom()
+  const to = moment().format('YYYY-MM-DD')
+  useSteps(fromDate, to)
 
   return (
     <Container>
@@ -39,19 +43,20 @@ const User = () => {
         onChange={setSelectedOption}
         options={options}
       />
-      <Title>{fromDate}</Title>
-      <Slider min={-100} max={100} value={days} onChange={setDays} />
+      <DaysSlider />
+      <BarChart />
       <StepsChart
         title="Veckodagar"
         start={fromDate}
         option={selectedOption.value}
       />
-      <StepsChart
+      {/* <StepsChart
         title="Helger"
         start={fromDate}
         option={selectedOption.value}
         weekDays={false}
-      />
+      /> */}
+      <ScatterChart />
     </Container>
   )
 }
