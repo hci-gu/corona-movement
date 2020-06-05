@@ -1,5 +1,5 @@
-import 'package:mycoronamovement/models/recoil.dart';
-import 'package:mycoronamovement/models/user_model.dart';
+import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,7 +23,7 @@ class Home extends HookWidget {
               ),
             ),
             Text(
-              'Ta reda på hur dina rörelsemönster påverkats av Corona',
+              'Ta reda på hur dina rörelsemönster påverkats av att jobba hemifrån',
               style: TextStyle(
                 fontSize: 18,
               ),

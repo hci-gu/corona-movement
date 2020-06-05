@@ -1,9 +1,9 @@
-import 'package:mycoronamovement/models/user_model.dart';
-import 'package:mycoronamovement/pages/charts.dart';
-import 'package:mycoronamovement/pages/home.dart';
-import 'package:mycoronamovement/models/recoil.dart';
-import 'package:mycoronamovement/pages/pick-data-range.dart';
-import 'package:mycoronamovement/pages/sync-data.dart';
+import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/pages/charts.dart';
+import 'package:wfhmovement/pages/home.dart';
+import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/pages/pick-data-range.dart';
+import 'package:wfhmovement/pages/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
     return Provider(
       create: (context) => StateStore(),
       child: MaterialApp(
-        title: 'Coronamovement',
+        title: 'Work from home movement',
         theme: ThemeData(
           fontFamily: 'Poppins',
           primarySwatch: Colors.amber,
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            title: Text('Coronamovement'),
+            title: Text('Work from home movement'),
           ),
           body: ScreenSelector(),
         ),
