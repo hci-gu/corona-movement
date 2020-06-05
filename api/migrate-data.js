@@ -21,7 +21,12 @@ const syncDocs = async (collection, offset) => {
   console.log('sync', res.length)
   if (res.length > 0) {
     await mongo.save(res)
-    await elastic.save(res)
+    await elastic.save(
+      res.map((d) => {
+        delete d._id
+        return d
+      })
+    )
 
     return syncDocs(collection, offset + 1)
   }

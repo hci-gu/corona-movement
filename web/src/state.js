@@ -57,13 +57,20 @@ export const stepsChartSelector = selector({
   key: 'stepsChart',
   get: ({ get }) => {
     const steps = get(stepsState)
-    const days = [1, 2, 3, 4, 5]
-    const [start, current] = get(datesSelector)
+    const days = get(weekdayState).value
+
+    const datePeriod = get(datePeriodState).value
+    const [start, current, now] = get(datesSelector)
+
+    const cmpDate =
+      datePeriod === 'same-period-1-year'
+        ? moment(now).subtract(1, 'year').format('YYYY-MM-DD')
+        : current
 
     return [
       filterDataIntoBuckets(
         steps,
-        ({ date }) => date >= start && date < current,
+        ({ date }) => date >= start && date < cmpDate,
         days
       ),
       filterDataIntoBuckets(steps, ({ date }) => date >= current, days),
@@ -128,9 +135,10 @@ export const datesSelector = selector({
   key: 'dates',
   get: ({ get }) => {
     const days = get(sliderState)
+    const from = get(fetchDateForPeriod)
 
     return [
-      fetchFrom(),
+      from,
       moment(startDate).add(days, 'days').format('YYYY-MM-DD'),
       moment().format('YYYY-MM-DD'),
     ]
@@ -143,4 +151,53 @@ export const isCurrentDateAtom = selectorFamily({
     const [_, currentDate] = get(datesSelector)
     return currentDate === date
   },
+})
+
+export const datePeriodOptions = [
+  { value: '3-months-back', label: 'Jämför med 3 månader tillbaka' },
+  { value: 'same-period-1-year', label: 'Jämför med samma period förra året' },
+  { value: 'all-historic-data', label: 'Jämför med all historisk data' },
+]
+
+export const datePeriodState = atom({
+  key: 'datePeriodState',
+  default: datePeriodOptions[0],
+})
+
+export const fetchDateForPeriod = selector({
+  key: 'fetchDates',
+  get: ({ get }) => {
+    const option = get(datePeriodState)
+
+    switch (option.value) {
+      case '3-months-back':
+        return moment(startDate).subtract(3, 'months').format('YYYY-MM-DD')
+      case 'same-period-1-year':
+        return moment(startDate).subtract(1, 'years').format('YYYY-MM-DD')
+      case 'all-historic-data':
+        return moment('2018-01-01').format('YYYY-MM-DD')
+      default:
+        return []
+    }
+  },
+})
+
+export const weekdayOptons = [
+  {
+    value: [0, 1, 2, 3, 4, 5, 6],
+    label: 'Alla dagar',
+  },
+  {
+    value: [1, 2, 3, 4, 5],
+    label: 'Veckodagar',
+  },
+  {
+    value: [0, 6],
+    label: 'Helger',
+  },
+]
+
+export const weekdayState = atom({
+  key: 'weekdayState',
+  default: weekdayOptons[1],
 })

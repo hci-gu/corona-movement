@@ -23,6 +23,6 @@ export const useSteps = (from, to) => {
       setSteps(steps)
     }
     getSteps()
-  }, [])
+  }, [from])
   return steps
 }
