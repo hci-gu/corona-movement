@@ -1,4 +1,4 @@
-package com.mycoronamovement.app
+package com.wfh-movement.app
 
 import io.flutter.embedding.android.FlutterActivity
 

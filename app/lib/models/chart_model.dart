@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:mycoronamovement/api.dart' as api;
-import 'package:mycoronamovement/models/user_model.dart';
-import 'package:mycoronamovement/models/recoil.dart';
+import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/models/recoil.dart';
 
 var stepsChartAtom = Atom(
   'steps-chart',
