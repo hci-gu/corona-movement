@@ -9,10 +9,10 @@ const COLLECTION_NAME = 'steps'
 const options =
   process.env.NODE_ENV === 'production'
     ? {
-      ssl: true,
-      sslValidate: false,
-      sslCA: caBundle,
-    }
+        ssl: true,
+        sslValidate: false,
+        sslCA: caBundle,
+      }
     : {}
 
 let cachedConnection
@@ -63,6 +63,7 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
               $lte: new Date(to),
             },
             day: { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] },
+            duration: { $lte: 360000000 },
           },
         },
         {
@@ -117,13 +118,17 @@ const getHours = async (collection, { id, from, to }) => {
               $gte: new Date(from),
               $lte: new Date(to),
             },
-            // day: { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] },
+            duration: { $lte: 36000000 }, // remove datapoints with unreasonable duration
           },
         },
         {
           $group: {
             _id: {
-              $dateToString: { format: '%Y-%m-%d %H', date: '$date', timezone: 'Europe/Stockholm' },
+              $dateToString: {
+                format: '%Y-%m-%d %H',
+                date: '$date',
+                timezone: 'Europe/Stockholm',
+              },
             },
             value: { $sum: '$value' },
           },
@@ -143,7 +148,7 @@ const getHours = async (collection, { id, from, to }) => {
   return {
     from,
     to,
-    result: result
+    result: result,
     // Array.from({ length: 24 }).map((_, i) => {
     //   const match = result.find((o) => o.key === i)
     //   if (match) {

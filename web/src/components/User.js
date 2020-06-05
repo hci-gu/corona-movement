@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import moment from 'moment'
 import Select from 'react-select'
 
 import { useSteps } from '../hooks'
-import { fetchFrom } from '../state'
+import {
+  datePeriodOptions,
+  datePeriodState,
+  fetchDateForPeriod,
+} from '../state'
 import DaysSlider from './DaysSlider'
 import BarChart from './BarChart'
+import WeekdaySelect from './WeekdaySelect'
 import StepsChart from './StepsChart'
 import ScatterChart from './ScatterChart'
 
@@ -23,17 +29,11 @@ const Title = styled.h1`
   text-align: center;
 `
 
-const options = [
-  { value: '3-months-back', label: 'Jämför med 3 månader tillbaka' },
-  { value: 'same-period-1-year', label: 'Jämför med samma period förra året' },
-  { value: 'all-historic-data', label: 'Jämför med all historisk data' },
-]
-
 const User = () => {
-  const [selectedOption, setSelectedOption] = useState(options[0])
-  const fromDate = fetchFrom()
+  const [selectedOption, setSelectedOption] = useRecoilState(datePeriodState)
+  const from = useRecoilValue(fetchDateForPeriod)
   const to = moment().format('YYYY-MM-DD')
-  useSteps(fromDate, to)
+  useSteps(from, to)
 
   return (
     <Container>
@@ -41,21 +41,12 @@ const User = () => {
       <Select
         value={selectedOption}
         onChange={setSelectedOption}
-        options={options}
+        options={datePeriodOptions}
       />
       <DaysSlider />
       <BarChart />
-      <StepsChart
-        title="Veckodagar"
-        start={fromDate}
-        option={selectedOption.value}
-      />
-      {/* <StepsChart
-        title="Helger"
-        start={fromDate}
-        option={selectedOption.value}
-        weekDays={false}
-      /> */}
+      <WeekdaySelect />
+      <StepsChart />
       <ScatterChart />
     </Container>
   )

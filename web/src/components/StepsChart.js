@@ -20,36 +20,10 @@ const Container = styled.div`
   padding-bottom: 100px;
 `
 
-const Heading = styled.h2`
-  text-align: center;
-`
-
 const formatKey = (value) =>
   moment().startOf('day').add(value, 'hours').format('HH:mm')
 
-const datesForOption = (option, start) => {
-  switch (option) {
-    case '3-months-back':
-      return [
-        moment(start).subtract(3, 'months').format('YYYY-MM-DDTHH:MM'),
-        moment(start).format('YYYY-MM-DDTHH:MM'),
-      ]
-    case 'same-period-1-year':
-      return [
-        moment(start).subtract(1, 'years').format('YYYY-MM-DDTHH:MM'),
-        moment().subtract(1, 'years').format('YYYY-MM-DDTHH:MM'),
-      ]
-    case 'all-historic-data':
-      return [
-        moment('2018-01-01').format('YYYY-MM-DDTHH:MM'),
-        moment(start).format('YYYY-MM-DDTHH:MM'),
-      ]
-    default:
-      return []
-  }
-}
-
-const StepsChart = ({ title }) => {
+const StepsChart = () => {
   const [preCoronaSteps, postCoronaSteps] = useRecoilValue(stepsChartSelector)
 
   if (!preCoronaSteps.length || !postCoronaSteps.length)
@@ -74,7 +48,6 @@ const StepsChart = ({ title }) => {
 
   return (
     <Container>
-      <Heading>{title}</Heading>
       <ResponsiveContainer>
         <LineChart data={steps}>
           <Line
