@@ -24,7 +24,7 @@ apiGateway:
       - path: /health-data
         method: POST
         function: ${api.arn}
-      - path: /{id}/weeks
+      - path: /{id}/hours
         method: GET
         function: ${api.arn}
 web:
