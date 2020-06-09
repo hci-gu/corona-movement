@@ -6,7 +6,6 @@ const bodyParser = require('body-parser')
 const fitbit = require('./adapters/fitbit')
 const db = require('./adapters/db')
 const fs = require('fs')
-const uuid = require('uuid').v4
 const cors = require('cors')
 const moment = require('moment')
 
@@ -25,12 +24,11 @@ app.get('/callback', (req, res) =>
 )
 app.get('/', (req, res) => res.send('hello'))
 
-app.get('/register', async (req, res) => {
-  const id = uuid()
-  console.log('register', id)
-  res.send({
-    id,
-  })
+app.post('/register', async (req, res) => {
+  console.log('REGISTER', req.body)
+  const user = await db.createUser(req.body)
+  console.log('register', user)
+  res.send(user)
 })
 app.post('/health-data', async (req, res) => {
   await db.save(req.body)

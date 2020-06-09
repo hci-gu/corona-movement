@@ -1,11 +1,13 @@
 const fs = require('fs')
 const { MongoClient } = require('mongodb')
 const moment = require('moment')
+const uuid = require('uuid').v4
 const { getBusinessDaysBetween } = require('../../utils/date')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 const DB_NAME = 'coronamovement'
-const COLLECTION_NAME = 'steps'
+const STEPS_COLLECTION = 'steps'
+const USERS_COLLECTION = 'users'
 const options =
   process.env.NODE_ENV === 'production'
     ? {
@@ -17,13 +19,13 @@ const options =
 
 let cachedConnection
 
-const run = async (func, data) => {
+const run = async (func, data, collectionName = STEPS_COLLECTION) => {
   let client = cachedConnection ? cachedConnection : null
   if (!client) {
     client = await MongoClient.connect(process.env.CONNECT_TO, options)
     cachedConnection = client
   }
-  const collection = client.db(DB_NAME).collection(COLLECTION_NAME)
+  const collection = client.db(DB_NAME).collection(collectionName)
 
   const res = await func(collection, data)
   return res
@@ -32,8 +34,16 @@ const run = async (func, data) => {
 const createIndex = async () => {
   const client = await MongoClient.connect(process.env.CONNECT_TO, options)
   const db = client.db(DB_NAME)
-  await db.createCollection(COLLECTION_NAME)
+  await db.createCollection(STEPS_COLLECTION)
+  await db.createCollection(USERS_COLLECTION)
   client.close()
+}
+
+const createUser = async (collection, { compareDate, division }) => {
+  return collection.insert({
+    compareDate: new Date(compareDate),
+    division,
+  })
 }
 
 const insert = async (collection, dataPoints) => {
@@ -47,6 +57,24 @@ const insert = async (collection, dataPoints) => {
   )
 }
 
+const getQuery = ({ id, from, to, weekDays }) => {
+  const query = {
+    date: {
+      $gte: new Date(from),
+      $lte: new Date(to),
+    },
+    duration: { $lte: 360000000 },
+  }
+  if (weekDays !== undefined) {
+    query['day'] = { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] }
+  }
+  if (id !== 'all') {
+    query['id'] = id
+  }
+
+  return query
+}
+
 const getAverageHour = async (collection, { id, from, to, weekDays }) => {
   const daysDiff = moment(to).diff(moment(from), 'days')
   const weekdayDiff = getBusinessDaysBetween(from, to)
@@ -56,15 +84,7 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
     await collection
       .aggregate([
         {
-          $match: {
-            id,
-            date: {
-              $gte: new Date(from),
-              $lte: new Date(to),
-            },
-            day: { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] },
-            duration: { $lte: 360000000 },
-          },
+          $match: getQuery({ id, from, to, weekDays }),
         },
         {
           $group: {
@@ -112,14 +132,7 @@ const getHours = async (collection, { id, from, to }) => {
     await collection
       .aggregate([
         {
-          $match: {
-            id,
-            date: {
-              $gte: new Date(from),
-              $lte: new Date(to),
-            },
-            duration: { $lte: 36000000 }, // remove datapoints with unreasonable duration
-          },
+          $match: getQuery({ id, from, to }),
         },
         {
           $group: {
@@ -167,4 +180,5 @@ module.exports = {
   save: (payload) => run(insert, payload),
   getAverageHour: (payload) => run(getAverageHour, payload),
   getHours: (payload) => run(getHours, payload),
+  createUser: (payload) => run(createUser, payload, USERS_COLLECTION),
 }
