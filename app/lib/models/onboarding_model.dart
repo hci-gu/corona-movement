@@ -39,16 +39,6 @@ class OnboardingModel extends ValueNotifier {
 int chunkSize = 500;
 var onboardingAtom = Atom('onboarding', OnboardingModel());
 
-Selector onboardingScreenSelector =
-    Selector('onboarding-screen-selector', (GetStateValue get) {
-  OnboardingModel onboarding = get(onboardingAtom);
-
-  if (onboarding.date != null && onboarding.dataSource != null) {
-    return null;
-  }
-  return 'home';
-});
-
 Action getHealthAuthorizationAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   try {
@@ -89,15 +79,13 @@ Action getAvailableStepsAction = (get) async {
   }
 };
 
-Future syncHealthData(ValueNotifier user) async {
-  await api.postData(
-      user.value['userId'], user.value['pendingHealthDataPoints'][0]);
+Future syncHealthData(String userId, List dataChunks) async {
+  await api.postData(userId, dataChunks[0]);
 
-  user.value['pendingHealthDataPoints'].removeAt(0);
-  user.notifyListeners();
+  dataChunks.removeAt(0);
 
-  if (user.value['pendingHealthDataPoints'].length > 0) {
-    return syncHealthData(user);
+  if (dataChunks.length > 0) {
+    return syncHealthData(userId, dataChunks);
   }
 }
 
@@ -116,7 +104,7 @@ Action uploadStepsAction = (get) async {
             : onboarding.availableData.length,
       );
     }
-    await syncHealthData(user);
+    await syncHealthData(user.id, stepsChunks);
   } catch (exception) {
     print(exception.toString());
   }

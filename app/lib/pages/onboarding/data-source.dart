@@ -21,47 +21,73 @@ class DataSource extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(onboarding.dataSource),
+        title: Text(
+          onboarding.dataSource,
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ),
-      body: _body(onboarding),
+      body: _body(context, onboarding),
     );
   }
 
-  Widget _body(OnboardingModel onboarding) {
+  Widget _body(BuildContext context, OnboardingModel onboarding) {
     var getHealthAuthorization = useAction(getHealthAuthorizationAction);
     var register = useAction(registerAction);
     var consent = useState(true);
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(25),
-            child: SvgPicture.asset(
-              'assets/svg/data.svg',
-              height: 150,
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.all(25),
+              child: SvgPicture.asset(
+                'assets/svg/data.svg',
+                height: 150,
+              ),
             ),
-          ),
-          if (!onboarding.authorized) _getAccess(getHealthAuthorization),
-          if (onboarding.availableData.length > 0)
-            _hasData(onboarding, register, consent)
-        ],
+            if (!onboarding.authorized) _getAccess(getHealthAuthorization),
+            if (onboarding.availableData.length > 0)
+              _hasData(context, onboarding, register, consent)
+          ],
+        ),
       ),
     );
   }
 
   Widget _getAccess(Function getHealthAuthorization) {
-    return RaisedButton(
-      child: Text('Give access'),
-      onPressed: () {
-        getHealthAuthorization();
-      },
+    return Column(
+      children: [
+        Text('To proceed you need to provide access'),
+        OutlineButton(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.check,
+                color: Colors.yellow[800],
+                size: 24.0,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Give access',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          onPressed: () {
+            getHealthAuthorization();
+          },
+        ),
+      ],
     );
   }
 
-  Widget _hasData(
-      OnboardingModel onboarding, Function register, ValueNotifier consent) {
+  Widget _hasData(BuildContext context, OnboardingModel onboarding,
+      Function register, ValueNotifier consent) {
     HealthDataPoint point = onboarding.availableData[0];
     DateTime from = DateTime.fromMillisecondsSinceEpoch(point.dateFrom);
 
@@ -90,10 +116,25 @@ class DataSource extends HookWidget {
           ],
         ),
         SizedBox(height: 20),
-        RaisedButton(
-          child: Text('Get started'),
+        OutlineButton(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.directions_run,
+                color: Colors.yellow[800],
+                size: 24.0,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Get started!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
           onPressed: () async {
-            register();
+            await register();
+            Navigator.of(context).pop();
           },
         )
       ],

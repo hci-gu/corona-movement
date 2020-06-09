@@ -17,10 +17,13 @@ class Home extends HookWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
+              'WFH Movement',
+              style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
+              textAlign: TextAlign.center,
+            ),
+            Text(
               'Find out how your movement patterns have changed.',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
               textAlign: TextAlign.center,
             ),
             Container(
@@ -35,9 +38,7 @@ class Home extends HookWidget {
             ),
             Text(
               'Interested? Start by picking the day you started working from home',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
             ),
             SizedBox(
               height: 10,
@@ -52,7 +53,10 @@ class Home extends HookWidget {
                     size: 24.0,
                   ),
                   SizedBox(width: 10),
-                  Text('Select date')
+                  Text(
+                    'Select date',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
               onPressed: () async {

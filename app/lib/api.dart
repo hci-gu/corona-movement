@@ -27,8 +27,8 @@ class UserResponse {
   String division;
 
   UserResponse(Map<String, dynamic> json) {
-    id = json['id'];
-    compareDate = json['compareDate'];
+    id = json['_id'];
+    compareDate = DateTime.parse(json['compareDate']);
     division = json['division'];
   }
 
@@ -87,7 +87,7 @@ Future<UserResponse> register(DateTime compareDate, String division) async {
 
 Future<UserResponse> getUser(String userId) async {
   var url = '$API_URL/user/$userId';
-  var response = await http.post(
+  var response = await http.get(
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
