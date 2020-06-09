@@ -1,4 +1,4 @@
-package com.wfh-movement.app
+package com.wfhmovement.app
 
 import io.flutter.embedding.android.FlutterActivity
 

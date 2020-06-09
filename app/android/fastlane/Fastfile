@@ -21,7 +21,7 @@ platform :android do
       track: 'alpha',
       json_key: './playstore.json',
       aab: '../build/app/outputs/bundle/release/app-release.aab',
-      package_name: 'com.wfh-movement.app'
+      package_name: 'com.wfhmovement.app'
     )
     # slack(message: 'Successfully distributed a new alpha build')
   end
@@ -31,7 +31,7 @@ platform :android do
       track: 'beta',
       json_key: './playstore.json',
       aab: '../build/app/outputs/bundle/release/app-release.aab',
-      package_name: 'com.wfh-movement.app'
+      package_name: 'com.wfhmovement.app'
     )
     # slack(message: 'Successfully distributed a new beta build')
   end
