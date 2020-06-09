@@ -9,9 +9,10 @@ class SyncData extends HookWidget {
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
     var uploadSteps = useAction(uploadStepsAction);
-    useMemoized(() {
+    useEffect(() {
       uploadSteps();
-    });
+      return;
+    }, []);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 25),
@@ -27,14 +28,14 @@ class SyncData extends HookWidget {
               ),
             ),
             Text(
-              'Analyserar din hälsodata...',
+              'Uploading your steps...',
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
             if (onboarding.availableData != null &&
                 onboarding.availableData.length > 0)
               Text(
-                'Synkar: ${onboarding.availableData.length} uppladdningar kvar',
+                'Syncing: ${onboarding.availableData.length} uploads left',
                 textAlign: TextAlign.center,
               )
           ],

@@ -21,16 +21,6 @@ class User extends ValueNotifier {
 
 var userAtom = Atom('user', User());
 
-// Selector userStateSelector =
-//     Selector('user-selector-state', (GetStateValue get) {
-//   var user = get(userAtom);
-
-//   if (DateTime.now().difference(lastFetch).inDays < 10) {
-//     return 'charts';
-//   }
-//   return 'sync-data';
-// });
-
 Action initAction = (get) async {
   User user = get(userAtom);
 

@@ -10,7 +10,8 @@ class SelectDataSource extends HookWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select data source'),
+        title: Text('Select data source',
+            style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: _body(context),
     );

@@ -2,9 +2,7 @@ import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/charts.dart';
 import 'package:wfhmovement/pages/onboarding/home.dart';
-import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/pages/pick-data-range.dart';
 import 'package:wfhmovement/pages/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -44,9 +42,15 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          appBar: AppBar(
-            title: Text('WFH Movement'),
-          ),
+          backgroundColor: Color.fromARGB(255, 250, 250, 250),
+          // appBar: AppBar(
+          //   title: Text(
+          //     'WFH Movement',
+          //     style: TextStyle(
+          //       fontWeight: FontWeight.w800,
+          //     ),
+          //   ),
+          // ),
           body: ScreenSelector(),
         ),
       ),
@@ -57,25 +61,18 @@ class MyApp extends StatelessWidget {
 class ScreenSelector extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    var screen = useModel(onboardingScreenSelector);
+    OnboardingModel onboarding = useModel(onboardingAtom);
+    User user = useModel(userAtom);
     var init = useAction(initAction);
-    useMemoized(() {
+    useEffect(() {
       init();
-    });
+      return;
+    }, []);
 
-    switch (screen) {
-      case 'home':
-        return Home();
-      case '':
-        return SelectDataSource();
-      // case 'pick-data-range':
-      //   return PickDataRange();
-      case 'sync-data':
-        return SyncData();
-      case 'charts':
-        return Charts();
-      default:
-        return Home();
+    if (user.id == null) {
+      return Home();
     }
+    if (onboarding.availableData.length > 0) return SyncData();
+    return Charts();
   }
 }
