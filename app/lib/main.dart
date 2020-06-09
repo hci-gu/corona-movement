@@ -1,6 +1,8 @@
+import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/charts.dart';
-import 'package:wfhmovement/pages/home.dart';
+import 'package:wfhmovement/pages/onboarding/home.dart';
+import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/pages/pick-data-range.dart';
 import 'package:wfhmovement/pages/sync-data.dart';
@@ -43,7 +45,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            title: Text('Work from home movement'),
+            title: Text('WFH Movement'),
           ),
           body: ScreenSelector(),
         ),
@@ -55,25 +57,25 @@ class MyApp extends StatelessWidget {
 class ScreenSelector extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    var userState = useModel(userStateSelector);
+    var screen = useModel(onboardingScreenSelector);
     var init = useAction(initAction);
     useMemoized(() {
       init();
     });
 
-    switch (userState) {
+    switch (screen) {
       case 'home':
         return Home();
-      case 'pick-data-range':
-        return PickDataRange();
+      case '':
+        return SelectDataSource();
+      // case 'pick-data-range':
+      //   return PickDataRange();
       case 'sync-data':
         return SyncData();
       case 'charts':
         return Charts();
       default:
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return Home();
     }
   }
 }
