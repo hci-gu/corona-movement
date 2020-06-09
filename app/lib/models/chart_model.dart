@@ -49,12 +49,12 @@ Action getStepsChartAction = (get) async {
   ValueNotifier chart = get(stepsChartAtom);
   ValueNotifier chartOffset = get(chartOffsetSelector);
 
-  var userId = get(userIdSelector);
+  User user = get(userAtom);
   DateTime from = get(fromDateSelector);
   DateTime to = get(toDateSelector);
   print(from.add(Duration(days: chartOffset.value)));
   var data = await api.getSteps(
-      userId, from.add(Duration(days: chartOffset.value)), to);
+      user.id, from.add(Duration(days: chartOffset.value)), to);
 
   chart.value['data'] = data;
   chart.notifyListeners();

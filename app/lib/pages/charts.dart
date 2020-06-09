@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Charts extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    var userId = useModel(userIdSelector);
+    User user = useModel(userAtom);
     // var sliderValue = useModel(chartOffsetSelector);
     // var data = useModel(chartDataSelector);
     // var getStepsChart = useAction(getStepsChartAction);
@@ -47,7 +47,7 @@ class Charts extends HookWidget {
             RaisedButton(
               child: Text('Gå till mycoronamovement.com'),
               onPressed: () async {
-                var url = 'https://mycoronamovement.com/user/$userId';
+                var url = 'https://mycoronamovement.com/user/${user.id}';
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {

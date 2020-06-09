@@ -2,7 +2,7 @@ import 'package:health/health.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const API_URL = 'https://api.mycoronamovement.com';
+const API_URL = 'http://192.168.0.32:4000';
 
 Future postData(String userId, List<HealthDataPoint> healthData) async {
   var url = '$API_URL/health-data';
@@ -21,15 +21,19 @@ Future postData(String userId, List<HealthDataPoint> healthData) async {
   return response.body;
 }
 
-class User {
+class UserResponse {
   String id;
+  DateTime compareDate;
+  String division;
 
-  User(Map<String, dynamic> json) {
+  UserResponse(Map<String, dynamic> json) {
     id = json['id'];
+    compareDate = json['compareDate'];
+    division = json['division'];
   }
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(json);
+  factory UserResponse.fromJson(Map<String, dynamic> json) {
+    return UserResponse(json);
   }
 }
 
@@ -65,17 +69,32 @@ class HealthData {
   }
 }
 
-Future<String> register() async {
+Future<UserResponse> register(DateTime compareDate, String division) async {
   const url = '$API_URL/register';
-  var response = await http.get(
+  var response = await http.post(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'compareDate': DateTime.now().toIso8601String(),
+      'division': division,
+    }),
+  );
+
+  return UserResponse.fromJson(json.decode(response.body));
+}
+
+Future<UserResponse> getUser(String userId) async {
+  var url = '$API_URL/user/$userId';
+  var response = await http.post(
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
   );
-  User user = User.fromJson(json.decode(response.body));
 
-  return user.id;
+  return UserResponse.fromJson(json.decode(response.body));
 }
 
 Future<List<HealthData>> getSteps(
