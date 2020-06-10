@@ -18,32 +18,38 @@ class SelectDataSource extends HookWidget {
   }
 
   Widget _body(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(25),
-            child: SvgPicture.asset(
-              'assets/svg/data_sources.svg',
-              height: 150,
+    return ListView(
+      padding: EdgeInsets.only(top: 25, bottom: 50, left: 25, right: 25),
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(25),
+          child: SvgPicture.asset(
+            'assets/svg/data_sources.svg',
+            height: 150,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'To continue you need to select where you have historical data of your steps.',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+        SizedBox(
+          height: 50,
+        ),
+        ..._dataSources(context),
+        Card(
+          child: ListTile(
+            title: Text(
+              'I don\'t have any steps saved.',
             ),
+            trailing: Icon(Icons.arrow_forward_ios),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            'To continue you need to select where you have historical data of your steps.',
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          ..._dataSources(context),
-        ],
-      ),
+        )
+      ],
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/widgets/button.dart';
 
 class DataSource extends HookWidget {
   @override
@@ -45,7 +46,7 @@ class DataSource extends HookWidget {
             Container(
               margin: EdgeInsets.all(25),
               child: SvgPicture.asset(
-                'assets/svg/data.svg',
+                'assets/svg/access.svg',
                 height: 150,
               ),
             ),
@@ -62,25 +63,11 @@ class DataSource extends HookWidget {
     return Column(
       children: [
         Text('To proceed you need to provide access'),
-        OutlineButton(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.check,
-                color: Colors.yellow[800],
-                size: 24.0,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'Give access',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-          onPressed: () {
-            getHealthAuthorization();
-          },
+        SizedBox(height: 25),
+        StyledButton(
+          icon: Icon(Icons.check),
+          title: 'Give access',
+          onPressed: () => getHealthAuthorization(),
         ),
       ],
     );
@@ -116,27 +103,15 @@ class DataSource extends HookWidget {
           ],
         ),
         SizedBox(height: 20),
-        OutlineButton(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.directions_run,
-                color: Colors.yellow[800],
-                size: 24.0,
-              ),
-              SizedBox(width: 10),
-              Text(
-                'Get started!',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
+        StyledButton(
+          icon: Icon(Icons.directions_run),
+          title: 'Get started!',
           onPressed: () async {
             await register();
             Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
-        )
+        ),
       ],
     );
   }

@@ -19,6 +19,10 @@ dependencies:
   workmanager: ^0.2.0
   fl_chart: ^0.9.4
   url_launcher: ^5.4.10
+  cookie_jar: ^1.0.1
+  dio: ^3.0.9
+  dio_cookie_manager: ^1.0.0
+  dio_retry: ^0.1.9-beta
 
 dev_dependencies:
   flutter_test:

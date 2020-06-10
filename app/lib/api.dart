@@ -2,6 +2,7 @@ import 'package:health/health.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+// const API_URL = 'http://10.0.2.2:4000';
 const API_URL = 'http://192.168.0.32:4000';
 
 Future postData(String userId, List<HealthDataPoint> healthData) async {
@@ -56,11 +57,16 @@ class ChartResult {
 }
 
 class HealthData {
-  int key;
+  String date;
+  int hours;
+  int weekday;
   double value;
 
   HealthData(Map<String, dynamic> json) {
-    key = json['key'];
+    DateTime _date = DateTime.parse('${json['key']}:00');
+    date = _date.toIso8601String().substring(0, 10);
+    hours = _date.hour;
+    weekday = _date.weekday;
     value = json['value'].toDouble();
   }
 
@@ -100,7 +106,7 @@ Future<UserResponse> getUser(String userId) async {
 Future<List<HealthData>> getSteps(
     String userId, DateTime from, DateTime to) async {
   var url =
-      '$API_URL/$userId/weeks?from=${from.toIso8601String()}&to=${to.toIso8601String()}';
+      '$API_URL/$userId/hours?from=${from.toIso8601String()}&to=${to.toIso8601String()}';
   var response = await http.get(
     url,
     headers: <String, String>{

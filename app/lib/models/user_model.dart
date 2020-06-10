@@ -21,6 +21,19 @@ class User extends ValueNotifier {
 
 var userAtom = Atom('user', User());
 
+var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
+  User user = get(userAtom);
+
+  return [
+    user.compareDate
+        .subtract(Duration(days: 90))
+        .toIso8601String()
+        .substring(0, 10),
+    user.compareDate.toIso8601String().substring(0, 10),
+    DateTime.now().toIso8601String().substring(0, 10),
+  ];
+});
+
 Action initAction = (get) async {
   User user = get(userAtom);
 
@@ -29,6 +42,8 @@ Action initAction = (get) async {
   if (userId != null) {
     api.UserResponse response = await api.getUser(userId);
     user.setUser(response);
+  } else {
+    prefs.setString('id', '5edf81e1c8c51ed728f5e56a');
   }
 };
 
