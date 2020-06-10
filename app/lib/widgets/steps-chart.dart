@@ -3,21 +3,17 @@ import 'package:wfhmovement/models/chart_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:wfhmovement/style.dart';
 
 class StepsChart extends HookWidget {
-  Color beforeColor = Colors.blueGrey[500];
-  Color afterColor = Colors.yellow[800];
+  Color beforeColor = AppColors.secondary;
+  Color afterColor = AppColors.main;
 
   @override
   Widget build(BuildContext context) {
     ChartModel chart = useModel(stepsChartAtom);
     List data = useModel(stepsChartSelector);
     List totalSteps = useModel(totalStepsForChartSelector);
-    var getStepsChart = useAction(getStepsChartAction);
-    useEffect(() {
-      getStepsChart();
-      return;
-    }, []);
 
     if (chart.fetching) {
       return _chartBody(Center(
@@ -90,14 +86,7 @@ class StepsChart extends HookWidget {
       height: 250,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
-        gradient: LinearGradient(
-          colors: [
-            Colors.blueGrey[900],
-            Colors.blueGrey[800],
-          ],
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
-        ),
+        gradient: AppColors.backgroundGradient,
       ),
       child: child,
     );

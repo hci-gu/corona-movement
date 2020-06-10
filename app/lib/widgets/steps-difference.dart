@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/models/chart_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/widgets/steps-chart.dart';
 
 class StepsDifference extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var diff = useModel(percentDifferenceSelector);
+
+    if (diff == null) return Center(child: CircularProgressIndicator());
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 60, vertical: 25),
@@ -23,8 +24,9 @@ class StepsDifference extends HookWidget {
           ),
         ),
         Text(
-          'Your average daily steps have decreased by $diff%.',
+          'Your average daily steps have ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff%.',
           textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w300),
         ),
         SizedBox(height: 10),
         Text(

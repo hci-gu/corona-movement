@@ -117,3 +117,41 @@ var percentDifferenceSelector =
   if (values[0] == 0) return null;
   return (100 - ((values[0] / values[1]) * 100)).toStringAsFixed(1);
 });
+
+var dayBreakdownSelector =
+    Selector('steps-day-breakdown-selector', (GetStateValue get) {
+  ChartModel chart = get(stepsChartAtom);
+  Map days = chart.data.fold({}, (dates, o) {
+    if (dates[o.date] != null) {
+      dates[o.date][o.hours] = {
+        'hours': o.hours,
+        'value': o.value,
+        'date': o.date,
+        'weekday': o.weekday,
+      };
+    } else {
+      dates[o.date] = List.generate(24, (index) {
+        return {
+          'hours': index,
+          'value': 0,
+          'date': o.date,
+          'weekday': o.weekday,
+        };
+      }).toList();
+    }
+    return dates;
+  });
+  return days;
+});
+
+var dayTotalSelector =
+    Selector('steps-day-total-selector', (GetStateValue get) {
+  Map days = get(dayBreakdownSelector);
+
+  return days.keys.map((key) {
+    return {
+      'date': key,
+      'value': days[key].fold(0, (sum, day) => sum + day['value'])
+    };
+  }).toList();
+});
