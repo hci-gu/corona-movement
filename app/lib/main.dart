@@ -1,7 +1,7 @@
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
-import 'package:wfhmovement/pages/charts.dart';
-import 'package:wfhmovement/pages/onboarding/home.dart';
+import 'package:wfhmovement/pages/home.dart';
+import 'package:wfhmovement/pages/onboarding/introduction.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/pages/sync-data.dart';
 import 'package:flutter/material.dart';
@@ -43,14 +43,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           backgroundColor: Color.fromARGB(255, 250, 250, 250),
-          // appBar: AppBar(
-          //   title: Text(
-          //     'WFH Movement',
-          //     style: TextStyle(
-          //       fontWeight: FontWeight.w800,
-          //     ),
-          //   ),
-          // ),
           body: ScreenSelector(),
         ),
       ),
@@ -70,9 +62,9 @@ class ScreenSelector extends HookWidget {
     }, []);
 
     if (user.id == null) {
-      return Home();
+      return Introduction();
     }
     if (onboarding.availableData.length > 0) return SyncData();
-    return Charts();
+    return Home();
   }
 }

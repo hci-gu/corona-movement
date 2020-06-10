@@ -1,7 +1,6 @@
 const fs = require('fs')
-const { MongoClient } = require('mongodb')
+const { MongoClient, ObjectId } = require('mongodb')
 const moment = require('moment')
-const uuid = require('uuid').v4
 const { getBusinessDaysBetween } = require('../../utils/date')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
@@ -40,11 +39,15 @@ const createIndex = async () => {
 }
 
 const createUser = async (collection, { compareDate, division }) => {
-  return collection.insert({
+  const result = await collection.insert({
     compareDate: new Date(compareDate),
     division,
   })
+  return result.ops[0]
 }
+
+const getUser = async (collection, id) =>
+  collection.findOne({ _id: ObjectId(id) })
 
 const insert = async (collection, dataPoints) => {
   await collection.insertMany(
@@ -181,4 +184,5 @@ module.exports = {
   getAverageHour: (payload) => run(getAverageHour, payload),
   getHours: (payload) => run(getHours, payload),
   createUser: (payload) => run(createUser, payload, USERS_COLLECTION),
+  getUser: (payload) => run(getUser, payload, USERS_COLLECTION),
 }

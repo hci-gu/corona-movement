@@ -22,12 +22,18 @@ app.get('/auth', (_, res) => fitbit.redirect(res))
 app.get('/callback', (req, res) =>
   fitbit.handleCallback(req).then((token) => res.send({ token }))
 )
-app.get('/', (req, res) => res.send('hello'))
+app.get('/', (_, res) => res.send('hello'))
 
 app.post('/register', async (req, res) => {
-  console.log('REGISTER', req.body)
+  console.log('POST /register', req.body)
   const user = await db.createUser(req.body)
   console.log('register', user)
+  res.send(user)
+})
+app.get('/user/:id', async (req, res) => {
+  const { id } = req.params
+  console.log('GET /user/', id)
+  const user = await db.getUser(id)
   res.send(user)
 })
 app.post('/health-data', async (req, res) => {
