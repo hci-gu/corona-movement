@@ -8,12 +8,12 @@ const DB_NAME = 'coronamovement'
 const STEPS_COLLECTION = 'steps'
 const USERS_COLLECTION = 'users'
 const options =
-  process.env.NODE_ENV === 'production' || true
+  process.env.NODE_ENV === 'production'
     ? {
-      ssl: true,
-      sslValidate: false,
-      sslCA: caBundle,
-    }
+        ssl: true,
+        sslValidate: false,
+        sslCA: caBundle,
+      }
     : {}
 
 let cachedConnection
@@ -217,13 +217,7 @@ const getAverageStepsForUser = async (collection, { id, from, to }) => {
   const result = await collection
     .aggregate([
       {
-        $match: {
-          id,
-          date: {
-            $gte: new Date(from),
-            $lte: new Date(to),
-          },
-        },
+        $match: getQuery({ id, from, to }),
       },
       {
         $group: {
@@ -238,7 +232,7 @@ const getAverageStepsForUser = async (collection, { id, from, to }) => {
     .toArray()
 
   const period = moment(to).diff(moment(from), 'days')
-  const total = result[0].value
+  const total = result.length ? result[0].value : 0
 
   return {
     period,
@@ -255,12 +249,22 @@ const getSummary = async (collection, { id }) => {
     throw new Error('No such user')
   }
 
-  const userSummary = await getSummaryForUser(collection, { user, from: '2020-01-01' })
-  const othersSummary = await Promise.all(users.map(user => getSummaryForUser(collection, { user, from: '2020-01-01' })))
-    .then(summaries => ({
-      before: summaries.map(({ before }) => before).reduce((sum, x) => sum + x, 0) / summaries.length,
-      after: summaries.map(({ after }) => after).reduce((sum, x) => sum + x, 0) / summaries.length
-    }))
+  const userSummary = await getSummaryForUser(collection, {
+    user,
+    from: '2020-01-01',
+  })
+  const othersSummary = await Promise.all(
+    users.map((user) =>
+      getSummaryForUser(collection, { user, from: '2020-01-01' })
+    )
+  ).then((summaries) => ({
+    before:
+      summaries.map(({ before }) => before).reduce((sum, x) => sum + x, 0) /
+      summaries.length,
+    after:
+      summaries.map(({ after }) => after).reduce((sum, x) => sum + x, 0) /
+      summaries.length,
+  }))
 
   return {
     user: userSummary,
@@ -268,18 +272,17 @@ const getSummary = async (collection, { id }) => {
   }
 }
 
-
 const getSummaryForUser = async (collection, { from, user }) => {
   const [before, after] = await Promise.all([
     getAverageStepsForUser(collection, {
-      id: user.id,
+      id: user._id.toString(),
       from: from,
       to: user.compareDate,
     }),
     getAverageStepsForUser(collection, {
-      id: user.id,
+      id: user._id.toString(),
       from: user.compareDate,
-      to: moment().format('YYYY-MM-DD'),
+      to: moment().format(),
     }),
   ])
 
@@ -289,34 +292,32 @@ const getSummaryForUser = async (collection, { from, user }) => {
   }
 }
 
-const averageSummary = async (collection, { id }) => {
-  const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
-  console.log(users)
-
-  const userSummaries = await Promise.all(
-    users.map((user) => getSummary(collection, { user }))
-  )
-
-  return userSummaries
-}
+const avg = (data) =>
+  data.length > 0 ? data.reduce((sum, x) => sum + x) / data.length : 0
 
 const getDailyAverages = async (collection, { id, from, to }) => {
+  console.log('getDailyAverages', { id, from, to })
   const user = await run(getUser, id, USERS_COLLECTION)
   const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
-  const dates = Array.from({ length: moment(from).diff(to, 'days') }).map((_, i) =>
-    moment(from).add(i, 'days').format('YYYY-MM-DD')
-  )
+  const dates = Array.from({
+    length: moment(to).diff(from, 'days'),
+  }).map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
 
   if (!user) {
     throw new Error('No such user')
   }
 
-  const avg = data => data.length > 0 ? (data.reduce((sum, x) => sum + x) / data.length) : 0
+  const othersAverages = await Promise.all(
+    users.map((user) =>
+      getDays(collection, { id: user._id.toString(), from, to })
+    )
+  ).then((userData) => calculateDailyAverages(userData, dates))
 
-  const othersAverages = Promise.all(users.map(user => getDays(collection, { id: user.id, from, to })))
-    .then(userData => calculateDailyAverages(userData, dates))
-
-  const userDays = getDays(collection, { id: user.id, from, to })
+  const userDays = await getDays(collection, {
+    id: user._id.toString(),
+    from,
+    to,
+  })
   const userAverages = calculateDailyAverages([userDays], dates)
 
   return {
@@ -326,9 +327,15 @@ const getDailyAverages = async (collection, { id, from, to }) => {
 }
 
 const calculateDailyAverages = (users, dates) =>
-  dates.map(date => ({
+  dates.map((date) => ({
     date,
-    avg: avg(users.map(({ result }) => result.filter(({ key }) => key === date).map(({ value }) => value)).flat())
+    avg: avg(
+      users
+        .map(({ result }) =>
+          result.filter(({ key }) => key === date).map(({ value }) => value)
+        )
+        .flat()
+    ),
   }))
 
 module.exports = {

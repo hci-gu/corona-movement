@@ -87,7 +87,8 @@ app.get('/:id/summary', async (req, res) => {
 })
 
 app.get('/:id/daily-averages', async (req, res) => {
-  const { id, to, from } = req.params
+  const { to, from } = req.query
+  const { id } = req.params
   console.log('GET daily averages', id)
 
   const data = await db.getDailyAverages({ id, to, from })
