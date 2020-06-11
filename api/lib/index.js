@@ -77,6 +77,15 @@ app.get('/:id/hours', async (req, res) => {
 
   res.send(data)
 })
+app.get('/:id/summary', async (req, res) => {
+  const { id } = req.params
+  console.log('GET summary', id)
+
+  const data = await db.getSummary({ id })
+
+  res.send(data)
+})
+
 app.post('/ping', async (req, res) => {
   console.log('PING', req.body)
   res.send({ ok: true })

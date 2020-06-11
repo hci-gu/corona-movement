@@ -49,6 +49,9 @@ const createUser = async (collection, { compareDate, division }) => {
 const getUser = async (collection, id) =>
   collection.findOne({ _id: ObjectId(id) })
 
+const getAllUsersExcept = async (collection, id) =>
+  collection.find({ _id: { $ne: ObjectId(id) } }).toArray()
+
 const insert = async (collection, dataPoints) => {
   await collection.insertMany(
     dataPoints.map((point) => ({
@@ -178,6 +181,76 @@ const getHours = async (collection, { id, from, to }) => {
   }
 }
 
+const getAverageStepsForUser = async (collection, { id, from, to }) => {
+  const result = await collection
+    .aggregate([
+      {
+        $match: {
+          id,
+          date: {
+            $gte: new Date(from),
+            $lte: new Date(to),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: 'total',
+          value: { $sum: '$value' },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ])
+    .toArray()
+
+  const period = moment(to).diff(moment(from), 'days')
+  const total = result[0].value
+
+  return {
+    period,
+    total,
+    value: parseFloat((total / period).toFixed(3)),
+  }
+}
+
+const getSummary = async (collection, { id, user }) => {
+  if (!user) {
+    user = await run(getUser, id, USERS_COLLECTION)
+  }
+
+  const [before, after] = await Promise.all([
+    getAverageStepsForUser(collection, {
+      id,
+      from: user.initialDataDate,
+      to: user.compareDate,
+    }),
+    getAverageStepsForUser(collection, {
+      id,
+      from: user.compareDate,
+      to: moment().format('YYYY-MM-DD'),
+    }),
+  ])
+
+  return {
+    before,
+    after,
+    difference: parseFloat((1 - before.value / after.value).toFixed(3)),
+  }
+}
+
+const averageSummary = async (collection, { id }) => {
+  const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
+  console.log(users)
+
+  const userSummaries = await Promise.all(
+    users.map((user) => getSummary(collection, { user }))
+  )
+
+  return userSummaries
+}
+
 module.exports = {
   createIndex,
   save: (payload) => run(insert, payload),
@@ -185,4 +258,5 @@ module.exports = {
   getHours: (payload) => run(getHours, payload),
   createUser: (payload) => run(createUser, payload, USERS_COLLECTION),
   getUser: (payload) => run(getUser, payload, USERS_COLLECTION),
+  getSummary: async (payload) => run(getSummary, payload),
 }
