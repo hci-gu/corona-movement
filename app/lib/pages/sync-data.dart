@@ -32,10 +32,10 @@ class SyncData extends HookWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
-            if (onboarding.availableData != null &&
-                onboarding.availableData.length > 0)
+            if (onboarding.dataChunks != null &&
+                onboarding.dataChunks.length > 0)
               Text(
-                'Syncing: ${onboarding.availableData.length} uploads left',
+                'Syncing: ${onboarding.dataChunks.length} uploads left',
                 textAlign: TextAlign.center,
               )
           ],

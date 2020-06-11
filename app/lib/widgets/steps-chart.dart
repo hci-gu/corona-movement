@@ -16,9 +16,11 @@ class StepsChart extends HookWidget {
     List totalSteps = useModel(totalStepsForChartSelector);
 
     if (chart.fetching) {
-      return _chartBody(Center(
-        child: CircularProgressIndicator(),
-      ));
+      return _chartBody(
+          context,
+          Center(
+            child: CircularProgressIndicator(),
+          ));
     }
 
     return Center(
@@ -26,7 +28,7 @@ class StepsChart extends HookWidget {
         child: Column(
           children: [
             _totalSteps(totalSteps[0], totalSteps[1]),
-            _chart(data),
+            _chart(context, data),
           ],
         ),
       ),
@@ -80,9 +82,10 @@ class StepsChart extends HookWidget {
     );
   }
 
-  Widget _chartBody(Widget child) {
+  Widget _chartBody(BuildContext context, Widget child) {
     return Container(
-      width: 90000,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      width: MediaQuery.of(context).size.width,
       height: 250,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -92,8 +95,9 @@ class StepsChart extends HookWidget {
     );
   }
 
-  Widget _chart(List data) {
+  Widget _chart(BuildContext context, List data) {
     return _chartBody(
+      context,
       Expanded(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0),

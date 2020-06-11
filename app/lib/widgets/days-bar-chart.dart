@@ -21,7 +21,7 @@ class DaysBarChart extends HookWidget {
         child: Scrollbar(
           isAlwaysShown: true,
           child: ListView(
-            padding: EdgeInsets.only(top: 10, bottom: 20),
+            padding: EdgeInsets.only(top: 10, bottom: 20, right: 10, left: 10),
             reverse: true,
             scrollDirection: Axis.horizontal,
             children: [
@@ -56,7 +56,7 @@ class DaysBarChart extends HookWidget {
                 int rodIndex,
               ) {
                 return BarTooltipItem(
-                  'Started WFH',
+                  'Started working from home',
                   TextStyle(
                     color: AppColors.secondaryText,
                     fontWeight: FontWeight.bold,
@@ -78,11 +78,11 @@ class DaysBarChart extends HookWidget {
               getTitles: (double value) {
                 DateTime date = DateTime.parse(days[value.toInt()]['date']);
                 if (date.weekday == 1) {
-                  return days[value.toInt()]['date'].substring(5, 10);
+                  return _labelforDate(date);
                 }
                 return null;
               },
-              rotateAngle: -15,
+              rotateAngle: -10,
             ),
             leftTitles: SideTitles(showTitles: false),
           ),
@@ -93,6 +93,40 @@ class DaysBarChart extends HookWidget {
         ),
       ),
     );
+  }
+
+  String _labelforDate(DateTime date) {
+    return '${_month(date.month)} ${date.day}';
+  }
+
+  String _month(int month) {
+    switch (month) {
+      case 1:
+        return 'Jan';
+      case 2:
+        return 'Feb';
+      case 3:
+        return 'Mar';
+      case 4:
+        return 'Apr';
+      case 5:
+        return 'May';
+      case 6:
+        return 'Jun';
+      case 7:
+        return 'Jul';
+      case 8:
+        return 'Aug';
+      case 9:
+        return 'Sep';
+      case 10:
+        return 'Oct';
+      case 11:
+        return 'Nov';
+      case 12:
+        return 'Dec';
+      default:
+    }
   }
 
   List<BarChartGroupData> _barGroupsForDays(
@@ -107,7 +141,7 @@ class DaysBarChart extends HookWidget {
             barsSpace: 40,
             barRods: [
               BarChartRodData(
-                y: maxValue - 2000,
+                y: maxValue - (maxValue / 10),
                 color: AppColors.secondaryText,
                 width: 5,
               )

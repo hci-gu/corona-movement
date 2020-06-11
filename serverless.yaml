@@ -19,6 +19,9 @@ apiGateway:
     region: eu-central-1
     endpoints:
       - path: /register
+        method: POST
+        function: ${api.arn}
+      - path: /user/{id}
         method: GET
         function: ${api.arn}
       - path: /health-data

@@ -296,7 +296,6 @@ const avg = (data) =>
   data.length > 0 ? data.reduce((sum, x) => sum + x) / data.length : 0
 
 const getDailyAverages = async (collection, { id, from, to }) => {
-  console.log('getDailyAverages', { id, from, to })
   const user = await run(getUser, id, USERS_COLLECTION)
   const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
   const dates = Array.from({

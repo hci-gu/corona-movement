@@ -5,6 +5,7 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api.dart' as api;
 
 class User extends ValueNotifier {
+  bool inited = false;
   String id;
   DateTime compareDate;
   String division;
@@ -15,6 +16,11 @@ class User extends ValueNotifier {
     id = response.id;
     compareDate = response.compareDate;
     division = response.division;
+    notifyListeners();
+  }
+
+  setInited() {
+    inited = true;
     notifyListeners();
   }
 }
@@ -45,14 +51,17 @@ Action initAction = (get) async {
   } else {
     prefs.setString('id', '5edf81e1c8c51ed728f5e56a');
   }
+  user.setInited();
 };
 
 Action registerAction = (get) async {
   User user = get(userAtom);
   OnboardingModel onboarding = get(onboardingAtom);
+  onboarding.setGaveConsent();
 
   api.UserResponse response = await api.register(
     onboarding.date,
+    onboarding.initialDataDate,
     onboarding.division,
   );
   user.setUser(response);
