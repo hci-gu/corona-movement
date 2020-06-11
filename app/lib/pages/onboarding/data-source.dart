@@ -36,7 +36,7 @@ class DataSource extends HookWidget {
   Widget _body(BuildContext context, OnboardingModel onboarding) {
     var getHealthAuthorization = useAction(getHealthAuthorizationAction);
     var register = useAction(registerAction);
-    var consent = useState(true);
+    var consent = useState(false);
 
     return Center(
       child: Container(
@@ -52,7 +52,11 @@ class DataSource extends HookWidget {
             ),
             if (!onboarding.authorized) _getAccess(getHealthAuthorization),
             if (onboarding.availableData.length > 0)
-              _hasData(context, onboarding, register, consent)
+              _hasData(context, onboarding, register, consent),
+            if (onboarding.fetching)
+              Center(
+                child: CircularProgressIndicator(),
+              ),
           ],
         ),
       ),
@@ -75,13 +79,12 @@ class DataSource extends HookWidget {
 
   Widget _hasData(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent) {
-    HealthDataPoint point = onboarding.availableData[0];
-    DateTime from = DateTime.fromMillisecondsSinceEpoch(point.dateFrom);
-
     return Column(
       children: [
         Container(
-          child: Text('Found data from ${from.toString().substring(0, 10)}'),
+          child: Text(
+            'Found data from ${onboarding.initialDataDate.toString().substring(0, 10)}',
+          ),
         ),
         SizedBox(height: 20),
         Row(
@@ -103,14 +106,18 @@ class DataSource extends HookWidget {
           ],
         ),
         SizedBox(height: 20),
-        StyledButton(
-          icon: Icon(Icons.directions_run),
-          title: 'Get started!',
-          onPressed: () async {
-            await register();
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
+        Opacity(
+          opacity: consent.value ? 1 : 0.5,
+          child: StyledButton(
+            icon: Icon(Icons.directions_run),
+            title: 'Get started!',
+            onPressed: () async {
+              if (!consent.value) return;
+              await register();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+          ),
         ),
       ],
     );

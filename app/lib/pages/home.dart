@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/models/chart_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/days-bar-chart.dart';
 import 'package:wfhmovement/widgets/steps-chart.dart';
 import 'package:wfhmovement/widgets/steps-difference.dart';
@@ -21,9 +22,19 @@ class Home extends HookWidget {
         title: Text(
           'WFH Movement',
           style: TextStyle(
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w800,
+            color: AppColors.primaryText,
           ),
         ),
+        actions: [
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Icon(
+              Icons.settings,
+              color: AppColors.primaryText,
+            ),
+          )
+        ],
       ),
       body: Container(
         child: ListView(

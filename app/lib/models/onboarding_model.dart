@@ -9,7 +9,11 @@ class OnboardingModel extends ValueNotifier {
   String division;
   String dataSource;
   List<dynamic> availableData = [];
+  List<dynamic> dataChunks = [];
+  DateTime initialDataDate;
+  bool fetching = false;
   bool authorized = false;
+  bool gaveConsent = false;
 
   OnboardingModel() : super(null);
 
@@ -30,6 +34,31 @@ class OnboardingModel extends ValueNotifier {
 
   setAvailableData(List steps) {
     availableData = steps;
+    if (steps.length > 0) {
+      initialDataDate =
+          DateTime.fromMillisecondsSinceEpoch(availableData[0].dateFrom);
+    }
+    fetching = false;
+    notifyListeners();
+  }
+
+  setDataChunks(List updatedDataChunks) {
+    dataChunks = updatedDataChunks;
+    notifyListeners();
+  }
+
+  removeDataChunk() {
+    dataChunks.removeAt(0);
+    notifyListeners();
+  }
+
+  setFetching() {
+    fetching = true;
+    notifyListeners();
+  }
+
+  setGaveConsent() {
+    gaveConsent = true;
     notifyListeners();
   }
 
@@ -56,7 +85,7 @@ Future<List<HealthDataPoint>> getSteps(
     to,
     HealthDataType.STEPS,
   );
-  if (steps.length > 0 && !from.isBefore(DateTime.parse('2019-12-01'))) {
+  if (steps.length > 0) {
     totalSteps.addAll(steps);
     return getSteps(from.subtract(Duration(days: 30)), from, totalSteps);
   }
@@ -67,6 +96,7 @@ Future<List<HealthDataPoint>> getSteps(
 Action getAvailableStepsAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   DateTime now = DateTime.now();
+  onboarding.setFetching();
   try {
     List<HealthDataPoint> steps = await getSteps(
       now.subtract(Duration(days: 30)),
@@ -79,13 +109,13 @@ Action getAvailableStepsAction = (get) async {
   }
 };
 
-Future syncHealthData(String userId, List dataChunks) async {
-  await api.postData(userId, dataChunks[0]);
+Future syncHealthData(OnboardingModel onboarding, String userId) async {
+  await api.postData(userId, onboarding.dataChunks[0]);
 
-  dataChunks.removeAt(0);
+  onboarding.removeDataChunk();
 
-  if (dataChunks.length > 0) {
-    return syncHealthData(userId, dataChunks);
+  if (onboarding.dataChunks.length > 0) {
+    return syncHealthData(onboarding, userId);
   }
 }
 
@@ -104,7 +134,8 @@ Action uploadStepsAction = (get) async {
             : onboarding.availableData.length,
       );
     }
-    await syncHealthData(user.id, stepsChunks);
+    onboarding.setDataChunks(stepsChunks);
+    await syncHealthData(onboarding, user.id);
   } catch (exception) {
     print(exception.toString());
   }

@@ -2,8 +2,8 @@ import 'package:health/health.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const API_URL = 'http://10.0.2.2:4000';
-// const API_URL = 'http://192.168.0.32:4000';
+// const API_URL = 'http://10.0.2.2:4000';
+const API_URL = 'http://192.168.0.32:4000';
 
 Future postData(String userId, List<HealthDataPoint> healthData) async {
   var url = '$API_URL/health-data';
@@ -75,7 +75,8 @@ class HealthData {
   }
 }
 
-Future<UserResponse> register(DateTime compareDate, String division) async {
+Future<UserResponse> register(
+    DateTime compareDate, DateTime initialDataDate, String division) async {
   const url = '$API_URL/register';
   var response = await http.post(
     url,
@@ -83,7 +84,8 @@ Future<UserResponse> register(DateTime compareDate, String division) async {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode({
-      'compareDate': DateTime.now().toIso8601String(),
+      'compareDate': compareDate.toIso8601String(),
+      'initialDataDate': initialDataDate.toIso8601String(),
       'division': division,
     }),
   );

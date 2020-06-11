@@ -61,10 +61,18 @@ class ScreenSelector extends HookWidget {
       return;
     }, []);
 
-    if (user.id == null) {
+    if (!user.inited)
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+
+    if (user.id == null || !onboarding.gaveConsent) {
       return Introduction();
     }
-    if (onboarding.availableData.length > 0) return SyncData();
+    if (onboarding.availableData.length > 0 ||
+        onboarding.dataChunks.length > 0) {
+      return SyncData();
+    }
     return Home();
   }
 }
