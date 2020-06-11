@@ -86,6 +86,15 @@ app.get('/:id/summary', async (req, res) => {
   res.send(data)
 })
 
+app.get('/:id/daily-averages', async (req, res) => {
+  const { id, to, from } = req.params
+  console.log('GET daily averages', id)
+
+  const data = await db.getDailyAverages({ id, to, from })
+
+  res.send(data)
+})
+
 app.post('/ping', async (req, res) => {
   console.log('PING', req.body)
   res.send({ ok: true })

@@ -168,16 +168,48 @@ const getHours = async (collection, { id, from, to }) => {
     from,
     to,
     result: result,
-    // Array.from({ length: 24 }).map((_, i) => {
-    //   const match = result.find((o) => o.key === i)
-    //   if (match) {
-    //     return match
-    //   }
-    //   return {
-    //     key: i,
-    //     value: 0,
-    //   }
-    // }),
+  }
+}
+
+const getDays = async (collection, { id, from, to }) => {
+  const daysDiff = moment(to).diff(moment(from), 'days')
+  const weekdayDiff = getBusinessDaysBetween(from, to)
+  const weekendDiff = daysDiff - weekdayDiff
+
+  const result = (
+    await collection
+      .aggregate([
+        {
+          $match: getQuery({ id, from, to }),
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: '$date',
+                timezone: 'Europe/Stockholm',
+              },
+            },
+            value: { $sum: '$value' },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .toArray()
+  ).map((o) => {
+    return {
+      ...o,
+      key: o._id,
+    }
+  })
+
+  return {
+    from,
+    to,
+    result: result,
   }
 }
 
@@ -268,11 +300,43 @@ const averageSummary = async (collection, { id }) => {
   return userSummaries
 }
 
+const getDailyAverages = async (collection, { id, from, to }) => {
+  const user = await run(getUser, id, USERS_COLLECTION)
+  const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
+  const dates = Array.from({ length: moment(from).diff(to, 'days') }).map((_, i) =>
+    moment(from).add(i, 'days').format('YYYY-MM-DD')
+  )
+
+  if (!user) {
+    throw new Error('No such user')
+  }
+
+  const avg = data => data.length > 0 ? (data.reduce((sum, x) => sum + x) / data.length) : 0
+
+  const othersAverages = Promise.all(users.map(user => getDays(collection, { id: user.id, from, to })))
+    .then(userData => calculateDailyAverages(userData, dates))
+
+  const userDays = getDays(collection, { id: user.id, from, to })
+  const userAverages = calculateDailyAverages([userDays], dates)
+
+  return {
+    userDays: userAverages,
+    otherDays: othersAverages,
+  }
+}
+
+const calculateDailyAverages = (users, dates) =>
+  dates.map(date => ({
+    date,
+    avg: avg(users.map(({ result }) => result.filter(({ key }) => key === date).map(({ value }) => value)).flat())
+  }))
+
 module.exports = {
   createIndex,
   save: (payload) => run(insert, payload),
   getAverageHour: (payload) => run(getAverageHour, payload),
   getHours: (payload) => run(getHours, payload),
+  getDailyAverages: (payload) => run(getDailyAverages, payload),
   createUser: (payload) => run(createUser, payload, USERS_COLLECTION),
   getUser: (payload) => run(getUser, payload, USERS_COLLECTION),
   getSummary: async (payload) => run(getSummary, payload),
