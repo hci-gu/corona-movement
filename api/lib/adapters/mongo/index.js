@@ -8,12 +8,12 @@ const DB_NAME = 'coronamovement'
 const STEPS_COLLECTION = 'steps'
 const USERS_COLLECTION = 'users'
 const options =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'production' || true
     ? {
-        ssl: true,
-        sslValidate: false,
-        sslCA: caBundle,
-      }
+      ssl: true,
+      sslValidate: false,
+      sslCA: caBundle,
+    }
     : {}
 
 let cachedConnection
@@ -215,28 +215,45 @@ const getAverageStepsForUser = async (collection, { id, from, to }) => {
   }
 }
 
-const getSummary = async (collection, { id, user }) => {
+const getSummary = async (collection, { id }) => {
+  const user = await run(getUser, id, USERS_COLLECTION)
+  const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
+
   if (!user) {
-    user = await run(getUser, id, USERS_COLLECTION)
+    throw new Error('No such user')
   }
 
+  const userSummary = await getSummaryForUser(collection, { user, from: '2020-01-01' })
+  const othersSummary = await Promise.all(users.map(user => getSummaryForUser(collection, { user, from: '2020-01-01' })))
+    .then(summaries => ({
+      before: summaries.map(({ before }) => before).reduce((sum, x) => sum + x, 0) / summaries.length,
+      after: summaries.map(({ after }) => after).reduce((sum, x) => sum + x, 0) / summaries.length
+    }))
+
+  return {
+    user: userSummary,
+    others: othersSummary,
+  }
+}
+
+
+const getSummaryForUser = async (collection, { from, user }) => {
   const [before, after] = await Promise.all([
     getAverageStepsForUser(collection, {
-      id,
-      from: user.initialDataDate,
+      id: user.id,
+      from: from,
       to: user.compareDate,
     }),
     getAverageStepsForUser(collection, {
-      id,
+      id: user.id,
       from: user.compareDate,
       to: moment().format('YYYY-MM-DD'),
     }),
   ])
 
   return {
-    before,
-    after,
-    difference: parseFloat((1 - before.value / after.value).toFixed(3)),
+    before: before.value,
+    after: after.value,
   }
 }
 
