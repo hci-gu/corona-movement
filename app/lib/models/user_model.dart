@@ -42,14 +42,14 @@ var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
 
 Action initAction = (get) async {
   User user = get(userAtom);
+  OnboardingModel onboarding = get(onboardingAtom);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userId = prefs.getString('id');
   if (userId != null) {
     api.UserResponse response = await api.getUser(userId);
     user.setUser(response);
-  } else {
-    prefs.setString('id', '5edf81e1c8c51ed728f5e56a');
+    onboarding.skip();
   }
   user.setInited();
 };

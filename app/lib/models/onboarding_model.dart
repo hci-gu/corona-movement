@@ -62,6 +62,11 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
+  skip() {
+    setGaveConsent();
+    setAuthorized(true);
+  }
+
   static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
 }
 

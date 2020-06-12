@@ -1,5 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wfhmovement/models/chart_model.dart';
+import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,9 +11,9 @@ class StepsChart extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChartModel chart = useModel(stepsChartAtom);
-    List data = useModel(stepsChartSelector);
-    List totalSteps = useModel(totalStepsForChartSelector);
+    StepsModel chart = useModel(stepsAtom);
+    List data = useModel(stepsBeforeAndAfterSelector);
+    List totalSteps = useModel(totalStepsBeforeAndAfterSelector);
 
     if (chart.fetching) {
       return _chartBody(
@@ -96,6 +96,12 @@ class StepsChart extends HookWidget {
   }
 
   Widget _chart(BuildContext context, List data) {
+    double maxBefore =
+        data[0].fold(0, (_max, o) => o['value'] > _max ? o['value'] : _max);
+    double maxAfter =
+        data[1].fold(0, (_max, o) => o['value'] > _max ? o['value'] : _max);
+    double max = maxBefore > maxAfter ? maxBefore : maxAfter;
+
     return _chartBody(
       context,
       Expanded(
@@ -103,9 +109,29 @@ class StepsChart extends HookWidget {
           padding: EdgeInsets.symmetric(horizontal: 0),
           child: LineChart(
             LineChartData(
-              maxY: 1500,
+              maxY: max + max / 5,
               lineTouchData: LineTouchData(
                 enabled: true,
+                touchTooltipData: LineTouchTooltipData(
+                  tooltipBgColor: AppColors.primaryText,
+                  fitInsideVertically: true,
+                  fitInsideHorizontally: true,
+                  getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                    double beforeVal =
+                        touchedBarSpots.firstWhere((o) => o.barIndex == 0).y;
+                    double afterVal =
+                        touchedBarSpots.firstWhere((o) => o.barIndex == 1).y;
+                    double diff = 100 - (beforeVal / afterVal) * 100;
+                    return [
+                      LineTooltipItem(
+                        '${touchedBarSpots[0].x.toInt()}:00\n ${diff.toStringAsFixed(2)} %',
+                        TextStyle(
+                            color: AppColors.main, fontWeight: FontWeight.bold),
+                      ),
+                      null,
+                    ];
+                  },
+                ),
               ),
               gridData: FlGridData(
                 show: false,
@@ -133,7 +159,6 @@ class StepsChart extends HookWidget {
               ),
               borderData: FlBorderData(
                 show: false,
-                border: Border.all(color: const Color(0xff37434d), width: 1),
               ),
               lineBarsData: _lineBarsData(data),
             ),
