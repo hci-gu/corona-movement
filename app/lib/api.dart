@@ -75,6 +75,34 @@ class HealthData {
   }
 }
 
+class HealthComparison {
+  HealthSummary user;
+  HealthSummary others;
+
+  HealthComparison(Map<String, dynamic> json) {
+    user = HealthSummary.fromJson(json['user']);
+    others = HealthSummary.fromJson(json['others']);
+  }
+
+  factory HealthComparison.fromJson(Map<String, dynamic> json) {
+    return HealthComparison(json);
+  }
+}
+
+class HealthSummary {
+  double before;
+  double after;
+
+  HealthSummary(Map<String, dynamic> json) {
+    before = json['before'];
+    after = json['after'];
+  }
+
+  factory HealthSummary.fromJson(Map<String, dynamic> json) {
+    return HealthSummary(json);
+  }
+}
+
 Future<UserResponse> register(
     DateTime compareDate, DateTime initialDataDate, String division) async {
   const url = '$API_URL/register';
@@ -121,6 +149,20 @@ Future<List<HealthData>> getSteps(
       chart.result.map((d) => HealthData.fromJson(d)).toList();
 
   return steps;
+}
+
+Future<HealthComparison> getComparison(String userId) async {
+  var url = '$API_URL/$userId/summary';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  HealthComparison comparison =
+      HealthComparison.fromJson(json.decode(response.body));
+
+  return comparison;
 }
 
 Future<bool> ping() async {
