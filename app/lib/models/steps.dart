@@ -159,7 +159,7 @@ var stepsDayTotalSelector =
   return days.keys.map((key) {
     return {
       'date': key,
-      'value': days[key].fold(0, (sum, day) => sum + day['value'])
+      'value': days[key].fold(0.0, (sum, day) => sum + day['value'])
     };
   }).toList();
 });

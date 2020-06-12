@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/pages/settings.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
 import 'package:wfhmovement/widgets/days-bar-chart.dart';
@@ -28,11 +30,18 @@ class Home extends HookWidget {
           ),
         ),
         actions: [
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Icon(
-              Icons.settings,
-              color: AppColors.primaryText,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Settings(),
+              ));
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Icon(
+                Icons.settings,
+                color: AppColors.primaryText,
+              ),
             ),
           )
         ],
