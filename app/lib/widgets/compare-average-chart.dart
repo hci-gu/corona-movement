@@ -24,7 +24,7 @@ class CompareAverageChart extends HookWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 30),
         child: AspectRatio(
-          aspectRatio: 0.4,
+          aspectRatio: 0.35,
           child: BarChart(
             BarChartData(
               gridData: FlGridData(
@@ -54,7 +54,7 @@ class CompareAverageChart extends HookWidget {
                     int rodIndex,
                   ) {
                     return BarTooltipItem(
-                      '${rod.y.toString()} %',
+                      '${rod.y.toString()}%',
                       TextStyle(
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.bold,
@@ -72,9 +72,9 @@ class CompareAverageChart extends HookWidget {
                   textStyle: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                   ),
-                  margin: 40,
+                  margin: 50,
                   rotateAngle: -90,
                   getTitles: (double value) {
                     switch (value.toInt()) {
@@ -83,6 +83,7 @@ class CompareAverageChart extends HookWidget {
                       case 1:
                         return 'Others';
                     }
+                    return null;
                   },
                 ),
               ),
@@ -101,8 +102,9 @@ class CompareAverageChart extends HookWidget {
     if (comparison == null) return [];
     double userDiff =
         100 - (comparison.user.before / comparison.user.after) * 100;
-    double othersDiff =
-        100 - (comparison.others.before / comparison.others.after) * 100;
+    double othersDiff = comparison.others.before != null
+        ? 100 - (comparison.others.before / comparison.others.after) * 100
+        : 0.0;
 
     return [
       BarChartGroupData(
@@ -110,12 +112,9 @@ class CompareAverageChart extends HookWidget {
         barRods: [
           BarChartRodData(
             color: AppColors.main,
-            y: double.parse(userDiff.toStringAsFixed(2)),
+            y: double.parse(userDiff.toStringAsFixed(1)),
             width: barWidth,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(6),
-              topRight: Radius.circular(6),
-            ),
+            borderRadius: _radiusForValue(userDiff),
             rodStackItem: [],
           ),
         ],
@@ -126,17 +125,27 @@ class CompareAverageChart extends HookWidget {
         barRods: [
           BarChartRodData(
             color: AppColors.primaryText,
-            y: double.parse(othersDiff.toStringAsFixed(2)),
+            y: double.parse(othersDiff.toStringAsFixed(1)),
             width: barWidth,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(6),
-              bottomRight: Radius.circular(6),
-            ),
+            borderRadius: _radiusForValue(othersDiff),
             rodStackItem: [],
           ),
         ],
         showingTooltipIndicators: [0],
       ),
     ];
+  }
+
+  BorderRadius _radiusForValue(double value) {
+    if (value > 0) {
+      return BorderRadius.only(
+        topLeft: Radius.circular(6),
+        topRight: Radius.circular(6),
+      );
+    }
+    return BorderRadius.only(
+      bottomLeft: Radius.circular(6),
+      bottomRight: Radius.circular(6),
+    );
   }
 }

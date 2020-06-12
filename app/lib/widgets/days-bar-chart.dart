@@ -7,10 +7,35 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/style.dart';
 
 class DaysBarChart extends HookWidget {
+  double barWidth = 11.0;
+  ScrollController scrollController = ScrollController();
+
+  List emptyDays = List.generate(
+      200,
+      (index) => {
+            'value': 0.1,
+            'date': DateTime.parse('2020-01-01')
+                .add(Duration(days: index))
+                .toIso8601String()
+                .substring(0, 10)
+          });
+
   @override
   Widget build(BuildContext context) {
-    var days = useModel(stepsDayTotalSelector);
+    List days = useModel(stepsDayTotalSelector);
     List<String> dates = useModel(userDatesSelector);
+    useEffect(() {
+      if (days.length > 0) {
+        String compareDate = dates[1];
+        var day =
+            days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
+        int index = days.indexOf(day);
+
+        scrollController.animateTo(index * barWidth - 50,
+            duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+      }
+      return;
+    }, [days]);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
@@ -20,11 +45,12 @@ class DaysBarChart extends HookWidget {
         child: Scrollbar(
           isAlwaysShown: true,
           child: ListView(
-            padding: EdgeInsets.only(top: 10, bottom: 20, right: 10, left: 10),
-            reverse: true,
+            controller: scrollController,
+            padding: EdgeInsets.only(top: 10, bottom: 45, right: 10, left: 10),
             scrollDirection: Axis.horizontal,
             children: [
-              _barChart(days, dates[1]),
+              _barChart(days.length > 0 ? days : emptyDays, dates[1],
+                  days.length == 0),
             ],
           ),
         ),
@@ -32,15 +58,17 @@ class DaysBarChart extends HookWidget {
     );
   }
 
-  Widget _barChart(days, String compareDate) {
-    double maxValue = days.fold(
-        0, (value, day) => value > day['value'] ? value : day['value']);
+  Widget _barChart(days, String compareDate, [bool empty]) {
+    double maxValue = days.length > 0
+        ? days.fold(
+            0, (value, day) => value > day['value'] ? value : day['value'])
+        : 500;
 
     return Container(
-      width: (days.length * 11).toDouble(),
+      width: (days.length * barWidth).toDouble(),
       child: BarChart(
         BarChartData(
-          maxY: maxValue + (maxValue / 10),
+          maxY: empty ? 10 : maxValue + (maxValue / 10),
           alignment: BarChartAlignment.spaceAround,
           barTouchData: BarTouchData(
             enabled: false,

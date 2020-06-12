@@ -41,13 +41,14 @@ class Home extends HookWidget {
         child: ListView(
           padding: EdgeInsets.only(top: 25),
           children: [
-            CompareAverageChart(),
+            DaysBarChart(),
             StepsDifference(),
+            CompareAverageChart(),
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: StepsChart(),
             ),
-            DaysBarChart(),
+            SizedBox(height: 50),
           ],
         ),
       ),

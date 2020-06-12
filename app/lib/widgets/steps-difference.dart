@@ -22,19 +22,25 @@ class StepsDifference extends HookWidget {
             height: 1,
           ),
         ),
-        if (diff != null)
-          Text(
-            'Your average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff%.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w300,
-            ),
+        Text(
+          _textForDiff(diff),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w300,
           ),
+        ),
         SizedBox(height: 10),
         Text(
           'Below you can see how your activity have changed over a typical day before and after working from home.',
         )
       ]),
     );
+  }
+
+  String _textForDiff(diff) {
+    if (diff == null) {
+      return 'Your average daily steps have\n changed by -%.';
+    }
+    return 'Your average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff%.';
   }
 }
