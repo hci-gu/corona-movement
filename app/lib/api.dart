@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 // const API_URL = 'http://10.0.2.2:4000';
-const API_URL = 'http://192.168.0.32:4000';
+// const API_URL = 'http://192.168.0.32:4000';
+const API_URL = 'https://api.mycoronamovement.com';
 
 Future postData(String userId, List<HealthDataPoint> healthData) async {
   var url = '$API_URL/health-data';

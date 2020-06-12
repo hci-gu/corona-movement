@@ -30,6 +30,9 @@ apiGateway:
       - path: /{id}/hours
         method: GET
         function: ${api.arn}
+      - path: /{id}/summary
+        method: GET
+        function: ${api.arn}
 web:
   component: '@serverless/website'
   inputs:
