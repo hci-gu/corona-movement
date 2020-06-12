@@ -1,7 +1,7 @@
 name: wfhmovement
 description: A new Flutter project.
 
-version: 1.0.0+1
+version: 1.0.2+3
 
 environment:
   sdk: '>=2.5.2 <3.0.0'

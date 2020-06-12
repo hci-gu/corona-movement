@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/pages/onboarding/data-source.dart';
+import 'package:wfhmovement/pages/onboarding/no-steps.dart';
 
 class SelectDataSource extends HookWidget {
   @override
@@ -47,6 +48,11 @@ class SelectDataSource extends HookWidget {
               'I don\'t have any steps saved.',
             ),
             trailing: Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => NoSteps()),
+              );
+            },
           ),
         )
       ],

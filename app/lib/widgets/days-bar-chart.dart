@@ -24,18 +24,18 @@ class DaysBarChart extends HookWidget {
   Widget build(BuildContext context) {
     List days = useModel(stepsDayTotalSelector);
     List<String> dates = useModel(userDatesSelector);
-    useEffect(() {
-      if (days.length > 0) {
-        String compareDate = dates[1];
-        var day =
-            days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
-        int index = days.indexOf(day);
+    // useEffect(() {
+    //   if (days.length > 0) {
+    //     String compareDate = dates[1];
+    //     var day =
+    //         days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
+    //     int index = day != null ? days.indexOf(day) : 0;
 
-        scrollController.animateTo(index * barWidth - 50,
-            duration: Duration(milliseconds: 500), curve: Curves.easeOut);
-      }
-      return;
-    }, [days]);
+    //     scrollController.animateTo(index * barWidth - 50,
+    //         duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+    //   }
+    //   return;
+    // }, [days]);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
@@ -61,8 +61,8 @@ class DaysBarChart extends HookWidget {
   Widget _barChart(days, String compareDate, [bool empty]) {
     double maxValue = days.length > 0
         ? days.fold(
-            0, (value, day) => value > day['value'] ? value : day['value'])
-        : 500;
+            0.0, (value, day) => value > day['value'] ? value : day['value'])
+        : 500.0;
 
     return Container(
       width: (days.length * barWidth).toDouble(),
@@ -154,6 +154,7 @@ class DaysBarChart extends HookWidget {
         return 'Dec';
       default:
     }
+    return '';
   }
 
   List<BarChartGroupData> _barGroupsForDays(

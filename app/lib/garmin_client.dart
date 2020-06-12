@@ -111,6 +111,14 @@ class GarminClient {
     return ids;
   }
 
+  Future fetch_steps(String dateString) async {
+    Response response = await dio.get(
+        'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySummaryChart?date=$dateString');
+    List<dynamic> data = response.data;
+
+    return data;
+  }
+
   Future<Map<String, dynamic>> get_activity_summary(int activity_id) async {
     Response response;
     bool hadException = false;

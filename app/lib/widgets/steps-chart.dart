@@ -97,9 +97,9 @@ class StepsChart extends HookWidget {
 
   Widget _chart(BuildContext context, List data) {
     double maxBefore =
-        data[0].fold(0, (_max, o) => o['value'] > _max ? o['value'] : _max);
+        data[0].fold(0.0, (_max, o) => o['value'] > _max ? o['value'] : _max);
     double maxAfter =
-        data[1].fold(0, (_max, o) => o['value'] > _max ? o['value'] : _max);
+        data[1].fold(0.0, (_max, o) => o['value'] > _max ? o['value'] : _max);
     double max = maxBefore > maxAfter ? maxBefore : maxAfter;
 
     return _chartBody(
