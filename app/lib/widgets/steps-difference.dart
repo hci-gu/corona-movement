@@ -29,10 +29,6 @@ class StepsDifference extends HookWidget {
             fontWeight: FontWeight.w300,
           ),
         ),
-        SizedBox(height: 10),
-        Text(
-          'Below you can see how your activity have changed over a typical day before and after working from home.',
-        )
       ]),
     );
   }

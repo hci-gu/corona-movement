@@ -95,8 +95,14 @@ class HealthSummary {
   double after;
 
   HealthSummary(Map<String, dynamic> json) {
-    before = json['before'].toDouble();
-    after = json['after'].toDouble();
+    if (json['before'] != null)
+      before = json['before'].toDouble();
+    else
+      before = 0.0;
+    if (json['after'] != null)
+      after = json['after'].toDouble();
+    else
+      after = 0.0;
   }
 
   factory HealthSummary.fromJson(Map<String, dynamic> json) {

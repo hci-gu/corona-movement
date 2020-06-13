@@ -1,4 +1,3 @@
-import 'package:wfhmovement/garmin_client.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/home.dart';
