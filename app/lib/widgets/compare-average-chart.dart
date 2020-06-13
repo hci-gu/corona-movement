@@ -100,11 +100,8 @@ class CompareAverageChart extends HookWidget {
 
   List<BarChartGroupData> _barGroupData(HealthComparison comparison) {
     if (comparison == null) return [];
-    double userDiff =
-        100 - (comparison.user.before / comparison.user.after) * 100;
-    double othersDiff = comparison.others.before != null
-        ? 100 - (comparison.others.before / comparison.others.after) * 100
-        : 0.0;
+    double userDiff = _diffForSummary(comparison.user);
+    double othersDiff = _diffForSummary(comparison.others);
 
     return [
       BarChartGroupData(
@@ -134,6 +131,10 @@ class CompareAverageChart extends HookWidget {
         showingTooltipIndicators: [0],
       ),
     ];
+  }
+
+  double _diffForSummary(HealthSummary summary) {
+    return 100 - (summary.before / summary.after) * 100;
   }
 
   BorderRadius _radiusForValue(double value) {

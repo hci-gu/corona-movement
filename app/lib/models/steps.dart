@@ -26,19 +26,6 @@ class StepsModel extends ValueNotifier {
 
 var stepsAtom = Atom('steps', StepsModel());
 
-Action getStepsAction = (get) async {
-  StepsModel steps = get(stepsAtom);
-
-  User user = get(userAtom);
-  List<api.HealthData> data = await api.getSteps(
-    user.id,
-    steps.from,
-    DateTime.now(),
-  );
-
-  steps.setData(data);
-};
-
 List groupByHour(List<api.HealthData> list) {
   Map<String, dynamic> obj = list.fold({}, (obj, x) {
     var key = x.hours.toString();
@@ -164,17 +151,32 @@ var stepsDayTotalSelector =
   }).toList();
 });
 
-Action getStepsComparisonAction = (get) async {
-  StepsModel steps = get(stepsAtom);
-  User user = get(userAtom);
-
-  api.HealthComparison data = await api.getComparison(user.id);
-
-  steps.setComparison(data);
-};
-
 var stepsComparisonSelector = Selector('steps-comparison', (GetStateValue get) {
   StepsModel steps = get(stepsAtom);
 
   return steps.comparison;
 });
+
+Action getStepsComparisonAction = (get) async {
+  StepsModel steps = get(stepsAtom);
+  User user = get(userAtom);
+
+  if (steps.comparison == null) {
+    api.HealthComparison data = await api.getComparison(user.id);
+    steps.setComparison(data);
+  }
+};
+
+Action getStepsAction = (get) async {
+  StepsModel steps = get(stepsAtom);
+  User user = get(userAtom);
+
+  if (steps.data.length == 0) {
+    List<api.HealthData> data = await api.getSteps(
+      user.id,
+      steps.from,
+      DateTime.now(),
+    );
+    steps.setData(data);
+  }
+};

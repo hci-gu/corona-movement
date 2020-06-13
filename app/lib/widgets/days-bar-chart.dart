@@ -7,18 +7,18 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/style.dart';
 
 class DaysBarChart extends HookWidget {
-  double barWidth = 11.0;
-  ScrollController scrollController = ScrollController();
-
-  List emptyDays = List.generate(
-      200,
-      (index) => {
-            'value': 0.1,
-            'date': DateTime.parse('2020-01-01')
-                .add(Duration(days: index))
-                .toIso8601String()
-                .substring(0, 10)
-          });
+  final double barWidth = 11.0;
+  final ScrollController scrollController = ScrollController();
+  final List emptyDays = List.generate(
+    200,
+    (index) => {
+      'value': 0.1,
+      'date': DateTime.parse('2020-01-01')
+          .add(Duration(days: index))
+          .toIso8601String()
+          .substring(0, 10)
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -38,21 +38,18 @@ class DaysBarChart extends HookWidget {
     }, [days]);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 25),
-      child: Container(
-        width: 5000,
-        height: 300,
-        child: Scrollbar(
-          isAlwaysShown: true,
-          child: ListView(
-            controller: scrollController,
-            padding: EdgeInsets.only(top: 10, bottom: 45, right: 10, left: 10),
-            scrollDirection: Axis.horizontal,
-            children: [
-              _barChart(days.length > 0 ? days : emptyDays, dates[1],
-                  days.length == 0),
-            ],
-          ),
+      width: 5000,
+      height: 300,
+      child: Scrollbar(
+        isAlwaysShown: true,
+        child: ListView(
+          controller: scrollController,
+          padding: EdgeInsets.all(10),
+          scrollDirection: Axis.horizontal,
+          children: [
+            _barChart(
+                days.length > 0 ? days : emptyDays, dates[1], days.length == 0),
+          ],
         ),
       ),
     );

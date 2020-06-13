@@ -6,8 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/style.dart';
 
 class StepsChart extends HookWidget {
-  Color beforeColor = AppColors.secondary;
-  Color afterColor = AppColors.main;
+  final Color beforeColor = AppColors.secondary;
+  final Color afterColor = AppColors.main;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +39,7 @@ class StepsChart extends HookWidget {
     TextStyle textStyle = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w300,
+      color: Colors.black,
       height: 0.9,
     );
 
@@ -47,35 +48,44 @@ class StepsChart extends HookWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Before', style: textStyle),
-              Text(
-                stepsBefore.toString(),
-                style: TextStyle(
-                  fontSize: 36,
-                  height: 1,
-                  fontWeight: FontWeight.w900,
-                  color: beforeColor,
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Before', style: textStyle),
+                FittedBox(
+                  child: Text(
+                    stepsBefore.toString(),
+                    style: TextStyle(
+                      fontSize: 36,
+                      height: 1,
+                      fontWeight: FontWeight.w900,
+                      color: beforeColor,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text('After', style: textStyle),
-              Text(
-                stepsAfter.toString(),
-                style: TextStyle(
-                  fontSize: 36,
-                  height: 1,
-                  fontWeight: FontWeight.w900,
-                  color: afterColor,
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('After', style: textStyle),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    stepsAfter.toString(),
+                    style: TextStyle(
+                      fontSize: 36,
+                      height: 1,
+                      fontWeight: FontWeight.w900,
+                      color: afterColor,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
