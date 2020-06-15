@@ -55,20 +55,19 @@ List putDataInBuckets(List<Map<String, dynamic>> data) {
 }
 
 typedef Filter = bool Function(dynamic o);
-const weekdays = [0, 1, 2, 3, 4, 5, 6];
+const weekdays = [0, 1, 2, 3, 4, 5, 6, 7];
 List filterDataIntoBuckets(List data, Filter filter) {
-  List _group = groupByHour(
-    data
-        .where(filter)
-        .toList()
-        .where((o) => weekdays.contains(o.weekday))
-        .toList(),
-  );
+  List dataInFilter = data
+      .where(filter)
+      .toList()
+      .where((o) => weekdays.contains(o.weekday))
+      .toList();
+  var numDates = dataInFilter.map((o) => o.date).toSet().length;
+  List _group = groupByHour(dataInFilter);
   return putDataInBuckets(_group.map((o) {
     return {
       'key': o['key'],
-      'value':
-          o['values'].fold(0, (sum, x) => sum + x.value) / o['values'].length
+      'value': o['values'].fold(0, (sum, x) => sum + x.value) / numDates
     };
   }).toList());
 }
@@ -86,7 +85,7 @@ var stepsBeforeAndAfterSelector =
     filterDataIntoBuckets(
       steps.data,
       (o) =>
-          (o.date.compareTo(start) >= 1 && o.date.compareTo(compareDate) < 0),
+          (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0),
     ),
     filterDataIntoBuckets(
       steps.data,
@@ -95,14 +94,33 @@ var stepsBeforeAndAfterSelector =
   ];
 });
 
+int getDaysBetween(String from, String to) {
+  return DateTime.parse(to).difference(DateTime.parse(from)).inDays;
+}
+
 var totalStepsBeforeAndAfterSelector =
     Selector('total-steps-before-and-after-selector', (GetStateValue get) {
-  var data = get(stepsBeforeAndAfterSelector);
-  if (data.length == 0) return [0, 0];
-  var values = data
-      .map((list) => list.fold(0, (sum, o) => sum + o['value'].toInt()))
-      .toList();
-  return values;
+  StepsModel steps = get(stepsAtom);
+  List<String> dates = get(userDatesSelector);
+
+  var start = dates[0];
+  var compareDate = dates[1];
+  var beforeDays = getDaysBetween(start, compareDate);
+  var afterDays = getDaysBetween(
+          compareDate, DateTime.now().toIso8601String().substring(0, 10)) +
+      1;
+
+  var before = steps.data
+      .where((o) =>
+          (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0))
+      .fold(0, (sum, o) => sum + o.value)
+      .toInt();
+  var after = steps.data
+      .where((o) => (o.date.compareTo(compareDate) >= 0))
+      .fold(0, (sum, o) => sum + o.value)
+      .toInt();
+
+  return [(before / beforeDays).toInt(), (after / afterDays).toInt()];
 });
 
 var stepsDiffBeforeAndAfterSelector =
@@ -110,7 +128,7 @@ var stepsDiffBeforeAndAfterSelector =
   var values = get(totalStepsBeforeAndAfterSelector);
 
   if (values[0] == 0) return null;
-  return (100 - ((values[0] / values[1]) * 100)).toStringAsFixed(1);
+  return (100 * (values[1] - values[0]) / values[0]).toStringAsFixed(1);
 });
 
 var stepsDayBreakdownSelector =
