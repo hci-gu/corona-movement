@@ -5,15 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/pages/onboarding/data-source.dart';
 import 'package:wfhmovement/pages/onboarding/no-steps.dart';
+import 'package:wfhmovement/style.dart';
 
 class SelectDataSource extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Select data source',
-            style: TextStyle(fontWeight: FontWeight.w800)),
-      ),
+      appBar: AppWidgets.appBar(context, 'Select data source', false),
       body: _body(context),
     );
   }

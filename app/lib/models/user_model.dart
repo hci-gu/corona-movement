@@ -48,7 +48,12 @@ Action initAction = (get) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userId = prefs.getString('id');
   if (userId != null) {
-    api.UserResponse response = await api.getUser(userId);
+    api.UserResponse response;
+    if (userId == 'all') {
+      response = fakeUser(onboarding);
+    } else {
+      response = await api.getUser(userId);
+    }
     user.setUser(response);
     onboarding.skip();
   }
@@ -70,3 +75,23 @@ Action registerAction = (get) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('id', user.id);
 };
+
+Action proceedWithoutStepsAction = (get) async {
+  User user = get(userAtom);
+  OnboardingModel onboarding = get(onboardingAtom);
+
+  user.setUser(fakeUser(onboarding));
+  onboarding.skip();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('id', user.id);
+};
+
+api.UserResponse fakeUser(OnboardingModel onboarding) {
+  return api.UserResponse.fromJson({
+    '_id': 'all',
+    'compareDate': onboarding.date != null
+        ? onboarding.date.toIso8601String()
+        : '2020-03-18',
+  });
+}

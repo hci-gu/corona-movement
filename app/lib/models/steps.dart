@@ -179,7 +179,7 @@ Action getStepsComparisonAction = (get) async {
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
 
-  if (steps.comparison == null) {
+  if (steps.comparison == null && user.id != 'all') {
     api.HealthComparison data = await api.getComparison(user.id);
     steps.setComparison(data);
   }
