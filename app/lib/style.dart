@@ -21,7 +21,7 @@ class AppColors {
 }
 
 class AppWidgets {
-  static AppBar appBar(BuildContext context, [String title]) {
+  static AppBar appBar(BuildContext context, [String title, bool settings]) {
     return AppBar(
       centerTitle: true,
       title: Text(
@@ -32,20 +32,21 @@ class AppWidgets {
         ),
       ),
       actions: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Settings(),
-            ));
-          },
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: Icon(
-              Icons.settings,
-              color: AppColors.primaryText,
+        if (settings)
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => Settings(),
+              ));
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Icon(
+                Icons.settings,
+                color: AppColors.primaryText,
+              ),
             ),
-          ),
-        )
+          )
       ],
     );
   }

@@ -8,7 +8,7 @@ class DetailedSteps extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppWidgets.appBar(context, 'Detailed steps'),
+      appBar: AppWidgets.appBar(context, 'Detailed steps', true),
       body: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),
