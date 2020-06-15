@@ -10,10 +10,10 @@ const USERS_COLLECTION = 'users'
 const options =
   process.env.NODE_ENV === 'production'
     ? {
-      ssl: true,
-      sslValidate: false,
-      sslCA: caBundle,
-    }
+        ssl: true,
+        sslValidate: false,
+        sslCA: caBundle,
+      }
     : {}
 
 let cachedConnection
@@ -48,6 +48,18 @@ const createUser = async (collection, { compareDate, division }) => {
 
 const getUser = async (collection, id) =>
   collection.findOne({ _id: ObjectId(id) })
+
+const updateUser = async (collection, { id, update }) => {
+  const _update = Object.keys(update).reduce((obj, key) => {
+    if (key === 'compareDate' || key == 'initialDataDate') {
+      obj[key] = new Date(update[key])
+    } else {
+      obj[key] = update[key]
+    }
+    return obj
+  }, {})
+  return collection.updateOne({ _id: ObjectId(id) }, { $set: _update })
+}
 
 const getAllUsersExcept = async (collection, id) =>
   collection.find({ _id: { $ne: ObjectId(id) } }).toArray()
@@ -138,19 +150,26 @@ const getHoursForEveryone = async (collection, { from, to }) => {
     length: moment(to).diff(from, 'days'),
   }).map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
 
-  const usersHours = (await Promise.all(users.map(async user => getHours(collection, { id: user._id.toString(), from, to }).then(({ result }) => result)))).flat()
+  const usersHours = (
+    await Promise.all(
+      users.map(async (user) =>
+        getHours(collection, { id: user._id.toString(), from, to }).then(
+          ({ result }) => result
+        )
+      )
+    )
+  ).flat()
 
-  const result = dates.map(date =>
+  const result = dates.map((date) =>
     Array.from({
       length: 24,
     }).map((_, hour) => {
-      const pad = hour => hour < 10 ? `0${hour}` : `${hour}`
+      const pad = (hour) => (hour < 10 ? `0${hour}` : `${hour}`)
       const key = `${date} ${pad(hour)}`
-      const data = usersHours.filter(datum => datum.key === key)
+      const data = usersHours.filter((datum) => datum.key === key)
       return {
         _key: key,
-        value: data
-          .reduce((sum, d) => sum + d.value, 0) / (data.length || 1)
+        value: data.reduce((sum, d) => sum + d.value, 0) / (data.length || 1),
       }
     })
   )
@@ -279,17 +298,24 @@ const getAverageStepsForUser = async (collection, { id, from, to }) => {
 }
 
 const getSummary = async (collection, { id }) => {
-  const user = id !== 'all' && await run(getUser, id, USERS_COLLECTION)
-  const users = await run(getAllUsersExcept, id === 'all' ? null : id, USERS_COLLECTION)
+  const user = id !== 'all' && (await run(getUser, id, USERS_COLLECTION))
+  const users = await run(
+    getAllUsersExcept,
+    id === 'all' ? null : id,
+    USERS_COLLECTION
+  )
 
   if (!user && id !== 'all') {
     throw new Error('No such user')
   }
 
-  const userSummary = id === 'all' ? { before: 0, after: 0 } : await getSummaryForUser(collection, {
-    user,
-    from: '2020-01-01',
-  })
+  const userSummary =
+    id === 'all'
+      ? { before: 0, after: 0 }
+      : await getSummaryForUser(collection, {
+          user,
+          from: '2020-01-01',
+        })
   const othersSummary = await Promise.all(
     users.map((user) =>
       getSummaryForUser(collection, { user, from: '2020-01-01' })
@@ -382,5 +408,6 @@ module.exports = {
   getDailyAverages: (payload) => run(getDailyAverages, payload),
   createUser: (payload) => run(createUser, payload, USERS_COLLECTION),
   getUser: (payload) => run(getUser, payload, USERS_COLLECTION),
+  updateUser: (payload) => run(updateUser, payload, USERS_COLLECTION),
   getSummary: async (payload) => run(getSummary, payload),
 }
