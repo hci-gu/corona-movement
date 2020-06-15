@@ -8,7 +8,9 @@ import 'package:wfhmovement/style.dart';
 
 class DaysBarChart extends HookWidget {
   final double barWidth = 11.0;
-  final ScrollController scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController(
+    initialScrollOffset: 0,
+  );
   final List emptyDays = List.generate(
     200,
     (index) => {
@@ -31,8 +33,10 @@ class DaysBarChart extends HookWidget {
             days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
         int index = day != null ? days.indexOf(day) : 0;
 
-        scrollController.animateTo(index * barWidth - 50,
-            duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+        if (scrollController.hasClients) {
+          scrollController.animateTo(index * barWidth - 50,
+              duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+        }
       }
       return;
     }, [days]);
@@ -42,6 +46,7 @@ class DaysBarChart extends HookWidget {
       height: 300,
       child: Scrollbar(
         isAlwaysShown: true,
+        controller: scrollController,
         child: ListView(
           controller: scrollController,
           padding: EdgeInsets.all(10),
@@ -100,10 +105,16 @@ class DaysBarChart extends HookWidget {
               ),
               margin: 10,
               getTitles: (double value) {
-                DateTime date = DateTime.parse(days[value.toInt()]['date']);
-                if (date.weekday == 1) {
-                  return _labelforDate(date);
+                DateTime date;
+                try {
+                  date = DateTime.parse(days[value.toInt()]['date']);
+                  if (date.weekday == 1) {
+                    return _labelforDate(date);
+                  }
+                } catch (_) {
+                  return null;
                 }
+
                 return null;
               },
               rotateAngle: -10,

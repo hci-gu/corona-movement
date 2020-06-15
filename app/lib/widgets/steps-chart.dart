@@ -94,7 +94,7 @@ class StepsChart extends HookWidget {
 
   Widget _chartBody(BuildContext context, Widget child) {
     return Container(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
+      clipBehavior: Clip.antiAlias,
       width: MediaQuery.of(context).size.width,
       height: 250,
       decoration: BoxDecoration(
@@ -114,64 +114,59 @@ class StepsChart extends HookWidget {
 
     return _chartBody(
       context,
-      Expanded(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0),
-          child: LineChart(
-            LineChartData(
-              maxY: max + max / 5,
-              lineTouchData: LineTouchData(
-                enabled: true,
-                touchTooltipData: LineTouchTooltipData(
-                  tooltipBgColor: AppColors.primaryText,
-                  fitInsideVertically: true,
-                  fitInsideHorizontally: true,
-                  getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-                    double beforeVal =
-                        touchedBarSpots.firstWhere((o) => o.barIndex == 0).y;
-                    double afterVal =
-                        touchedBarSpots.firstWhere((o) => o.barIndex == 1).y;
-                    return [
-                      LineTooltipItem(
-                        '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n ${_percentDiffForValues(beforeVal, afterVal)}',
-                        TextStyle(
-                            color: AppColors.main, fontWeight: FontWeight.bold),
-                      ),
-                      null,
-                    ];
-                  },
-                ),
-              ),
-              gridData: FlGridData(
-                show: false,
-              ),
-              titlesData: FlTitlesData(
-                bottomTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 24,
-                  textStyle: TextStyle(
-                    color: Colors.grey[400],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+      LineChart(
+        LineChartData(
+          maxY: max + max / 5,
+          lineTouchData: LineTouchData(
+            enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+              tooltipBgColor: AppColors.primaryText,
+              fitInsideVertically: true,
+              fitInsideHorizontally: true,
+              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                double beforeVal =
+                    touchedBarSpots.firstWhere((o) => o.barIndex == 0).y;
+                double afterVal =
+                    touchedBarSpots.firstWhere((o) => o.barIndex == 1).y;
+                return [
+                  LineTooltipItem(
+                    '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n ${_percentDiffForValues(beforeVal, afterVal)}',
+                    TextStyle(
+                        color: AppColors.main, fontWeight: FontWeight.bold),
                   ),
-                  margin: 10,
-                  getTitles: (value) {
-                    if (value == 2) return '00:00';
-                    if (value == 12) return '12:00';
-                    if (value == 21) return '23:00';
-                    return null;
-                  },
-                ),
-                leftTitles: SideTitles(
-                  showTitles: false,
-                ),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              lineBarsData: _lineBarsData(data),
+                  null,
+                ];
+              },
             ),
           ),
+          gridData: FlGridData(
+            show: false,
+          ),
+          titlesData: FlTitlesData(
+            bottomTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 24,
+              textStyle: TextStyle(
+                color: Colors.grey[400],
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+              margin: 10,
+              getTitles: (value) {
+                if (value == 2) return '00:00';
+                if (value == 12) return '12:00';
+                if (value == 21) return '23:00';
+                return null;
+              },
+            ),
+            leftTitles: SideTitles(
+              showTitles: false,
+            ),
+          ),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          lineBarsData: _lineBarsData(data),
         ),
       ),
     );

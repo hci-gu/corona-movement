@@ -34,6 +34,16 @@ class Home extends HookWidget {
             AppWidgets.chartDescription(
               'This is your steps data. Below you can pick different views of this data.',
             ),
+            Text(
+              'I want to see',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primaryText,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
             _grid(),
           ],
         ),
@@ -47,6 +57,7 @@ class Home extends HookWidget {
       crossAxisCount: 2,
       shrinkWrap: true,
       crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
       physics: NeverScrollableScrollPhysics(),
       children: [
         _pageItem(
@@ -54,17 +65,7 @@ class Home extends HookWidget {
             child: Hero(
               tag: 'steps-chart',
               child: StepsChart(),
-              flightShuttleBuilder: (
-                BuildContext flightContext,
-                Animation<double> animation,
-                HeroFlightDirection flightDirection,
-                BuildContext fromHeroContext,
-                BuildContext toHeroContext,
-              ) {
-                return SingleChildScrollView(
-                  child: fromHeroContext.widget,
-                );
-              },
+              flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
             destination: DetailedSteps(),
           ),
@@ -78,6 +79,7 @@ class Home extends HookWidget {
               flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
             destination: CompareSteps(),
+            scale: 1.2,
           ),
           'Compare',
         ),
@@ -89,6 +91,7 @@ class Home extends HookWidget {
               flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
             destination: TodayBefore(),
+            scale: 1.5,
           ),
           'Today & Before',
         ),
@@ -97,20 +100,23 @@ class Home extends HookWidget {
   }
 
   Widget _pageItem(Widget widget, String title) {
-    return Column(
-      children: [
-        widget,
-        FittedBox(
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 24,
-              color: AppColors.secondary,
-              fontWeight: FontWeight.w700,
+    return Container(
+      padding: EdgeInsets.all(5),
+      child: Column(
+        children: [
+          widget,
+          FittedBox(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 24,
+                color: AppColors.secondary,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
