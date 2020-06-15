@@ -59,7 +59,6 @@ class PageWidget extends HookWidget {
 
   Widget _body() {
     return Container(
-      height: 130,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -71,7 +70,9 @@ class PageWidget extends HookWidget {
           maxHeight: constraints.maxHeight * multiplier,
           child: Transform.scale(
             scale: (1 / multiplier / 1.1) * scale,
-            child: child,
+            child: AbsorbPointer(
+              child: child,
+            ),
           ),
         );
       }),

@@ -100,22 +100,32 @@ class Home extends HookWidget {
   }
 
   Widget _pageItem(Widget widget, String title) {
-    return Container(
-      padding: EdgeInsets.all(5),
-      child: Column(
-        children: [
-          widget,
-          FittedBox(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 24,
-                color: AppColors.secondary,
-                fontWeight: FontWeight.w700,
-              ),
+    return Card(
+      elevation: 1.5,
+      child: InkWell(
+        onTap: () {},
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: InkWell(
+            child: Column(
+              children: [
+                Flexible(
+                  child: widget,
+                ),
+                FittedBox(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: AppColors.secondary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
