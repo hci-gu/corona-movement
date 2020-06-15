@@ -15,7 +15,7 @@ class DaysBarChart extends HookWidget {
     200,
     (index) => {
       'value': 0.1,
-      'date': DateTime.parse('2020-01-01')
+      'date': DateTime.parse(StepsModel.fromDate)
           .add(Duration(days: index))
           .toIso8601String()
           .substring(0, 10)

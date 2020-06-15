@@ -3,6 +3,7 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/widgets/button.dart';
 
@@ -59,7 +60,7 @@ class Introduction extends HookWidget {
     var date = await showDatePicker(
       context: context,
       initialDate: DateTime.parse('2020-03-18'),
-      firstDate: DateTime.parse('2020-01-01'),
+      firstDate: DateTime.parse(StepsModel.fromDate),
       lastDate: DateTime.now(),
     );
     if (date != null) {

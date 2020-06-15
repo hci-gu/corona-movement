@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
+import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/user_model.dart';
@@ -52,8 +53,8 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setFetching() {
-    fetching = true;
+  setFetching(bool done) {
+    fetching = done;
     notifyListeners();
   }
 
@@ -75,6 +76,9 @@ var onboardingAtom = Atom('onboarding', OnboardingModel());
 
 Action getHealthAuthorizationAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
+  if (onboarding.dataSource == 'Garmin') {
+    return garminAuthorizationAction(get);
+  }
   try {
     bool _isAuthorized = await Health.requestAuthorization();
     onboarding.setAuthorized(_isAuthorized);
@@ -101,7 +105,10 @@ Future<List<HealthDataPoint>> getSteps(
 Action getAvailableStepsAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   DateTime now = DateTime.now();
-  onboarding.setFetching();
+  onboarding.setFetching(true);
+  if (onboarding.dataSource == 'Garmin') {
+    return garminGetAvailableData(get);
+  }
   try {
     List<HealthDataPoint> steps = await getSteps(
       now.subtract(Duration(days: 30)),
@@ -127,6 +134,10 @@ Future syncHealthData(OnboardingModel onboarding, String userId) async {
 Action uploadStepsAction = (get) async {
   User user = get(userAtom);
   OnboardingModel onboarding = get(onboardingAtom);
+
+  if (onboarding.dataSource == 'Garmin') {
+    return garminGetAndUploadSteps(get);
+  }
 
   try {
     List<dynamic> stepsChunks = [];

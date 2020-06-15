@@ -4,7 +4,7 @@ import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 
 class StepsModel extends ValueNotifier {
-  DateTime from = DateTime.parse('2020-01-01');
+  DateTime from = DateTime.parse(StepsModel.fromDate);
   DateTime to;
   List<api.HealthData> data = [];
   api.HealthComparison comparison;
@@ -22,6 +22,8 @@ class StepsModel extends ValueNotifier {
     comparison = newComparison;
     notifyListeners();
   }
+
+  static String fromDate = '2020-01-01';
 }
 
 var stepsAtom = Atom('steps', StepsModel());
