@@ -9,6 +9,7 @@ class StepsModel extends ValueNotifier {
   List<api.HealthData> data = [];
   api.HealthComparison comparison;
   bool fetching = true;
+  List<int> days = [1, 2, 3, 4, 5, 6, 7];
 
   StepsModel() : super(null);
 
@@ -23,7 +24,25 @@ class StepsModel extends ValueNotifier {
     notifyListeners();
   }
 
+  updateDays(int day, bool add) {
+    if (add)
+      days.add(day);
+    else
+      days.remove(day);
+    days.sort();
+    notifyListeners();
+  }
+
   static String fromDate = '2020-01-01';
+  static List<Map<String, dynamic>> weekdays = [
+    {'display': 'Monday', 'value': 1},
+    {'display': 'Tuesday', 'value': 2},
+    {'display': 'Wednesday', 'value': 3},
+    {'display': 'Thursday', 'value': 4},
+    {'display': 'Friday', 'value': 5},
+    {'display': 'Saturday', 'value': 6},
+    {'display': 'Sunday', 'value': 7}
+  ];
 }
 
 var stepsAtom = Atom('steps', StepsModel());
@@ -57,8 +76,7 @@ List putDataInBuckets(List<Map<String, dynamic>> data) {
 }
 
 typedef Filter = bool Function(dynamic o);
-const weekdays = [0, 1, 2, 3, 4, 5, 6, 7];
-List filterDataIntoBuckets(List data, Filter filter) {
+List filterDataIntoBuckets(List data, Filter filter, List<int> weekdays) {
   List dataInFilter = data
       .where(filter)
       .toList()
@@ -88,16 +106,29 @@ var stepsBeforeAndAfterSelector =
       steps.data,
       (o) =>
           (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0),
+      steps.days,
     ),
     filterDataIntoBuckets(
       steps.data,
       (o) => (o.date.compareTo(compareDate) >= 0),
+      steps.days,
     ),
   ];
 });
 
-int getDaysBetween(String from, String to) {
-  return DateTime.parse(to).difference(DateTime.parse(from)).inDays;
+int getDaysBetween(String from, String to, List<int> daysToInclude) {
+  var days = 0;
+  List dayDiff = List.generate(
+      DateTime.parse(to).difference(DateTime.parse(from)).inDays,
+      (index) => index);
+  dayDiff.forEach((value) {
+    var date = DateTime.parse(from).add(Duration(days: value));
+    if (daysToInclude.contains(date.weekday)) {
+      days++;
+    }
+  });
+
+  return days;
 }
 
 var totalStepsBeforeAndAfterSelector =
@@ -107,18 +138,20 @@ var totalStepsBeforeAndAfterSelector =
 
   var start = dates[0];
   var compareDate = dates[1];
-  var beforeDays = getDaysBetween(start, compareDate);
-  var afterDays = getDaysBetween(
-          compareDate, DateTime.now().toIso8601String().substring(0, 10)) +
+  var beforeDays = getDaysBetween(start, compareDate, steps.days);
+  var afterDays = getDaysBetween(compareDate,
+          DateTime.now().toIso8601String().substring(0, 10), steps.days) +
       1;
 
   var before = steps.data
       .where((o) =>
           (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0))
+      .where((o) => steps.days.contains(o.weekday))
       .fold(0, (sum, o) => sum + o.value)
       .toInt();
   var after = steps.data
       .where((o) => (o.date.compareTo(compareDate) >= 0))
+      .where((o) => steps.days.contains(o.weekday))
       .fold(0, (sum, o) => sum + o.value)
       .toInt();
 
