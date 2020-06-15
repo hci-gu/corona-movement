@@ -57,10 +57,21 @@ class AppWidgets {
     BuildContext fromHeroContext,
     BuildContext toHeroContext,
   ) {
-    return DefaultTextStyle(
-      style: DefaultTextStyle.of(toHeroContext).style,
-      child: SingleChildScrollView(
-        child: fromHeroContext.widget,
+    return ScaleTransition(
+      scale: Tween<double>(
+        begin: flightDirection == HeroFlightDirection.pop ? 0.5 : 1,
+        end: 1,
+      )
+          .chain(Tween<double>(
+            begin: 1,
+            end: 1,
+          ))
+          .animate(animation),
+      child: Material(
+        color: Colors.transparent,
+        child: SingleChildScrollView(
+          child: fromHeroContext.widget,
+        ),
       ),
     );
   }

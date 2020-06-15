@@ -5,12 +5,14 @@ class PageWidget extends HookWidget {
   final Widget child;
   final Widget destination;
   final bool greyscale;
+  final double scale;
 
   PageWidget({
     Key key,
     @required this.child,
     @required this.destination,
-    this.greyscale = true,
+    this.greyscale = false,
+    this.scale = 1,
   }) : super(key: key);
 
   @override
@@ -68,7 +70,7 @@ class PageWidget extends HookWidget {
           maxWidth: constraints.maxWidth * multiplier,
           maxHeight: constraints.maxHeight * multiplier,
           child: Transform.scale(
-            scale: 1 / multiplier / 1.1,
+            scale: (1 / multiplier / 1.1) * scale,
             child: child,
           ),
         );
