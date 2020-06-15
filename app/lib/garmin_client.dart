@@ -111,7 +111,7 @@ class GarminClient {
               'date_from': step.startGMT.millisecondsSinceEpoch,
               'date_to': step.endGMT.millisecondsSinceEpoch,
               'data_type': 'STEPS',
-              'platform': 'Garmin',
+              'platform_type': 'Garmin',
             }))
         .toList();
   }

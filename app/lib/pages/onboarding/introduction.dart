@@ -64,7 +64,7 @@ class Introduction extends HookWidget {
       lastDate: DateTime.now(),
     );
     if (date != null) {
-      onboarding.setDate(date);
+      onboarding.setDate(DateTime(date.year, date.month, date.day));
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SelectDataSource(),
