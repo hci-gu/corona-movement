@@ -34,8 +34,8 @@ class DataSource extends HookWidget {
 
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
         child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
           children: <Widget>[
             Container(
               margin: EdgeInsets.all(25),
@@ -62,7 +62,8 @@ class DataSource extends HookWidget {
       OnboardingModel onboarding, Function getHealthAuthorization) {
     return Column(
       children: [
-        Text('To proceed you need to provide access'),
+        Text(
+            'To proceeed you must grant access for us to collect data from ${onboarding.dataSource}.'),
         SizedBox(height: 25),
         if (onboarding.dataSource == 'Garmin') GarminLogin(),
         StyledButton(
@@ -84,6 +85,11 @@ class DataSource extends HookWidget {
           ),
         ),
         SizedBox(height: 20),
+        Text(
+          'This is part of a design reserach project on how we can design for living in a pandemic, during a pandemic. For this, we want to collect some data.\n\nThe data we collect through this app is the step data, associated with a device id, as well as interaction logs. The research is exploratory, but we currently have two primary research questions. 1) have and if so how have people’s movement patterns been affected by the ongoing pandemic. and 2) how can we design for wellbeing during the pandemic.\n\nIf you agree to us gathering your data, please tick the checkbox below and get started.',
+          style: TextStyle(fontSize: 12),
+        ),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -94,10 +100,9 @@ class DataSource extends HookWidget {
               },
             ),
             Container(
-              width: 200,
               child: Text(
-                'I want to participate in a study with my data',
-                maxLines: 3,
+                'I agree to share my data with you.',
+                maxLines: 2,
               ),
             )
           ],
