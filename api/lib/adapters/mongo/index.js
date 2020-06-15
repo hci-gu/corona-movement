@@ -132,7 +132,41 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
   }
 }
 
+const getHoursForEveryone = async (collection, { from, to }) => {
+  const users = await run(getAllUsersExcept, null, USERS_COLLECTION)
+  const dates = Array.from({
+    length: moment(to).diff(from, 'days'),
+  }).map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
+
+  const usersHours = (await Promise.all(users.map(async user => getHours(collection, { id: user._id.toString(), from, to }).then(({ result }) => result)))).flat()
+
+  const result = dates.map(date =>
+    Array.from({
+      length: 24,
+    }).map((_, hour) => {
+      const pad = hour => hour < 10 ? `0${hour}` : `${hour}`
+      const key = `${date} ${pad(hour)}`
+      const data = usersHours.filter(datum => datum.key === key)
+      return {
+        _key: key,
+        value: data
+          .reduce((sum, d) => sum + d.value, 0) / (data.length || 1)
+      }
+    })
+  )
+
+  return {
+    result,
+    from,
+    to,
+  }
+}
+
 const getHours = async (collection, { id, from, to }) => {
+  if (id === 'all') {
+    return getHoursForEveryone(collection, { from, to })
+  }
+
   const daysDiff = moment(to).diff(moment(from), 'days')
   const weekdayDiff = getBusinessDaysBetween(from, to)
   const weekendDiff = daysDiff - weekdayDiff
