@@ -53,7 +53,8 @@ Action garminAuthorizationAction = (get) async {
 Action garminGetAvailableData = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   GarminModel model = get(garminAtom);
-  List<HealthDataPoint> steps = await model.client.fetchSteps('2020-01-01');
+  List<HealthDataPoint> steps =
+      await model.client.fetchSteps(StepsModel.fromDate);
 
   onboarding.setAvailableData(steps);
 };
@@ -76,7 +77,8 @@ Action garminGetAndUploadSteps = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   GarminModel model = get(garminAtom);
 
-  int days = DateTime.now().difference(StepsModel.fromDate).inDays;
+  int days =
+      DateTime.now().difference(DateTime.parse(StepsModel.fromDate)).inDays;
 
   List dates = List.generate(days, (index) {
     DateTime date = DateTime.now().subtract(Duration(days: index));
