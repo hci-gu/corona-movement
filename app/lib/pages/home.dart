@@ -25,7 +25,7 @@ class Home extends HookWidget {
     }, []);
 
     return Scaffold(
-      appBar: AppWidgets.appBar(context),
+      appBar: AppWidgets.appBar(context, null, true),
       body: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),

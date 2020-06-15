@@ -11,16 +11,7 @@ class Settings extends HookWidget {
     User user = useModel(userAtom);
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Settings',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            color: AppColors.primaryText,
-          ),
-        ),
-      ),
+      appBar: AppWidgets.appBar(context, 'Settings', false),
       body: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),

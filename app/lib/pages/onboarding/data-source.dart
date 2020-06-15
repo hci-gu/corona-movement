@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 
 class DataSource extends HookWidget {
@@ -21,14 +22,7 @@ class DataSource extends HookWidget {
     }, [onboarding.authorized]);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          onboarding.dataSource,
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
+      appBar: AppWidgets.appBar(context, onboarding.dataSource, false),
       body: _body(context, onboarding),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:wfhmovement/models/onboarding_model.dart';
+import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wfhmovement/style.dart';
+import 'package:wfhmovement/widgets/button.dart';
 
 class NoSteps extends HookWidget {
   @override
@@ -10,19 +13,14 @@ class NoSteps extends HookWidget {
     OnboardingModel onboarding = useModel(onboardingAtom);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'No steps',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
+      appBar: AppWidgets.appBar(context, 'No steps', false),
       body: _body(context, onboarding),
     );
   }
 
   Widget _body(BuildContext context, OnboardingModel onboarding) {
+    var proceedWithoutSteps = useAction(proceedWithoutStepsAction);
+
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
@@ -35,6 +33,17 @@ class NoSteps extends HookWidget {
                 height: 150,
               ),
             ),
+            AppWidgets.chartDescription(
+              'If you don\'t have any steps saved you can still proceed without uploading to just explore others results.',
+            ),
+            StyledButton(
+              title: 'Proceed',
+              onPressed: () {
+                proceedWithoutSteps();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            )
           ],
         ),
       ),
