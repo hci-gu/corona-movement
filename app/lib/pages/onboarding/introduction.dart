@@ -24,7 +24,7 @@ class Introduction extends HookWidget {
               textAlign: TextAlign.center,
             ),
             Text(
-              'Find out how your movement patterns have changed.',
+              'Have your movement patterns changed?',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
               textAlign: TextAlign.center,
             ),
@@ -39,7 +39,7 @@ class Introduction extends HookWidget {
               height: 50,
             ),
             Text(
-              'Interested? Start by picking the day you started working from home',
+              'Interested? Pick the day you started working from home, or other ways got your life turned up side down.',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
             ),
             SizedBox(
