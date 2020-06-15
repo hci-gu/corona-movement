@@ -153,7 +153,7 @@ const getHoursForEveryone = async (collection, { from, to }) => {
           .reduce((sum, d) => sum + d.value, 0) / (data.length || 1)
       }
     })
-  )
+  ).flat()
 
   return {
     result,
