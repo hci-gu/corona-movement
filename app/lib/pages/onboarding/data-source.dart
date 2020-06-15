@@ -1,4 +1,3 @@
-import 'package:health/health.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
+import 'package:wfhmovement/widgets/garmin-login.dart';
 
 class DataSource extends HookWidget {
   @override
@@ -35,7 +35,7 @@ class DataSource extends HookWidget {
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             Container(
               margin: EdgeInsets.all(25),
@@ -44,7 +44,8 @@ class DataSource extends HookWidget {
                 height: 150,
               ),
             ),
-            if (!onboarding.authorized) _getAccess(getHealthAuthorization),
+            if (!onboarding.authorized && !onboarding.fetching)
+              _getAccess(onboarding, getHealthAuthorization),
             if (onboarding.availableData.length > 0)
               _hasData(context, onboarding, register, consent),
             if (onboarding.fetching)
@@ -57,11 +58,13 @@ class DataSource extends HookWidget {
     );
   }
 
-  Widget _getAccess(Function getHealthAuthorization) {
+  Widget _getAccess(
+      OnboardingModel onboarding, Function getHealthAuthorization) {
     return Column(
       children: [
         Text('To proceed you need to provide access'),
         SizedBox(height: 25),
+        if (onboarding.dataSource == 'Garmin') GarminLogin(),
         StyledButton(
           icon: Icon(Icons.check),
           title: 'Give access',

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/models/steps.dart';
 
 class User extends ValueNotifier {
   bool inited = false;
@@ -31,11 +32,7 @@ var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
   User user = get(userAtom);
 
   return [
-    // user.compareDate
-    //     .subtract(Duration(days: 90))
-    //     .toIso8601String()
-    //     .substring(0, 10),
-    '2020-01-01',
+    StepsModel.fromDate,
     user.compareDate.toIso8601String().substring(0, 10),
     DateTime.now().toIso8601String().substring(0, 10),
   ];
