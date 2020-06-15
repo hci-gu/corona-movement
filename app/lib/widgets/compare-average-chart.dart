@@ -134,7 +134,7 @@ class CompareAverageChart extends HookWidget {
   }
 
   double _diffForSummary(HealthSummary summary) {
-    return 100 - (summary.before / summary.after) * 100;
+    return ((summary.after - summary.before) / summary.before) * 100;
   }
 
   BorderRadius _radiusForValue(double value) {

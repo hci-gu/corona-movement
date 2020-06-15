@@ -10,10 +10,10 @@ const USERS_COLLECTION = 'users'
 const options =
   process.env.NODE_ENV === 'production'
     ? {
-        ssl: true,
-        sslValidate: false,
-        sslCA: caBundle,
-      }
+      ssl: true,
+      sslValidate: false,
+      sslCA: caBundle,
+    }
     : {}
 
 let cachedConnection
@@ -67,7 +67,7 @@ const getQuery = ({ id, from, to, weekDays }) => {
   const query = {
     date: {
       $gte: new Date(from),
-      $lte: new Date(to),
+      $lt: new Date(to),
     },
     duration: { $lte: 360000000 },
   }
@@ -88,6 +88,9 @@ const getAverageHour = async (collection, { id, from, to, weekDays }) => {
 
   const result = (
     await collection
+      .query({
+        duration: { $lte: 360000000 },
+      })
       .aggregate([
         {
           $match: getQuery({ id, from, to, weekDays }),

@@ -31,10 +31,11 @@ var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
   User user = get(userAtom);
 
   return [
-    user.compareDate
-        .subtract(Duration(days: 90))
-        .toIso8601String()
-        .substring(0, 10),
+    // user.compareDate
+    //     .subtract(Duration(days: 90))
+    //     .toIso8601String()
+    //     .substring(0, 10),
+    '2020-01-01',
     user.compareDate.toIso8601String().substring(0, 10),
     DateTime.now().toIso8601String().substring(0, 10),
   ];
