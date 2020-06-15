@@ -8,7 +8,7 @@ class TodayBefore extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppWidgets.appBar(context, 'Today & Before'),
+      appBar: AppWidgets.appBar(context, 'Today & Before', false),
       body: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),
