@@ -17,10 +17,11 @@ class StepsChart extends HookWidget {
 
     if (chart.fetching) {
       return _chartBody(
-          context,
-          Center(
-            child: CircularProgressIndicator(),
-          ));
+        context,
+        Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     return Center(
