@@ -160,19 +160,21 @@ const getHoursForEveryone = async (collection, { from, to }) => {
     )
   ).flat()
 
-  const result = dates.map((date) =>
-    Array.from({
-      length: 24,
-    }).map((_, hour) => {
-      const pad = (hour) => (hour < 10 ? `0${hour}` : `${hour}`)
-      const key = `${date} ${pad(hour)}`
-      const data = usersHours.filter((datum) => datum.key === key)
-      return {
-        _key: key,
-        value: data.reduce((sum, d) => sum + d.value, 0) / (data.length || 1),
-      }
-    })
-  ).flat()
+  const result = dates
+    .map((date) =>
+      Array.from({
+        length: 24,
+      }).map((_, hour) => {
+        const pad = (hour) => (hour < 10 ? `0${hour}` : `${hour}`)
+        const key = `${date} ${pad(hour)}`
+        const data = usersHours.filter((datum) => datum.key === key)
+        return {
+          key: key,
+          value: data.reduce((sum, d) => sum + d.value, 0) / (data.length || 1),
+        }
+      })
+    )
+    .flat()
 
   return {
     result,
