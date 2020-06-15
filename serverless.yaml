@@ -24,6 +24,9 @@ apiGateway:
       - path: /user/{id}
         method: GET
         function: ${api.arn}
+      - path: /user/{id}
+        method: PATCH
+        function: ${api.arn}
       - path: /health-data
         method: POST
         function: ${api.arn}

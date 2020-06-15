@@ -123,8 +123,8 @@ Future<UserResponse> register(
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode({
-      'compareDate': compareDate.toIso8601String(),
-      'initialDataDate': initialDataDate.toIso8601String(),
+      'compareDate': compareDate.toIso8601String().substring(0, 10),
+      'initialDataDate': initialDataDate.toIso8601String().substring(0, 10),
       'division': division,
     }),
   );
@@ -142,6 +142,19 @@ Future<UserResponse> getUser(String userId) async {
   );
 
   return UserResponse.fromJson(json.decode(response.body));
+}
+
+Future updateUserCompareDate(String userId, DateTime compareDate) async {
+  var url = '$API_URL/user/$userId';
+  await http.patch(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'compareDate': compareDate.toIso8601String().substring(0, 10),
+    }),
+  );
 }
 
 Future<List<HealthData>> getSteps(

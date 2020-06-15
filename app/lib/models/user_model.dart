@@ -10,6 +10,7 @@ class User extends ValueNotifier {
   String id;
   DateTime compareDate;
   String division;
+  bool updating = false;
 
   User() : super(null);
 
@@ -17,6 +18,16 @@ class User extends ValueNotifier {
     id = response.id;
     compareDate = response.compareDate;
     division = response.division;
+    notifyListeners();
+  }
+
+  setCompareDate(DateTime date) {
+    compareDate = date;
+    notifyListeners();
+  }
+
+  setUpdating(bool done) {
+    updating = done;
     notifyListeners();
   }
 
@@ -92,3 +103,12 @@ api.UserResponse fakeUser(OnboardingModel onboarding) {
         : '2020-03-18',
   });
 }
+
+Action updateUserCompareDateAction = (get) async {
+  User user = get(userAtom);
+  user.setUpdating(true);
+
+  await api.updateUserCompareDate(user.id, user.compareDate);
+
+  user.setUpdating(false);
+};
