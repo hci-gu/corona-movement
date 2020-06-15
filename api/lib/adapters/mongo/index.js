@@ -279,14 +279,14 @@ const getAverageStepsForUser = async (collection, { id, from, to }) => {
 }
 
 const getSummary = async (collection, { id }) => {
-  const user = await run(getUser, id, USERS_COLLECTION)
-  const users = await run(getAllUsersExcept, id, USERS_COLLECTION)
+  const user = id !== 'all' && await run(getUser, id, USERS_COLLECTION)
+  const users = await run(getAllUsersExcept, id === 'all' ? null : id, USERS_COLLECTION)
 
-  if (!user) {
+  if (!user && id !== 'all') {
     throw new Error('No such user')
   }
 
-  const userSummary = await getSummaryForUser(collection, {
+  const userSummary = id === 'all' ? { before: 0, after: 0 } : await getSummaryForUser(collection, {
     user,
     from: '2020-01-01',
   })
