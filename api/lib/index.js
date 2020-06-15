@@ -36,6 +36,12 @@ app.get('/user/:id', async (req, res) => {
   const user = await db.getUser(id)
   res.send(user)
 })
+app.patch('/user/:id', async (req, res) => {
+  const { id } = req.params
+  console.log('PATCH /user/', id, req.body)
+  const user = await db.updateUser({ id, update: req.body })
+  res.send(user)
+})
 app.post('/health-data', async (req, res) => {
   await db.save(req.body)
 
