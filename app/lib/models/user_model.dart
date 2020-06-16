@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -11,6 +12,8 @@ class User extends ValueNotifier {
   DateTime compareDate;
   String division;
   bool updating = false;
+  bool syncing = false;
+  DateTime lastSync;
 
   User() : super(null);
 
@@ -28,6 +31,14 @@ class User extends ValueNotifier {
 
   setUpdating(bool done) {
     updating = done;
+    notifyListeners();
+  }
+
+  setSyncing(bool done) {
+    syncing = done;
+    if (done) {
+      lastSync = DateTime.now();
+    }
     notifyListeners();
   }
 
@@ -54,7 +65,8 @@ Action initAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String userId = prefs.getString('id');
+  // String userId = prefs.getString('id');
+  String userId = '5ee86f904553a80008cc0d89';
   if (userId != null) {
     api.UserResponse response;
     if (userId == 'all') {
@@ -111,4 +123,41 @@ Action updateUserCompareDateAction = (get) async {
   await api.updateUserCompareDate(user.id, user.compareDate);
 
   user.setUpdating(false);
+};
+
+Future uploadChunks(String userId, List chunks) async {
+  await api.postData(userId, chunks[0]);
+
+  chunks.removeAt(0);
+
+  if (chunks.length > 0) {
+    return uploadChunks(userId, chunks);
+  }
+}
+
+Action syncStepsAction = (get) async {
+  var user = get(userAtom);
+  user.setSyncing(true);
+  try {
+    DateTime from = await api.getLatestUpload(user.id);
+    DateTime to = DateTime.now();
+
+    List<HealthDataPoint> steps = await Health.getHealthDataFromType(
+      from,
+      to,
+      HealthDataType.STEPS,
+    );
+    List dataChunks = [];
+    while (steps.length > 0) {
+      dataChunks.add(steps.take(500).toList());
+      steps.removeRange(
+        0,
+        steps.length > 500 ? 500 : steps.length,
+      );
+    }
+    await uploadChunks(user.id, dataChunks);
+    user.setSyncing(false);
+  } catch (e) {
+    user.setSyncing(false);
+  }
 };

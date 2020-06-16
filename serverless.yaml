@@ -36,6 +36,9 @@ apiGateway:
       - path: /{id}/summary
         method: GET
         function: ${api.arn}
+      - path: /{id}/last-upload
+        method: GET
+        function: ${api.arn}
 web:
   component: '@serverless/website'
   inputs:

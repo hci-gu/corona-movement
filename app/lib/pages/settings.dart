@@ -11,6 +11,7 @@ class Settings extends HookWidget {
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
+    var syncSteps = useAction(syncStepsAction);
 
     return Scaffold(
       appBar: AppWidgets.appBar(context, 'Settings', false),
@@ -37,6 +38,19 @@ class Settings extends HookWidget {
                               _onPressed(context, user, updateUserCompareDate),
                         ),
                 ),
+                SizedBox(height: 40),
+                if (user.id != 'all')
+                  Center(
+                    child: user.syncing
+                        ? CircularProgressIndicator()
+                        : StyledButton(
+                            icon: Icon(Icons.sync),
+                            title: 'Sync steps',
+                            onPressed: () {
+                              syncSteps();
+                            },
+                          ),
+                  )
               ],
             ),
           ),

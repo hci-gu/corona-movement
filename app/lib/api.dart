@@ -189,6 +189,21 @@ Future<HealthComparison> getComparison(String userId) async {
   return comparison;
 }
 
+Future<DateTime> getLatestUpload(String userId) async {
+  var url = '$API_URL/$userId/last-upload';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  Map<String, dynamic> data = json.decode(response.body);
+
+  DateTime date = DateTime.parse(data['date']);
+
+  return date;
+}
+
 Future<bool> ping() async {
   print('pingpong');
   const url = '$API_URL/ping';

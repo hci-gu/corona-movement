@@ -402,6 +402,9 @@ const calculateDailyAverages = (users, dates) =>
     ),
   }))
 
+const getLastUpload = async (collection, { id }) =>
+  collection.findOne({ id }, { sort: { date: -1 } })
+
 module.exports = {
   createIndex,
   save: (payload) => run(insert, payload),
@@ -412,4 +415,5 @@ module.exports = {
   getUser: (payload) => run(getUser, payload, USERS_COLLECTION),
   updateUser: (payload) => run(updateUser, payload, USERS_COLLECTION),
   getSummary: async (payload) => run(getSummary, payload),
+  getLastUpload: async (payload) => run(getLastUpload, payload),
 }
