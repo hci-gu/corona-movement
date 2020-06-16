@@ -15,6 +15,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
 `
 
 const Title = styled.div`
@@ -41,7 +45,7 @@ const AppstoreBadges = styled.div`
   align-items: center;
   justify-content: center;
 
-  > img {
+  > a > img {
     width: 200px;
   }
 `
@@ -57,26 +61,43 @@ const GULogo = styled.div`
   }
 `
 
+const ScreenShots = styled.div`
+  width: 350px;
+  height: 700px;
+  position: relative;
+  > img {
+    position: absolute;
+    width: 100%;
+  }
+`
+
 const Landing = () => {
   return (
     <Container>
       <Wrapper>
         <Title>
-          <h1>My Corona movement</h1>
-          <p>
-            Löksås ipsum regn dag sitt enligt jäst vad vidsträckt, på kan räv
-            rännil tre ser sitt, om helt blev samtidigt att sällan tiden. Mot
-            både vemod sjö vidsträckt gamla bland är, sax färdväg blev
-            ordningens händer det hav dag, söka ta björnbär sjö åker brunsås.
-            Händer göras dag har göras mjuka och räv därmed tiden rännil, mot
-            samtidigt brunsås genom det för inom bra omfångsrik denna se, del
-            samtidigt som sorgliga det miljoner strand sax av.
-          </p>
+          <ScreenShots>
+            <img src="/img/screenshot_intro.png"></img>
+            <img
+              src="/img/screenshot.png"
+              style={{ width: '70%', left: '60%', top: 220 }}
+            ></img>
+          </ScreenShots>
         </Title>
         <AppstoreBadges>
-          <h2>Snart kommer en app!</h2>
-          <img src="/img/google-play-badge.png"></img>
-          <img src="/img/appstore-badge.png" style={{ marginTop: 10 }}></img>
+          <h2>Get the app!</h2>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdtU_cBdpUAdaLMvpHU5KeRU4fbNFgK1OigiJTZVt-OdwJCLw/viewform"
+            target="_blank"
+          >
+            <img src="/img/google-play-badge.png"></img>
+          </a>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdtU_cBdpUAdaLMvpHU5KeRU4fbNFgK1OigiJTZVt-OdwJCLw/viewform"
+            target="_blank"
+          >
+            <img src="/img/appstore-badge.png" style={{ marginTop: 10 }}></img>
+          </a>
         </AppstoreBadges>
       </Wrapper>
       <GULogo>
