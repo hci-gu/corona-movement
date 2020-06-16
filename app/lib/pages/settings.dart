@@ -14,29 +14,37 @@ class Settings extends HookWidget {
 
     return Scaffold(
       appBar: AppWidgets.appBar(context, 'Settings', false),
-      body: Container(
-        child: ListView(
-          padding: EdgeInsets.all(25),
-          children: [
-            Text(
-              'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.all(25),
+              children: [
+                Text(
+                  'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: user.updating
+                      ? CircularProgressIndicator()
+                      : StyledButton(
+                          icon: Icon(Icons.date_range),
+                          title: 'Change date',
+                          onPressed: () =>
+                              _onPressed(context, user, updateUserCompareDate),
+                        ),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Center(
-              child: user.updating
-                  ? CircularProgressIndicator()
-                  : StyledButton(
-                      icon: Icon(Icons.date_range),
-                      title: 'Change date',
-                      onPressed: () =>
-                          _onPressed(context, user, updateUserCompareDate),
-                    ),
-            ),
-          ],
-        ),
+          ),
+          Container(
+            padding: EdgeInsets.all(25),
+            child: Text('User: ${user.id}'),
+          ),
+        ],
       ),
     );
   }

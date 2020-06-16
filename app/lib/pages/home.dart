@@ -53,7 +53,7 @@ class Home extends HookWidget {
 
   Widget _grid() {
     return GridView.count(
-      padding: EdgeInsets.symmetric(horizontal: 12),
+      padding: EdgeInsets.only(left: 12, right: 12, bottom: 25),
       crossAxisCount: 2,
       shrinkWrap: true,
       crossAxisSpacing: 12,
@@ -81,17 +81,22 @@ class Home extends HookWidget {
             destination: CompareSteps(),
             scale: 1.2,
           ),
-          'Compare',
+          'Me vs others',
         ),
         _pageItem(
           PageWidget(
             child: Hero(
               tag: 'today-before',
-              child: StepsDifference(),
+              child: TodayBeforeText(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 50,
+                  vertical: 75,
+                ),
+              ),
               flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
             destination: TodayBefore(),
-            scale: 1.5,
+            scale: 1.25,
           ),
           'Today & Before',
         ),

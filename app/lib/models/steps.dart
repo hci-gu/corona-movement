@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -233,3 +234,31 @@ Action getStepsAction = (get) async {
     steps.setData(data);
   }
 };
+
+var stepsTodaySelector = Selector('steps-today', (GetStateValue get) {
+  StepsModel steps = get(stepsAtom);
+  var todaysDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  return steps.data
+      .where((o) => o.date.compareTo(todaysDate) == 0)
+      .fold(0, (sum, o) => sum + o.value)
+      .toInt();
+});
+
+var typicalStepsSelector = Selector('steps-today', (GetStateValue get) {
+  StepsModel steps = get(stepsAtom);
+  var todaysDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  var hour = DateTime.now().hour;
+  var day = DateFormat('EEEE').format(DateTime.now());
+  var similarDaySteps = steps.data.where((o) =>
+      // not today
+      // weekday this weekday
+      // hour <= this hour
+      o.date.compareTo(todaysDate) != 0 &&
+      DateFormat('EEEE').format(DateTime.parse(o.date)).compareTo(day) == 0 &&
+      o.hours <= hour);
+  var uniqueDays = similarDaySteps.map((o) => o.date).toSet().length;
+  if (uniqueDays == 0) return 0;
+  return (similarDaySteps.fold(0.0, (sum, o) => sum + o.value).toInt() /
+          uniqueDays)
+      .toInt();
+});
