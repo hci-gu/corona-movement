@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/style.dart';
@@ -50,7 +51,7 @@ class TodayBeforeText extends HookWidget {
                 ),
                 TextSpan(
                   text:
-                      ' steps so far. On a typical monday, before the corona outbreak, you had normally taken ',
+                      ' steps so far. On a typical ${DateFormat('EEEE').format(DateTime.now())}, before the corona outbreak, you had normally taken ',
                 ),
                 TextSpan(
                   text: typicalSteps.toString(),

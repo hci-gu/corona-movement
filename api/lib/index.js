@@ -91,6 +91,14 @@ app.get('/:id/summary', async (req, res) => {
 
   res.send(data)
 })
+app.get('/:id/last-upload', async (req, res) => {
+  const { id } = req.params
+  console.log('GET last-upload', id)
+
+  const data = await db.getLastUpload({ id })
+
+  res.send(data)
+})
 
 app.get('/:id/daily-averages', async (req, res) => {
   const { to, from } = req.query

@@ -22,7 +22,7 @@ class Home extends HookWidget {
     useEffect(() {
       getStepsChart();
       return;
-    }, [user.compareDate]);
+    }, [user.compareDate, user.lastSync]);
 
     return Scaffold(
       appBar: AppWidgets.appBar(context, null, true),

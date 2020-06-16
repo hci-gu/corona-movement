@@ -6,10 +6,9 @@ let caBundle = fs.readFileSync(
   `${__dirname}/lib/adapters/mongo/rds-combined-ca-bundle.pem`
 )
 const DB_NAME = 'coronamovement'
-const COLLECTION_NAME = 'steps'
+const COLLECTION_NAME = 'users'
 
 const mongo = require('./lib/adapters/mongo/index')
-const elastic = require('./lib/adapters/elastic/index')
 
 const syncDocs = async (collection, offset) => {
   const limit = 2500
@@ -20,13 +19,9 @@ const syncDocs = async (collection, offset) => {
     .toArray()
   console.log('sync', res.length)
   if (res.length > 0) {
-    await mongo.save(res)
-    await elastic.save(
-      res.map((d) => {
-        delete d._id
-        return d
-      })
-    )
+    try {
+      await mongo.createUser(res)
+    } catch (e) {}
 
     return syncDocs(collection, offset + 1)
   }
