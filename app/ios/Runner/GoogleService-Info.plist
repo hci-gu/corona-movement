@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>983605386698-a51plmk6ljf7ebbp25h35atrcbr81f2j.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.983605386698-a51plmk6ljf7ebbp25h35atrcbr81f2j</string>
+	<key>API_KEY</key>
+	<string>AIzaSyANB8HS1ix2uEmccMAdh_y31oqYyrhWBH0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>983605386698</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.wfhmovement.app</string>
+	<key>PROJECT_ID</key>
+	<string>wfh-movement</string>
+	<key>STORAGE_BUCKET</key>
+	<string>wfh-movement.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:983605386698:ios:aa29e56c7345891dce4333</string>
+	<key>DATABASE_URL</key>
+	<string>https://wfh-movement.firebaseio.com</string>
+</dict>
+</plist>
