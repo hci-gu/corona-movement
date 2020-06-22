@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/home.dart';
@@ -20,8 +22,9 @@ void callbackDispatcher() {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
+  FirebaseAnalytics analytics = FirebaseAnalytics();
 
-  runApp(MyApp());
+  runApp(MyApp(analytics));
 
   Workmanager.initialize(
     callbackDispatcher,
@@ -30,7 +33,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp();
+  FirebaseAnalytics analytics;
+
+  MyApp(this.analytics);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -47,6 +52,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color.fromARGB(255, 250, 250, 250),
           body: ScreenSelector(),
         ),
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: analytics),
+        ],
       ),
     );
   }

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "983605386698",
+    "firebase_url": "https://wfh-movement.firebaseio.com",
+    "project_id": "wfh-movement",
+    "storage_bucket": "wfh-movement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983605386698:android:b48e03a0354faeadce4333",
+        "android_client_info": {
+          "package_name": "com.wfhmovement.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983605386698-gmdlek2dkqqb4hkmss74kh1mac5e4383.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM_C04zeNzj566Y5sgfCAu5kX0-5zbirg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983605386698-gmdlek2dkqqb4hkmss74kh1mac5e4383.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "983605386698-a51plmk6ljf7ebbp25h35atrcbr81f2j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wfhmovement.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

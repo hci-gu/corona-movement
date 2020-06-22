@@ -25,6 +25,7 @@ dependencies:
   dio_retry: ^0.1.9-beta
   timezone: any
   intl: any
+  firebase_analytics: ^5.0.15
 
 dev_dependencies:
   flutter_test:
