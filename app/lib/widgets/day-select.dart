@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/style.dart';
@@ -8,16 +9,19 @@ import 'package:wfhmovement/widgets/button.dart';
 class DaySelect extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    StepsModel steps = useModel(stepsAtom);
+
     return Center(
       child: StyledButton(
         title: 'Change days',
         icon: Icon(Icons.arrow_drop_down),
-        onPressed: () => _onPressed(context),
+        onPressed: () => _onPressed(context, steps),
       ),
     );
   }
 
-  _onPressed(BuildContext context) {
+  _onPressed(BuildContext context, StepsModel steps) {
+    globalAnalytics.observer.analytics.logEvent(name: 'showDaySelect');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -33,6 +37,12 @@ class DaySelect extends HookWidget {
                 ),
               ),
               onPressed: () {
+                globalAnalytics.observer.analytics.logEvent(
+                  name: 'daySelect',
+                  parameters: {
+                    'days': steps.days.toString(),
+                  },
+                );
                 Navigator.of(context).pop();
               },
             )

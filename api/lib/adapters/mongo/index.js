@@ -7,6 +7,7 @@ let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 const DB_NAME = 'coronamovement'
 const STEPS_COLLECTION = 'steps'
 const USERS_COLLECTION = 'users'
+const CODES_COLLECTION = 'codes'
 const options =
   process.env.NODE_ENV === 'production'
     ? {
@@ -405,6 +406,11 @@ const calculateDailyAverages = (users, dates) =>
 const getLastUpload = async (collection, { id }) =>
   collection.findOne({ id }, { sort: { date: -1 } })
 
+const codeExists = async (collection, code) => {
+  const doc = await collection.findOne({ code })
+  return !!doc
+}
+
 module.exports = {
   createIndex,
   save: (payload) => run(insert, payload),
@@ -416,4 +422,5 @@ module.exports = {
   updateUser: (payload) => run(updateUser, payload, USERS_COLLECTION),
   getSummary: async (payload) => run(getSummary, payload),
   getLastUpload: async (payload) => run(getLastUpload, payload),
+  codeExists: (payload) => run(codeExists, payload, CODES_COLLECTION),
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
-import 'package:wfhmovement/widgets/steps-difference.dart';
 
 class Settings extends HookWidget {
   @override
@@ -35,29 +35,31 @@ class Settings extends HookWidget {
                 ),
                 SizedBox(height: 20),
                 Center(
-                  child: user.updating
+                  child: user.loading
                       ? CircularProgressIndicator()
                       : StyledButton(
                           icon: Icon(Icons.date_range),
                           title: 'Change date',
-                          onPressed: () =>
-                              _onPressed(context, user, updateUserCompareDate),
+                          onPressed: () => _onChangeDatePressed(
+                              context, user, updateUserCompareDate),
                         ),
                 ),
                 SizedBox(height: 40),
                 if (user.id != 'all')
                   Center(
-                    child: user.syncing
+                    child: user.loading
                         ? CircularProgressIndicator()
                         : StyledButton(
                             icon: Icon(Icons.sync),
                             title: 'Sync steps',
                             onPressed: () {
+                              globalAnalytics.observer.analytics
+                                  .logEvent(name: 'syncSteps');
                               syncSteps();
                             },
                           ),
                   ),
-                if (!user.syncing)
+                if (!user.loading)
                   Center(
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -78,8 +80,10 @@ class Settings extends HookWidget {
     );
   }
 
-  void _onPressed(BuildContext context, user, updateUserCompareDate) async {
+  void _onChangeDatePressed(
+      BuildContext context, user, updateUserCompareDate) async {
     DateTime compareDate = user.compareDate;
+    globalAnalytics.observer.analytics.logEvent(name: 'openChangeCompareDate');
 
     var date = await showDatePicker(
       context: context,
@@ -88,6 +92,7 @@ class Settings extends HookWidget {
       lastDate: DateTime.now(),
     );
     if (date != null) {
+      globalAnalytics.observer.analytics.logEvent(name: 'changeCompareDate');
       user.setCompareDate(DateTime(date.year, date.month, date.day));
       updateUserCompareDate();
     }
