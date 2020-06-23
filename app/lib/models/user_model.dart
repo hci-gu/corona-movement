@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -9,22 +8,34 @@ import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/steps.dart';
 
 class User extends ValueNotifier {
+  bool unlocked = false;
   bool inited = false;
   String id;
   DateTime compareDate;
   DateTime latestUploadDate;
   String dataSource;
   String division;
-  bool updating = false;
-  bool syncing = false;
+  String code = '';
+  bool loading = false;
   DateTime lastSync;
 
   User() : super(null);
+
+  setUnlocked() {
+    unlocked = true;
+    notifyListeners();
+  }
+
+  setCode(String value) {
+    code = value;
+    notifyListeners();
+  }
 
   setUser(api.UserResponse response) {
     id = response.id;
     compareDate = response.compareDate;
     division = response.division;
+    unlocked = true;
     notifyListeners();
   }
 
@@ -39,16 +50,13 @@ class User extends ValueNotifier {
     notifyListeners();
   }
 
-  setUpdating(bool done) {
-    updating = done;
+  setLoading(bool done) {
+    loading = done;
     notifyListeners();
   }
 
-  setSyncing(bool done) {
-    syncing = done;
-    if (done) {
-      lastSync = DateTime.now();
-    }
+  setLastSync() {
+    lastSync = DateTime.now();
     notifyListeners();
   }
 
@@ -127,12 +135,11 @@ api.UserResponse fakeUser(OnboardingModel onboarding) {
 
 Action updateUserCompareDateAction = (get) async {
   User user = get(userAtom);
-  user.setUpdating(true);
-  globalAnalytics.observer.analytics.logEvent(name: 'updateCompareDate');
+  user.setLoading(true);
 
   await api.updateUserCompareDate(user.id, user.compareDate);
 
-  user.setUpdating(false);
+  user.setLoading(false);
 };
 
 Future uploadChunks(String userId, List chunks) async {
@@ -147,20 +154,19 @@ Future uploadChunks(String userId, List chunks) async {
 
 Action getUserLatestUploadAction = (get) async {
   User user = get(userAtom);
-  user.setSyncing(true);
+  user.setLoading(true);
 
   api.LatestUpload latestUpload = await api.getLatestUpload(user.id);
 
   user.setLatestUpload(latestUpload);
 
-  user.setSyncing(false);
+  user.setLoading(false);
 };
 
 Action syncStepsAction = (get) async {
   User user = get(userAtom);
   GarminModel garmin = get(garminAtom);
-  user.setSyncing(true);
-  globalAnalytics.observer.analytics.logEvent(name: 'syncSteps');
+  user.setLoading(true);
   try {
     DateTime from = user.latestUploadDate;
     DateTime to = DateTime.now();
@@ -184,7 +190,21 @@ Action syncStepsAction = (get) async {
       await uploadChunks(user.id, dataChunks);
     }
     getUserLatestUploadAction(get);
+    user.setLastSync();
   } catch (e) {
-    user.setSyncing(false);
+    user.setLoading(false);
   }
+};
+
+Action unlockAction = (get) async {
+  User user = get(userAtom);
+  user.setLoading(true);
+
+  bool unlock = await api.unlock(user.code);
+
+  if (unlock) {
+    user.setUnlocked();
+  }
+
+  user.setLoading(false);
 };

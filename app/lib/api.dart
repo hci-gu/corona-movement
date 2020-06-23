@@ -216,6 +216,21 @@ Future<LatestUpload> getLatestUpload(String userId) async {
   return LatestUpload.fromJson(data);
 }
 
+Future<bool> unlock(String code) async {
+  const url = '$API_URL/code';
+  var response = await http.post(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'code': code,
+    }),
+  );
+
+  return response.statusCode == 200;
+}
+
 Future<bool> ping() async {
   print('pingpong');
   const url = '$API_URL/ping';

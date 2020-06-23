@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -28,14 +29,12 @@ class DaysBarChart extends HookWidget {
     List<String> dates = useModel(userDatesSelector);
     useEffect(() {
       if (days.length > 0) {
-        String compareDate = dates[1];
-        var day =
-            days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
-        int index = day != null ? days.indexOf(day) : 0;
-
         if (scrollController.hasClients) {
-          scrollController.animateTo(index * barWidth - 50,
-              duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+          scrollController.animateTo(
+            _scrollOffsetForDays(days, dates[1]),
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeOut,
+          );
         }
       }
       return;
@@ -47,17 +46,35 @@ class DaysBarChart extends HookWidget {
       child: Scrollbar(
         isAlwaysShown: true,
         controller: scrollController,
-        child: ListView(
-          controller: scrollController,
-          padding: EdgeInsets.all(10),
-          scrollDirection: Axis.horizontal,
-          children: [
-            _barChart(
-                days.length > 0 ? days : emptyDays, dates[1], days.length == 0),
-          ],
+        child: NotificationListener(
+          onNotification: (notification) {
+            if (notification is ScrollEndNotification) {
+              double offset = _scrollOffsetForDays(days, dates[1]);
+              if (scrollController.offset != offset) {
+                globalAnalytics.observer.analytics.logEvent(
+                  name: 'dayBarChartScroll',
+                );
+              }
+            }
+          },
+          child: ListView(
+            controller: scrollController,
+            padding: EdgeInsets.all(10),
+            scrollDirection: Axis.horizontal,
+            children: [
+              _barChart(days.length > 0 ? days : emptyDays, dates[1],
+                  days.length == 0),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  double _scrollOffsetForDays(days, compareDate) {
+    var day = days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
+    int index = day != null ? days.indexOf(day) : 0;
+    return index * barWidth - 50;
   }
 
   Widget _barChart(days, String compareDate, [bool empty]) {

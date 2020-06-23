@@ -18,6 +18,9 @@ apiGateway:
   inputs:
     region: eu-central-1
     endpoints:
+      - path: /unlock
+        method: POST
+        function: ${api.arn}
       - path: /register
         method: POST
         function: ${api.arn}

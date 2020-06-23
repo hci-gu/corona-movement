@@ -110,6 +110,14 @@ app.get('/:id/daily-averages', async (req, res) => {
   res.send(data)
 })
 
+app.post('/unlock', async (req, res) => {
+  const { code } = req.body
+
+  const exists = await db.codeExists(code)
+
+  res.sendStatus(exists ? 200 : 401)
+})
+
 app.post('/ping', async (req, res) => {
   console.log('PING', req.body)
   res.send({ ok: true })
