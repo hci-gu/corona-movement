@@ -44,7 +44,10 @@ class SelectDataSource extends HookWidget {
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => NoSteps()),
+                MaterialPageRoute(
+                  builder: (context) => NoSteps(),
+                  settings: RouteSettings(name: 'No steps'),
+                ),
               );
             },
           ),
@@ -109,6 +112,7 @@ class SelectDataSource extends HookWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DataSource(),
+                settings: RouteSettings(name: 'Datasource $dataSource'),
               ),
             );
           },

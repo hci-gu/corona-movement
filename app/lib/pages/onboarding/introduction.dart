@@ -1,3 +1,4 @@
+import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,10 @@ class Introduction extends HookWidget {
   @override
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
+    useEffect(() {
+      globalAnalytics.observer.analytics
+          .setCurrentScreen(screenName: 'Introduction');
+    }, []);
 
     return Center(
       child: Container(
@@ -68,6 +73,7 @@ class Introduction extends HookWidget {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SelectDataSource(),
+          settings: RouteSettings(name: 'Select datasource'),
         ),
       );
     }

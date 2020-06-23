@@ -90,3 +90,30 @@ Action garminGetAndUploadSteps = (get) async {
 
   await syncHealthData(model.client, onboarding, user.id);
 };
+
+Future uploadGarminDataForDays(
+  GarminClient garminClient,
+  List<String> days,
+  String userId,
+) async {
+  List<HealthDataPoint> steps = await garminClient.fetchSteps(days[0]);
+  await api.postData(userId, steps);
+  if (days.length > 0) {
+    return uploadGarminDataForDays(garminClient, days, userId);
+  }
+}
+
+Future syncGarminSteps(
+  DateTime from,
+  String userId,
+  GarminClient garminClient,
+) async {
+  int days = DateTime.now().difference(from).inDays;
+
+  List dates = List.generate(days, (index) {
+    DateTime date = DateTime.now().subtract(Duration(days: index));
+    return date.toString().substring(0, 10);
+  });
+
+  return uploadGarminDataForDays(garminClient, dates, userId);
+}

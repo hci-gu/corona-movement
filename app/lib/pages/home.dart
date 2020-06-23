@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -20,6 +21,7 @@ class Home extends HookWidget {
     User user = useModel(userAtom);
     var getStepsChart = useAction(getStepsAction);
     useEffect(() {
+      globalAnalytics.observer.analytics.setCurrentScreen(screenName: 'Home');
       getStepsChart();
       return;
     }, [user.compareDate, user.lastSync]);
@@ -44,14 +46,14 @@ class Home extends HookWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
-            _grid(),
+            _grid(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _grid() {
+  Widget _grid(BuildContext context) {
     return GridView.count(
       padding: EdgeInsets.only(left: 12, right: 12, bottom: 25),
       crossAxisCount: 2,
@@ -67,7 +69,12 @@ class Home extends HookWidget {
               child: StepsChart(),
               flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
-            destination: DetailedSteps(),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DetailedSteps(),
+                settings: RouteSettings(name: 'Detailed Steps'),
+              ));
+            },
           ),
           'Detailed steps',
         ),
@@ -78,8 +85,13 @@ class Home extends HookWidget {
               child: CompareAverageChart(),
               flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
-            destination: CompareSteps(),
             scale: 1.2,
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CompareSteps(),
+                settings: RouteSettings(name: 'Compare Steps'),
+              ));
+            },
           ),
           'Me vs others',
         ),
@@ -95,7 +107,12 @@ class Home extends HookWidget {
               ),
               flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
             ),
-            destination: TodayBefore(),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => TodayBefore(),
+                settings: RouteSettings(name: 'Today & Before'),
+              ));
+            },
             scale: 1.25,
           ),
           'Today & Before',

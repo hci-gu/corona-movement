@@ -94,6 +94,20 @@ class HealthComparison {
   }
 }
 
+class LatestUpload {
+  DateTime date;
+  String dataSource;
+
+  LatestUpload(Map<String, dynamic> json) {
+    date = DateTime.parse(json['date']);
+    dataSource = json['platform_type'];
+  }
+
+  factory LatestUpload.fromJson(Map<String, dynamic> json) {
+    return LatestUpload(json);
+  }
+}
+
 class HealthSummary {
   double before;
   double after;
@@ -189,7 +203,7 @@ Future<HealthComparison> getComparison(String userId) async {
   return comparison;
 }
 
-Future<DateTime> getLatestUpload(String userId) async {
+Future<LatestUpload> getLatestUpload(String userId) async {
   var url = '$API_URL/$userId/last-upload';
   var response = await http.get(
     url,
@@ -199,9 +213,7 @@ Future<DateTime> getLatestUpload(String userId) async {
   );
   Map<String, dynamic> data = json.decode(response.body);
 
-  DateTime date = DateTime.parse(data['date']);
-
-  return date;
+  return LatestUpload.fromJson(data);
 }
 
 Future<bool> ping() async {
