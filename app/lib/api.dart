@@ -217,7 +217,7 @@ Future<LatestUpload> getLatestUpload(String userId) async {
 }
 
 Future<bool> unlock(String code) async {
-  const url = '$API_URL/code';
+  const url = '$API_URL/unlock';
   var response = await http.post(
     url,
     headers: <String, String>{
