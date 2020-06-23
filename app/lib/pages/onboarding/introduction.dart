@@ -56,12 +56,10 @@ class Introduction extends HookWidget {
   Widget unlockWidget(user, code, unlock) {
     return Column(
       children: [
-        SizedBox(
-          height: 50,
-        ),
+        SizedBox(height: 50),
         Text(
-          'This app is currently not available to everyone',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+          'This app is currently not available to everyone but can be unlocked with a code.',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
         ),
         TextField(
           controller: code,
@@ -70,12 +68,10 @@ class Introduction extends HookWidget {
             user.setCode(value);
           },
           decoration: InputDecoration(
-            hintText: 'Code',
+            hintText: 'Your code',
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
+        SizedBox(height: 20),
         StyledButton(
           icon: user.loading
               ? Container(
@@ -92,6 +88,13 @@ class Introduction extends HookWidget {
           onPressed: () {
             unlock();
           },
+        ),
+        SizedBox(height: 20),
+        Text('Interested in trying? Email:'),
+        SizedBox(height: 5),
+        SelectableText(
+          'wfhmovement@gmail.com',
+          style: TextStyle(fontWeight: FontWeight.w700),
         ),
       ],
     );
