@@ -37,6 +37,7 @@ class AppWidgets {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => Settings(),
+                settings: RouteSettings(name: 'Settings'),
               ));
             },
             child: Container(

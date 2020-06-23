@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
@@ -10,6 +11,11 @@ class Settings extends HookWidget {
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
+    var getUserLatestUpload = useAction(getUserLatestUploadAction);
+
+    useEffect(() {
+      getUserLatestUpload();
+    }, []);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
     var syncSteps = useAction(syncStepsAction);
 
@@ -50,7 +56,16 @@ class Settings extends HookWidget {
                               syncSteps();
                             },
                           ),
-                  )
+                  ),
+                if (!user.syncing)
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Last sync: ${DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate)}',
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

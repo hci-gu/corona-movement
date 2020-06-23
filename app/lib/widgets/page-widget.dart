@@ -3,14 +3,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class PageWidget extends HookWidget {
   final Widget child;
-  final Widget destination;
   final bool greyscale;
   final double scale;
+  final Function onTap;
 
   PageWidget({
     Key key,
     @required this.child,
-    @required this.destination,
+    @required this.onTap,
     this.greyscale = false,
     this.scale = 1,
   }) : super(key: key);
@@ -20,11 +20,7 @@ class PageWidget extends HookWidget {
     return GestureDetector(
       child: _colorFilter(),
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => destination,
-        ));
-      },
+      onTap: onTap,
     );
   }
 

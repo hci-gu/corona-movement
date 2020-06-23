@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
+import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/steps.dart';
@@ -10,6 +12,8 @@ class User extends ValueNotifier {
   bool inited = false;
   String id;
   DateTime compareDate;
+  DateTime latestUploadDate;
+  String dataSource;
   String division;
   bool updating = false;
   bool syncing = false;
@@ -26,6 +30,12 @@ class User extends ValueNotifier {
 
   setCompareDate(DateTime date) {
     compareDate = date;
+    notifyListeners();
+  }
+
+  setLatestUpload(api.LatestUpload latestUpload) {
+    latestUploadDate = latestUpload.date;
+    dataSource = latestUpload.dataSource;
     notifyListeners();
   }
 
@@ -65,8 +75,7 @@ Action initAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  // String userId = prefs.getString('id');
-  String userId = '5ee86f904553a80008cc0d89';
+  String userId = prefs.getString('id');
   if (userId != null) {
     api.UserResponse response;
     if (userId == 'all') {
@@ -119,6 +128,7 @@ api.UserResponse fakeUser(OnboardingModel onboarding) {
 Action updateUserCompareDateAction = (get) async {
   User user = get(userAtom);
   user.setUpdating(true);
+  globalAnalytics.observer.analytics.logEvent(name: 'updateCompareDate');
 
   await api.updateUserCompareDate(user.id, user.compareDate);
 
@@ -135,28 +145,45 @@ Future uploadChunks(String userId, List chunks) async {
   }
 }
 
-Action syncStepsAction = (get) async {
-  var user = get(userAtom);
+Action getUserLatestUploadAction = (get) async {
+  User user = get(userAtom);
   user.setSyncing(true);
+
+  api.LatestUpload latestUpload = await api.getLatestUpload(user.id);
+
+  user.setLatestUpload(latestUpload);
+
+  user.setSyncing(false);
+};
+
+Action syncStepsAction = (get) async {
+  User user = get(userAtom);
+  GarminModel garmin = get(garminAtom);
+  user.setSyncing(true);
+  globalAnalytics.observer.analytics.logEvent(name: 'syncSteps');
   try {
-    DateTime from = await api.getLatestUpload(user.id);
+    DateTime from = user.latestUploadDate;
     DateTime to = DateTime.now();
 
-    List<HealthDataPoint> steps = await Health.getHealthDataFromType(
-      from,
-      to,
-      HealthDataType.STEPS,
-    );
-    List dataChunks = [];
-    while (steps.length > 0) {
-      dataChunks.add(steps.take(500).toList());
-      steps.removeRange(
-        0,
-        steps.length > 500 ? 500 : steps.length,
+    if (user.dataSource == 'Garmin') {
+      await syncGarminSteps(from, user.id, garmin.client);
+    } else {
+      List<HealthDataPoint> steps = await Health.getHealthDataFromType(
+        from,
+        to,
+        HealthDataType.STEPS,
       );
+      List dataChunks = [];
+      while (steps.length > 0) {
+        dataChunks.add(steps.take(500).toList());
+        steps.removeRange(
+          0,
+          steps.length > 500 ? 500 : steps.length,
+        );
+      }
+      await uploadChunks(user.id, dataChunks);
     }
-    await uploadChunks(user.id, dataChunks);
-    user.setSyncing(false);
+    getUserLatestUploadAction(get);
   } catch (e) {
     user.setSyncing(false);
   }
