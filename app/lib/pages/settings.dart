@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/global-analytics.dart';
+import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
+import 'package:wfhmovement/widgets/garmin-login.dart';
 
 class Settings extends HookWidget {
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
     var getUserLatestUpload = useAction(getUserLatestUploadAction);
+    var garminSyncSteps = useAction(garminSyncStepsAction);
 
     useEffect(() {
       getUserLatestUpload();
@@ -41,33 +44,15 @@ class Settings extends HookWidget {
                           icon: Icon(Icons.date_range),
                           title: 'Change date',
                           onPressed: () => _onChangeDatePressed(
-                              context, user, updateUserCompareDate),
+                            context,
+                            user,
+                            updateUserCompareDate,
+                          ),
                         ),
                 ),
                 SizedBox(height: 40),
                 if (user.id != 'all')
-                  Center(
-                    child: user.loading
-                        ? CircularProgressIndicator()
-                        : StyledButton(
-                            icon: Icon(Icons.sync),
-                            title: 'Sync steps',
-                            onPressed: () {
-                              globalAnalytics.observer.analytics
-                                  .logEvent(name: 'syncSteps');
-                              syncSteps();
-                            },
-                          ),
-                  ),
-                if (!user.loading)
-                  Center(
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Last sync: ${DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate)}',
-                      ),
-                    ),
-                  ),
+                  _syncStepsWidget(user, syncSteps, garminSyncSteps)
               ],
             ),
           ),
@@ -77,6 +62,52 @@ class Settings extends HookWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _syncStepsWidget(User user, syncSteps, garminSyncSteps) {
+    if (user.awaitingDataSource) {
+      return Column(
+        children: [
+          Text('Login with your Garmin to credentials'),
+          GarminLogin(),
+          user.loading
+              ? CircularProgressIndicator()
+              : StyledButton(
+                  icon: Icon(Icons.sync),
+                  title: 'Sync Garmin',
+                  onPressed: () {
+                    garminSyncSteps();
+                  },
+                )
+        ],
+      );
+    }
+    return Column(
+      children: [
+        Center(
+          child: user.loading
+              ? CircularProgressIndicator()
+              : StyledButton(
+                  icon: Icon(Icons.sync),
+                  title: 'Sync steps',
+                  onPressed: () {
+                    globalAnalytics.observer.analytics
+                        .logEvent(name: 'syncSteps');
+                    syncSteps();
+                  },
+                ),
+        ),
+        if (!user.loading)
+          Center(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Last sync: ${DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate)}',
+              ),
+            ),
+          ),
+      ],
     );
   }
 
