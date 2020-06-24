@@ -17,6 +17,7 @@ class User extends ValueNotifier {
   String division;
   String code = '';
   bool loading = false;
+  bool awaitingDataSource = false;
   DateTime lastSync;
 
   User() : super(null);
@@ -57,6 +58,11 @@ class User extends ValueNotifier {
 
   setLastSync() {
     lastSync = DateTime.now();
+    notifyListeners();
+  }
+
+  setAwaitingDataSource(bool done) {
+    awaitingDataSource = done;
     notifyListeners();
   }
 
@@ -165,14 +171,16 @@ Action getUserLatestUploadAction = (get) async {
 
 Action syncStepsAction = (get) async {
   User user = get(userAtom);
-  GarminModel garmin = get(garminAtom);
   user.setLoading(true);
   try {
     DateTime from = user.latestUploadDate;
     DateTime to = DateTime.now();
 
-    if (user.dataSource == 'Garmin') {
-      await syncGarminSteps(from, user.id, garmin.client);
+    if (user.dataSource == 'Garmin' || user.dataSource == null) {
+      if (DateTime.now().difference(from).inDays == 0) {
+        return user.setLoading(false);
+      }
+      user.setAwaitingDataSource(true);
     } else {
       List<HealthDataPoint> steps = await Health.getHealthDataFromType(
         from,
