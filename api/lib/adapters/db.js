@@ -23,6 +23,7 @@ const dbAdapter = process.env.DB === 'elastic' ? elastic : mongo
 
 module.exports = {
   ...dbAdapter,
+  transformHealthData,
   save: ({ id, dataPoints }) => {
     dbAdapter.save(
       dataPoints.map(transformHealthData).map((d) => ({ ...d, id }))

@@ -4,7 +4,7 @@ const moment = require('moment')
 const { getBusinessDaysBetween } = require('../../utils/date')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
-const DB_NAME = 'coronamovement'
+const DB_NAME = process.env.DB_NAME ? process.env.DB_NAME : 'coronamovement'
 const STEPS_COLLECTION = 'steps'
 const USERS_COLLECTION = 'users'
 const CODES_COLLECTION = 'codes'
@@ -59,7 +59,11 @@ const updateUser = async (collection, { id, update }) => {
     }
     return obj
   }, {})
-  return collection.updateOne({ _id: ObjectId(id) }, { $set: _update })
+  const result = await collection.findOneAndUpdate(
+    { _id: ObjectId(id) },
+    { $set: _update }
+  )
+  return result.value
 }
 
 const getAllUsersExcept = async (collection, id) =>
