@@ -11,13 +11,10 @@ const moment = require('moment')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
-if (process.env.NODE_ENV !== 'production') db.createIndex()
-
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 
-app.get('/init', () => db.createIndex())
 app.get('/auth', (_, res) => fitbit.redirect(res))
 app.get('/callback', (req, res) =>
   fitbit.handleCallback(req).then((token) => res.send({ token }))
@@ -43,7 +40,7 @@ app.patch('/user/:id', async (req, res) => {
   res.send(user)
 })
 app.post('/health-data', async (req, res) => {
-  await db.save(req.body)
+  await db.saveSteps(req.body)
 
   res.send({
     ok: true,

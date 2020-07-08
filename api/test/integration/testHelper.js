@@ -25,7 +25,12 @@ const init = async () => {
 /*
 
 */
-const generateHealthData = ({ from, to, steps = 10 }) => {
+const generateHealthData = ({
+  from,
+  to,
+  steps = 10,
+  platform = 'PlatformType.IOS',
+}) => {
   let length = 0
   let diff = moment(to).diff(moment(from))
   while (diff > 0) {
@@ -45,7 +50,7 @@ const generateHealthData = ({ from, to, steps = 10 }) => {
       .add(i * 10 + 10, 'minutes')
       .valueOf(),
     data_type: 'STEPS',
-    platform: 'PlatformType.IOS',
+    platform,
   }))
 }
 
