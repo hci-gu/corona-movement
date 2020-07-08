@@ -1,7 +1,7 @@
-const elastic = require(`${process.cwd()}/lib/adapters/elastic`)
+const db = require(`${process.cwd()}/lib/adapters/db.js`)
 const moment = require('moment')
 
-describe('#elastic', () => {
+describe('#db', () => {
   let testData
   beforeEach(() => {
     testData = [
@@ -61,7 +61,7 @@ describe('#elastic', () => {
       const time = moment('2020-01-01T13:50')
       expect(
         moment(
-          elastic.transformHealthData({
+          db.transformHealthData({
             value: 2,
             unit: 'COUNT',
             date_from: time.unix() * 1000,
@@ -74,10 +74,10 @@ describe('#elastic', () => {
     })
 
     it('rounds time to nearest 15min', () => {
-      const parsed = testData
-        .map(elastic.transformHealthData)
-        .map((d) => d.time)
+      const parsed = testData.map(db.transformHealthData).map((d) => d.time)
       expect(parsed).to.eql([540, 645, 660, 735, 810, 825])
     })
   })
+
+  describe('#save', () => {})
 })

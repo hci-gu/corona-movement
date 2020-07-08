@@ -110,6 +110,8 @@ app.get('/:id/daily-averages', async (req, res) => {
   res.send(data)
 })
 
+app.post('/should-unlock', async (_, res) => res.send())
+
 app.post('/unlock', async (req, res) => {
   const { code } = req.body
 
@@ -127,3 +129,4 @@ if (process.env.NODE_ENV !== 'production')
   app.listen(PORT, () => console.log(`listening on ${PORT}`))
 
 module.exports.handler = serverless(app)
+module.exports.app = app
