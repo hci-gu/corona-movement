@@ -70,7 +70,7 @@ describe('#db', () => {
             platform_type: 'PlatformType.IOS',
           }).date
         ).format()
-      ).to.eql(moment('2020-01-01T13:55').format())
+      ).to.eql(moment('2020-01-01T14:00').format())
     })
 
     it('rounds time to nearest 15min', () => {
