@@ -1,18 +1,35 @@
+const { ObjectId } = require('mongodb')
 const moment = require('moment')
 const { getBusinessDaysBetween } = require('../../utils/date')
 const userCollection = require('./users')
 const COLLECTION = 'steps'
 let collection
 
+const saveSingle = async (dataPoint) => {
+  try {
+    await collection.insertOne(dataPoint)
+  } catch (e) {
+    if (e.code === 11000) {
+      await collection.update(
+        {
+          id: dataPoint.id,
+          date: dataPoint.date,
+          value: { $lt: dataPoint.value },
+        },
+        { $set: { value: dataPoint.value, platform: dataPoint.platform } }
+      )
+    }
+  }
+}
+
 const save = async (dataPoints) => {
-  await collection.insertMany(
-    dataPoints.map((point) => ({
-      ...point,
-      date: new Date(point.date),
-      date_from: new Date(point.date_from),
-      date_to: new Date(point.date_to),
-    }))
-  )
+  try {
+    await collection.insertMany(dataPoints)
+  } catch (e) {
+    if (e.code === 11000) {
+      await Promise.all(dataPoints.map(saveSingle))
+    }
+  }
 }
 
 const getQuery = ({ id, from, to, weekDays }) => {
@@ -339,10 +356,16 @@ module.exports = {
   init: async (db) => {
     await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
+    collection.createIndex({ id: 1, date: 1 }, { unique: true })
   },
   collection,
-  // steps
-  save,
+  save: (dataPoints) =>
+    save(
+      dataPoints.map((point) => ({
+        ...point,
+        date: new Date(point.date),
+      }))
+    ),
   getAverageHour,
   getHours,
   getDailyAverages,
