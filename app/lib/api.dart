@@ -128,8 +128,8 @@ class HealthSummary {
   }
 }
 
-Future<UserResponse> register(
-    DateTime compareDate, DateTime initialDataDate, String division) async {
+Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
+    String division, String code) async {
   const url = '$API_URL/register';
   var response = await http.post(
     url,
@@ -140,6 +140,7 @@ Future<UserResponse> register(
       'compareDate': compareDate.toIso8601String().substring(0, 10),
       'initialDataDate': initialDataDate.toIso8601String().substring(0, 10),
       'division': division,
+      'code': code
     }),
   );
 
@@ -167,6 +168,19 @@ Future updateUserCompareDate(String userId, DateTime compareDate) async {
     },
     body: jsonEncode({
       'compareDate': compareDate.toIso8601String().substring(0, 10),
+    }),
+  );
+}
+
+Future updateUserEstimate(String userId, double stepsEstimate) async {
+  var url = '$API_URL/user/$userId';
+  await http.patch(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'stepsEstimate': stepsEstimate,
     }),
   );
 }

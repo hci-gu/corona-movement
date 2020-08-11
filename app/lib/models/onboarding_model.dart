@@ -24,7 +24,11 @@ class OnboardingModel extends ValueNotifier {
   }
 
   setDataSource(String selectedDataSource) {
-    dataSource = selectedDataSource;
+    if (dataSource != selectedDataSource) {
+      dataSource = selectedDataSource;
+      authorized = false;
+      availableData = [];
+    }
     notifyListeners();
   }
 
@@ -80,6 +84,7 @@ Action getHealthAuthorizationAction = (get) async {
     return garminAuthorizationAction(get);
   }
   try {
+    onboarding.setAuthorized(false);
     bool _isAuthorized = await Health.requestAuthorization();
     onboarding.setAuthorized(_isAuthorized);
   } catch (e) {
