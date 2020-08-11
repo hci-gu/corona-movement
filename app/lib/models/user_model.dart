@@ -18,7 +18,9 @@ class User extends ValueNotifier {
   String code = '';
   bool loading = false;
   bool awaitingDataSource = false;
+  bool gaveEstimate = false;
   DateTime lastSync;
+  double stepsEstimate = 0.0;
 
   User() : super(null);
 
@@ -70,6 +72,16 @@ class User extends ValueNotifier {
     inited = true;
     notifyListeners();
   }
+
+  setStepsEstimate(value) {
+    stepsEstimate = value;
+    notifyListeners();
+  }
+
+  setGaveEstimate(value) {
+    gaveEstimate = value;
+    notifyListeners();
+  }
 }
 
 var userAtom = Atom('user', User());
@@ -98,6 +110,7 @@ Action initAction = (get) async {
       response = await api.getUser(userId);
     }
     user.setUser(response);
+    user.setGaveEstimate(true);
     onboarding.skip();
   }
   user.setInited();
@@ -112,6 +125,7 @@ Action registerAction = (get) async {
     onboarding.date,
     onboarding.initialDataDate,
     onboarding.division,
+    user.code,
   );
   user.setUser(response);
 
@@ -213,6 +227,15 @@ Action unlockAction = (get) async {
   if (unlock) {
     user.setUnlocked();
   }
+
+  user.setLoading(false);
+};
+
+Action updateEstimateAction = (get) async {
+  User user = get(userAtom);
+  user.setLoading(true);
+
+  await api.updateUserEstimate(user.id, user.stepsEstimate);
 
   user.setLoading(false);
 };

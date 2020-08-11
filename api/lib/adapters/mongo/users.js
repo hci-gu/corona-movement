@@ -2,10 +2,11 @@ const { ObjectId } = require('mongodb')
 const COLLECTION = 'users'
 let collection
 
-const create = async ({ compareDate, division }) => {
+const create = async ({ compareDate, division, code }) => {
   const result = await collection.insert({
     compareDate: new Date(compareDate),
     division,
+    code,
   })
   return result.ops[0]
 }

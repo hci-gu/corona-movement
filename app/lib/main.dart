@@ -26,7 +26,7 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics();
   globalAnalytics.init(analytics);
 
-  runApp(MyApp(analytics));
+  runApp(App(analytics));
 
   Workmanager.initialize(
     callbackDispatcher,
@@ -34,10 +34,10 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
-  FirebaseAnalytics analytics;
+class App extends StatelessWidget {
+  final FirebaseAnalytics analytics;
 
-  MyApp(this.analytics);
+  App(this.analytics);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,8 @@ class ScreenSelector extends HookWidget {
       return Introduction();
     }
     if (onboarding.availableData.length > 0 ||
-        onboarding.dataChunks.length > 0) {
+        onboarding.dataChunks.length > 0 ||
+        !user.gaveEstimate) {
       return SyncData();
     }
     return Home();

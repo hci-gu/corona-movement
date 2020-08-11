@@ -44,10 +44,16 @@ class DataSource extends HookWidget {
                 height: 150,
               ),
             ),
-            if (!onboarding.authorized && !onboarding.fetching)
+            if (!onboarding.authorized &&
+                !onboarding.fetching &&
+                onboarding.availableData.length == 0)
               _getAccess(onboarding, getHealthAuthorization),
             if (onboarding.availableData.length > 0)
               _hasData(context, onboarding, register, consent),
+            if (onboarding.authorized &&
+                onboarding.availableData.length == 0 &&
+                !onboarding.fetching)
+              _noData(context, onboarding, getHealthAuthorization),
             if (onboarding.fetching)
               Center(
                 child: CircularProgressIndicator(),
@@ -120,6 +126,31 @@ class DataSource extends HookWidget {
               Navigator.of(context).pop();
             },
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _noData(BuildContext context, OnboardingModel onboarding,
+      Function getHealthAuthorization) {
+    return Column(
+      children: [
+        Text(
+          'You don\'t have any saved steps from ${onboarding.dataSource} or failed to give this app access to your health data. Try again after reviewing access to health data in your phone settings or go back and select another data source or proceed without steps.',
+        ),
+        SizedBox(height: 25),
+        StyledButton(
+          icon: Icon(Icons.arrow_back),
+          title: 'Go back',
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        SizedBox(height: 25),
+        StyledButton(
+          icon: Icon(Icons.refresh),
+          title: 'Try again',
+          onPressed: () => getHealthAuthorization(),
         ),
       ],
     );

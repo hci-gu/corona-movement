@@ -3,6 +3,7 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wfhmovement/widgets/steps-estimate.dart';
 
 class SyncData extends HookWidget {
   @override
@@ -37,7 +38,8 @@ class SyncData extends HookWidget {
               Text(
                 'Syncing: ${onboarding.dataChunks.length} uploads left',
                 textAlign: TextAlign.center,
-              )
+              ),
+            StepsEstimate(),
           ],
         ),
       ),
