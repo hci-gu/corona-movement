@@ -5,6 +5,7 @@ import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/garmin-login.dart';
@@ -52,7 +53,24 @@ class Settings extends HookWidget {
                 ),
                 SizedBox(height: 40),
                 if (user.id != 'all')
-                  _syncStepsWidget(user, syncSteps, garminSyncSteps)
+                  _syncStepsWidget(user, syncSteps, garminSyncSteps),
+                SizedBox(height: 15),
+                Center(
+                  child: StyledButton(
+                    icon: Icon(Icons.add),
+                    title: 'Add data source',
+                    onPressed: () {
+                      globalAnalytics.observer.analytics
+                          .logEvent(name: 'addDataSource');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SelectDataSource(),
+                          settings: RouteSettings(name: 'Select data source'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -83,10 +101,10 @@ class Settings extends HookWidget {
         ],
       );
     }
-    return Column(
-      children: [
-        Center(
-          child: user.loading
+    return Center(
+      child: Column(
+        children: [
+          user.loading
               ? CircularProgressIndicator()
               : StyledButton(
                   icon: Icon(Icons.sync),
@@ -97,17 +115,15 @@ class Settings extends HookWidget {
                     syncSteps();
                   },
                 ),
-        ),
-        if (!user.loading)
-          Center(
-            child: Container(
+          if (!user.loading)
+            Container(
               padding: EdgeInsets.all(10),
               child: Text(
                 'Last sync: ${DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate)}',
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 

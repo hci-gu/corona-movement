@@ -15,6 +15,8 @@ class OnboardingModel extends ValueNotifier {
   bool fetching = false;
   bool authorized = false;
   bool gaveConsent = false;
+  bool uploading = false;
+  bool done = false;
 
   OnboardingModel() : super(null);
 
@@ -67,9 +69,13 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  skip() {
-    setGaveConsent();
-    setAuthorized(true);
+  setDone() {
+    done = true;
+  }
+
+  setUploading(bool value) {
+    uploading = value;
+    notifyListeners();
   }
 
   static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
@@ -139,6 +145,7 @@ Future syncHealthData(OnboardingModel onboarding, String userId) async {
 Action uploadStepsAction = (get) async {
   User user = get(userAtom);
   OnboardingModel onboarding = get(onboardingAtom);
+  onboarding.setUploading(true);
 
   if (onboarding.dataSource == 'Garmin') {
     return garminGetAndUploadSteps(get);
@@ -157,6 +164,9 @@ Action uploadStepsAction = (get) async {
     }
     onboarding.setDataChunks(stepsChunks);
     await syncHealthData(onboarding, user.id);
+    onboarding.setUploading(false);
+    onboarding.setDone();
+    user.setLastSync();
   } catch (exception) {
     print(exception.toString());
   }

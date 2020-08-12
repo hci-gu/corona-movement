@@ -90,7 +90,7 @@ class _OutlinedButtonState extends State<StyledButton>
       onTapUp: _onTapUp,
       onTap: widget.onPressed,
       child: Container(
-        width: 200,
+        width: widget.title.length > 12 ? 250 : 200,
         height: 44,
         decoration: BoxDecoration(
           color: _colorTween.value,

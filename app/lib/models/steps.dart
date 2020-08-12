@@ -10,6 +10,7 @@ class StepsModel extends ValueNotifier {
   List<api.HealthData> data = [];
   api.HealthComparison comparison;
   bool fetching = true;
+  bool refresh = true;
   List<int> days = [1, 2, 3, 4, 5, 6, 7];
 
   StepsModel() : super(null);
@@ -225,14 +226,12 @@ Action getStepsAction = (get) async {
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
 
-  if (steps.data.length == 0) {
-    List<api.HealthData> data = await api.getSteps(
-      user.id,
-      steps.from,
-      DateTime.now(),
-    );
-    steps.setData(data);
-  }
+  List<api.HealthData> data = await api.getSteps(
+    user.id,
+    steps.from,
+    DateTime.now(),
+  );
+  steps.setData(data);
 };
 
 var stepsTodaySelector = Selector('steps-today', (GetStateValue get) {

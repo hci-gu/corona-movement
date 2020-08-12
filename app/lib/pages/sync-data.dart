@@ -9,11 +9,6 @@ class SyncData extends HookWidget {
   @override
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
-    var uploadSteps = useAction(uploadStepsAction);
-    useEffect(() {
-      uploadSteps();
-      return;
-    }, []);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 25),
@@ -39,7 +34,7 @@ class SyncData extends HookWidget {
                 'Syncing: ${onboarding.dataChunks.length} uploads left',
                 textAlign: TextAlign.center,
               ),
-            StepsEstimate(),
+            if (!onboarding.done) StepsEstimate(),
           ],
         ),
       ),
