@@ -111,13 +111,14 @@ Action initAction = (get) async {
     }
     user.setUser(response);
     user.setGaveEstimate(true);
-    onboarding.skip();
+    onboarding.setDone();
   }
   user.setInited();
 };
 
 Action registerAction = (get) async {
   User user = get(userAtom);
+  if (user.id != null) return;
   OnboardingModel onboarding = get(onboardingAtom);
   onboarding.setGaveConsent();
 
@@ -138,7 +139,7 @@ Action proceedWithoutStepsAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
 
   user.setUser(fakeUser(onboarding));
-  onboarding.skip();
+  onboarding.setDone();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('id', user.id);

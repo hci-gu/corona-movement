@@ -89,6 +89,9 @@ Action garminGetAndUploadSteps = (get) async {
   onboarding.setAvailableData([]);
 
   await syncHealthData(model.client, onboarding, user.id);
+  onboarding.setUploading(false);
+  onboarding.setDone();
+  user.setLastSync();
 };
 
 Action garminSyncStepsAction = (get) async {

@@ -78,12 +78,10 @@ class ScreenSelector extends HookWidget {
         child: CircularProgressIndicator(),
       );
 
-    if (user.id == null || !onboarding.gaveConsent) {
+    if ((user.id == null || !onboarding.done) && !onboarding.uploading) {
       return Introduction();
     }
-    if (onboarding.availableData.length > 0 ||
-        onboarding.dataChunks.length > 0 ||
-        !user.gaveEstimate) {
+    if (onboarding.uploading || !user.gaveEstimate) {
       return SyncData();
     }
     return Home();

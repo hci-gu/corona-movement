@@ -28,9 +28,10 @@ class DataSource extends HookWidget {
   }
 
   Widget _body(BuildContext context, OnboardingModel onboarding) {
+    var consent = useState(false);
     var getHealthAuthorization = useAction(getHealthAuthorizationAction);
     var register = useAction(registerAction);
-    var consent = useState(false);
+    var uploadSteps = useAction(uploadStepsAction);
 
     return Center(
       child: Container(
@@ -49,7 +50,7 @@ class DataSource extends HookWidget {
                 onboarding.availableData.length == 0)
               _getAccess(onboarding, getHealthAuthorization),
             if (onboarding.availableData.length > 0)
-              _hasData(context, onboarding, register, consent),
+              _hasData(context, onboarding, register, consent, uploadSteps),
             if (onboarding.authorized &&
                 onboarding.availableData.length == 0 &&
                 !onboarding.fetching)
@@ -75,14 +76,16 @@ class DataSource extends HookWidget {
         StyledButton(
           icon: Icon(Icons.check),
           title: 'Give access',
-          onPressed: () => getHealthAuthorization(),
+          onPressed: () {
+            getHealthAuthorization();
+          },
         ),
       ],
     );
   }
 
   Widget _hasData(BuildContext context, OnboardingModel onboarding,
-      Function register, ValueNotifier consent) {
+      Function register, ValueNotifier consent, Function uploadSteps) {
     return Column(
       children: [
         Container(
@@ -122,8 +125,10 @@ class DataSource extends HookWidget {
             onPressed: () async {
               if (!consent.value) return;
               await register();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              uploadSteps();
+              while (Navigator.canPop(context)) {
+                Navigator.of(context).pop();
+              }
             },
           ),
         ),

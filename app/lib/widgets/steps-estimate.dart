@@ -56,7 +56,7 @@ class StepsEstimate extends HookWidget {
     return [
       SizedBox(height: 20),
       Text(
-        'You estimated a change of ${user.stepsEstimate.toStringAsFixed(1)}%.',
+        'You estimated a change of ${(user.stepsEstimate * 100).toStringAsFixed(1)}%.',
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
       SizedBox(height: 20),
