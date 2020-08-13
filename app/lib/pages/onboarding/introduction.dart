@@ -16,9 +16,12 @@ class Introduction extends HookWidget {
     User user = useModel(userAtom);
     var code = useTextEditingController(text: user.code);
     var unlock = useAction(unlockAction);
+    var shouldUnlock = useAction(shouldUnlockAction);
     useEffect(() {
+      shouldUnlock();
       globalAnalytics.observer.analytics
           .setCurrentScreen(screenName: 'Introduction');
+      return;
     }, []);
 
     return Center(

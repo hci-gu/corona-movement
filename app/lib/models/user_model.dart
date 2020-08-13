@@ -240,3 +240,13 @@ Action updateEstimateAction = (get) async {
 
   user.setLoading(false);
 };
+
+Action shouldUnlockAction = (get) async {
+  User user = get(userAtom);
+
+  bool locked = await api.shouldUnlock();
+
+  if (!locked) {
+    user.setUnlocked();
+  }
+};
