@@ -230,6 +230,20 @@ Future<LatestUpload> getLatestUpload(String userId) async {
   return LatestUpload.fromJson(data);
 }
 
+Future<bool> shouldUnlock() async {
+  const url = '$API_URL/should-unlock';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+
+  bool locked = json.decode(response.body);
+
+  return locked;
+}
+
 Future<bool> unlock(String code) async {
   const url = '$API_URL/unlock';
   var response = await http.post(
