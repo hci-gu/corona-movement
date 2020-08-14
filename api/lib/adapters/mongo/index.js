@@ -5,6 +5,7 @@ const stepsCollection = require('./steps')
 const codesCollection = require('./codes')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
+let inited
 const DB_NAME = process.env.DB_NAME ? process.env.DB_NAME : 'coronamovement'
 const options =
   process.env.NODE_ENV === 'production'
@@ -18,12 +19,13 @@ const options =
 const init = async () => {
   const client = await MongoClient.connect(process.env.CONNECT_TO, options)
   const db = client.db(DB_NAME)
-  userCollection.init(db)
-  stepsCollection.init(db)
-  codesCollection.init(db)
+  await Promise.all([
+    userCollection.init(db),
+    stepsCollection.init(db),
+    codesCollection.init(db),
+  ])
+  inited = true
 }
-
-init()
 
 module.exports = {
   // steps
@@ -39,4 +41,8 @@ module.exports = {
   updateUser: userCollection.update,
   // codes
   codeExists: codesCollection.codeExists,
+  inited: async () => {
+    if (!inited) await init()
+    return true
+  },
 }

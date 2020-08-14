@@ -356,7 +356,6 @@ module.exports = {
   init: async (db) => {
     await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
-    collection.createIndex({ id: 1, date: 1 }, { unique: true })
   },
   collection,
   save: (dataPoints) =>
