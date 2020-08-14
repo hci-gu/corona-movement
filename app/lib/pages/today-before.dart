@@ -51,7 +51,7 @@ class TodayBeforeText extends HookWidget {
                 ),
                 TextSpan(
                   text:
-                      ' steps so far. On a typical ${DateFormat('EEEE').format(DateTime.now())}, before the corona outbreak, you had normally taken ',
+                      ' steps so far. On a typical ${DateFormat('EEEE').format(DateTime.now())}, before working from home, you had normally taken ',
                 ),
                 TextSpan(
                   text: typicalSteps.toString(),

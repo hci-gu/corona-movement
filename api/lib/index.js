@@ -14,6 +14,10 @@ const PORT = process.env.PORT ? process.env.PORT : 4000
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
+app.use(async (_, __, next) => {
+  await db.inited()
+  next()
+})
 
 app.get('/auth', (_, res) => fitbit.redirect(res))
 app.get('/callback', (req, res) =>
@@ -107,7 +111,7 @@ app.get('/:id/daily-averages', async (req, res) => {
   res.send(data)
 })
 
-app.post('/should-unlock', async (_, res) => res.send())
+app.get('/should-unlock', async (_, res) => res.send(true))
 
 app.post('/unlock', async (req, res) => {
   const { code } = req.body
