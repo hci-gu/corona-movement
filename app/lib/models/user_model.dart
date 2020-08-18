@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
-import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/steps.dart';
@@ -204,10 +203,10 @@ Action syncStepsAction = (get) async {
       );
       List dataChunks = [];
       while (steps.length > 0) {
-        dataChunks.add(steps.take(500).toList());
+        dataChunks.add(steps.take(750).toList());
         steps.removeRange(
           0,
-          steps.length > 500 ? 500 : steps.length,
+          steps.length > 750 ? 750 : steps.length,
         );
       }
       await uploadChunks(user.id, dataChunks);

@@ -81,7 +81,7 @@ class OnboardingModel extends ValueNotifier {
   static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
 }
 
-int chunkSize = 500;
+int chunkSize = 750;
 var onboardingAtom = Atom('onboarding', OnboardingModel());
 
 Action getHealthAuthorizationAction = (get) async {
@@ -107,6 +107,12 @@ Future<List<HealthDataPoint>> getSteps(
   );
   if (steps.length > 0) {
     totalSteps.addAll(steps);
+    DateTime threeYearsAgo = DateTime.now().subtract(Duration(days: 365 * 3));
+    if (from.isBefore(threeYearsAgo)) {
+      totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
+      return totalSteps;
+    }
+
     return getSteps(from.subtract(Duration(days: 30)), from, totalSteps);
   }
   totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));

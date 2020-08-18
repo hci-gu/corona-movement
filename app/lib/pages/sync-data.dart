@@ -34,7 +34,7 @@ class SyncData extends HookWidget {
                 'Syncing: ${onboarding.dataChunks.length} uploads left',
                 textAlign: TextAlign.center,
               ),
-            if (!onboarding.done) StepsEstimate(),
+            StepsEstimate(),
           ],
         ),
       ),
