@@ -49,10 +49,10 @@ class DataSource extends HookWidget {
                 !onboarding.fetching &&
                 onboarding.availableData.length == 0)
               _getAccess(onboarding, getHealthAuthorization),
-            if (onboarding.availableData.length > 0)
+            if (onboarding.availableData.length > 500)
               _hasData(context, onboarding, register, consent, uploadSteps),
             if (onboarding.authorized &&
-                onboarding.availableData.length == 0 &&
+                onboarding.availableData.length <= 500 &&
                 !onboarding.fetching)
               _noData(context, onboarding, getHealthAuthorization),
             if (onboarding.fetching)
@@ -138,11 +138,16 @@ class DataSource extends HookWidget {
 
   Widget _noData(BuildContext context, OnboardingModel onboarding,
       Function getHealthAuthorization) {
+    String description =
+        'You don\'t have any saved steps from ${onboarding.dataSource} or failed to give this app access to your health data. Try again after reviewing access to health data in your phone settings or go back and select another data source or proceed without steps.';
+    if (onboarding.availableData.length > 0) {
+      description =
+          'You don\'t have enough steps saved to make any comparison, you need at least a couple of days before and after your set date for working from home. Go back and select another data source or proceed without steps.';
+    }
+
     return Column(
       children: [
-        Text(
-          'You don\'t have any saved steps from ${onboarding.dataSource} or failed to give this app access to your health data. Try again after reviewing access to health data in your phone settings or go back and select another data source or proceed without steps.',
-        ),
+        Text(description),
         SizedBox(height: 25),
         StyledButton(
           icon: Icon(Icons.arrow_back),
@@ -152,11 +157,12 @@ class DataSource extends HookWidget {
           },
         ),
         SizedBox(height: 25),
-        StyledButton(
-          icon: Icon(Icons.refresh),
-          title: 'Try again',
-          onPressed: () => getHealthAuthorization(),
-        ),
+        if (onboarding.availableData.length == 0)
+          StyledButton(
+            icon: Icon(Icons.refresh),
+            title: 'Try again',
+            onPressed: () => getHealthAuthorization(),
+          ),
       ],
     );
   }
