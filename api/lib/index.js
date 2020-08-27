@@ -31,6 +31,16 @@ app.post('/register', async (req, res) => {
   console.log('register', user)
   res.send(user)
 })
+app.delete('/user/:id', async (req, res) => {
+  const { id } = req.params
+  console.log('DELETE /user/', id)
+  const result = await db.removeUser(id)
+  if (result) {
+    await db.removeStepsForUser(id)
+    return res.sendStatus(200)
+  }
+  res.sendStatus(404)
+})
 app.get('/user/:id', async (req, res) => {
   const { id } = req.params
   console.log('GET /user/', id)

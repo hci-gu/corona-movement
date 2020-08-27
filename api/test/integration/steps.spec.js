@@ -9,13 +9,14 @@ const { test } = require('mocha')
 describe('#Steps', () => {
   let user
   let from = '2020-01-01'
-  let to = '2020-01-03'
+  let to = '2020-01-04'
 
   before(async () => {
     const res = await request(app)
       .post('/register')
       .send({
-        compareDate: moment('2020-01-02').format('YYYY-MM-DD'),
+        compareDate: '2020-01-02',
+        endDate: to,
       })
       .expect(200)
     user = res.body
@@ -56,7 +57,8 @@ describe('#Steps', () => {
       const res = await request(app)
         .post('/register')
         .send({
-          compareDate: moment('2020-01-02').format('YYYY-MM-DD'),
+          compareDate: '2020-01-02',
+          endDate: to,
         })
         .expect(200)
       await request(app)
@@ -74,14 +76,9 @@ describe('#Steps', () => {
 
     it('can get a summary for own hours before and after', async () => {
       const res = await request(app).get(`/${user._id}/summary`).expect(200)
-      expect(res.body.user.before).to.eql(1 * 24 * 6 * 10)
-      expect(res.body.user.after).to.eql(7.354)
-    })
-
-    it('can get a summary for own hours before and after', async () => {
-      const res = await request(app).get(`/${user._id}/summary`).expect(200)
-      expect(res.body.others.before).to.eql(1 * 24 * 6 * 20)
-      expect(res.body.others.after).to.eql(14.709)
+      console.log(res.body)
+      expect(res.body.user.before).to.eql(1 * 24 * 6 * 10) // 24h, 10 steps every 10min
+      expect(res.body.user.after).to.eql(1 * 24 * 6 * 10)
     })
   })
 
@@ -91,7 +88,7 @@ describe('#Steps', () => {
 describe('#Steps uploading same data', () => {
   let user
   let from = '2020-01-01'
-  let to = '2020-01-03'
+  let to = '2020-01-04'
 
   const uploadSteps = () =>
     request(app)
@@ -109,7 +106,8 @@ describe('#Steps uploading same data', () => {
     const res = await request(app)
       .post('/register')
       .send({
-        compareDate: moment('2020-01-02').format('YYYY-MM-DD'),
+        compareDate: '2020-01-02',
+        endDate: to,
       })
       .expect(200)
     user = res.body
@@ -120,7 +118,7 @@ describe('#Steps uploading same data', () => {
   it('has expected amount of steps before', async () => {
     const res = await request(app).get(`/${user._id}/summary`).expect(200)
     expect(res.body.user.before).to.eql(1 * 24 * 6 * 10)
-    expect(res.body.user.after).to.eql(7.354)
+    expect(res.body.user.after).to.eql(1 * 24 * 6 * 10)
   })
 
   it('uploads same data again without steps changing', async () => {
@@ -128,7 +126,7 @@ describe('#Steps uploading same data', () => {
 
     const res = await request(app).get(`/${user._id}/summary`).expect(200)
     expect(res.body.user.before).to.eql(1 * 24 * 6 * 10)
-    expect(res.body.user.after).to.eql(7.354)
+    expect(res.body.user.after).to.eql(1 * 24 * 6 * 10)
   })
 
   after(() => testHelper.cleanup())
@@ -220,4 +218,65 @@ describe('#Steps overwriting data', () => {
   after(() => testHelper.cleanup())
 })
 
-describe('#Steps overwrite highest value for time', () => {})
+describe('#Comparing steps', () => {
+  let users = []
+  let from = '2020-01-01'
+  let to = '2020-01-04'
+
+  before(async () => {
+    let res = await request(app)
+      .post('/register')
+      .send({
+        compareDate: '2020-01-02',
+        endDate: to,
+        code: 'code-1',
+      })
+      .expect(200)
+    users.push(res.body)
+
+    res = await request(app)
+      .post('/register')
+      .send({
+        compareDate: '2020-01-02',
+        endDate: to,
+        code: 'code-1',
+      })
+      .expect(200)
+    users.push(res.body)
+
+    res = await request(app)
+      .post('/register')
+      .send({
+        compareDate: '2020-01-02',
+        endDate: to,
+        code: 'code-2',
+      })
+      .expect(200)
+    users.push(res.body)
+
+    return Promise.all(
+      users.map((user) =>
+        request(app)
+          .post('/health-data')
+          .send({
+            id: user._id,
+            dataPoints: testHelper.generateHealthData({
+              from,
+              to,
+            }),
+          })
+          .expect(200)
+      )
+    )
+  })
+
+  it('should only show comparison for users with same code', async () => {
+    const res1 = await request(app).get(`/${users[0]._id}/summary`).expect(200)
+    const res2 = await request(app).get(`/${users[1]._id}/summary`).expect(200)
+    expect(res1.body.others.before).to.eql(res2.body.others.before)
+
+    const res3 = await request(app).get(`/${users[2]._id}/summary`).expect(200)
+
+    expect(res1.body.others.before).to.not.eql(res3.body.others.before)
+  })
+})

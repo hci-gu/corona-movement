@@ -31,6 +31,7 @@ const generateHealthData = ({
   steps = 10,
   platform = 'PlatformType.IOS',
 }) => {
+  to = moment(to).add(1, 'days').format()
   let length = 0
   let diff = moment(to).diff(moment(from))
   while (diff > 0) {

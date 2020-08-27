@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb')
 const userCollection = require('./users')
 const stepsCollection = require('./steps')
 const codesCollection = require('./codes')
+const steps = require('./steps')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 let inited
@@ -35,10 +36,12 @@ module.exports = {
   getDailyAverages: stepsCollection.getDailyAverages,
   getSummary: stepsCollection.getSummary,
   getLastUpload: stepsCollection.getLastUpload,
+  removeStepsForUser: stepsCollection.removeStepsForUser,
   // users
   createUser: userCollection.create,
   getUser: userCollection.get,
   updateUser: userCollection.update,
+  removeUser: userCollection.remove,
   // codes
   codeExists: codesCollection.codeExists,
   inited: async () => {
