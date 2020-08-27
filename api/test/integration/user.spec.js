@@ -52,5 +52,31 @@ describe('#User', () => {
     })
   })
 
+  describe('DELETE /user/:id', () => {
+    let userId
+
+    before(async () => {
+      const res = await request(app)
+        .post('/register')
+        .send({
+          compareDate: moment('2020-04-01').format('YYYY-MM-DD'),
+        })
+
+      userId = res.body._id
+    })
+
+    it('can get a registered user', async () => {
+      const res = await request(app).get(`/user/${userId}`).expect(200)
+
+      expect(res.body._id).to.eql(userId)
+    })
+
+    it('can delete user', () =>
+      request(app).delete(`/user/${userId}`).expect(200))
+
+    it('can not get deleted user', () =>
+      request(app).delete(`/user/${userId}`).expect(404))
+  })
+
   after(() => testHelper.cleanup())
 })

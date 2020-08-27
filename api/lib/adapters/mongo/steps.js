@@ -145,9 +145,6 @@ const getHours = async ({ id, from, to }) => {
     return getHoursForEveryone({ from, to })
   }
 
-  const daysDiff = moment(to).diff(moment(from), 'days')
-  const weekdayDiff = getBusinessDaysBetween(from, to)
-
   const result = (
     await collection
       .aggregate([
@@ -186,9 +183,6 @@ const getHours = async ({ id, from, to }) => {
 }
 
 const getDays = async ({ id, from, to }) => {
-  const daysDiff = moment(to).diff(moment(from), 'days')
-  const weekdayDiff = getBusinessDaysBetween(from, to)
-
   const result = (
     await collection
       .aggregate([
@@ -256,7 +250,10 @@ const getAverageStepsForUser = async ({ id, from, to }) => {
 
 const getSummary = async ({ id }) => {
   const user = id !== 'all' && (await userCollection.get(id))
-  const users = await userCollection.getAllExcept(id === 'all' ? null : id)
+  const users = await userCollection.getAllExcept(
+    id === 'all' ? null : id,
+    user.code
+  )
 
   if (!user && id !== 'all') {
     throw new Error('No such user')
@@ -296,7 +293,7 @@ const getSummaryForUser = async ({ from, user }) => {
     getAverageStepsForUser({
       id: user._id.toString(),
       from: user.compareDate,
-      to: moment().format(),
+      to: moment(user.endDate ? user.endDate : undefined).format(),
     }),
   ])
 
@@ -352,6 +349,8 @@ const calculateDailyAverages = (users, dates) =>
 const getLastUpload = async ({ id }) =>
   collection.findOne({ id }, { sort: { date: -1 } })
 
+const removeStepsForUser = async (id) => collection.deleteMany({ id })
+
 module.exports = {
   init: async (db) => {
     await db.createCollection(COLLECTION)
@@ -370,4 +369,5 @@ module.exports = {
   getDailyAverages,
   getSummary,
   getLastUpload,
+  removeStepsForUser,
 }
