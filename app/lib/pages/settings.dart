@@ -16,9 +16,13 @@ class Settings extends HookWidget {
     User user = useModel(userAtom);
     var getUserLatestUpload = useAction(getUserLatestUploadAction);
     var garminSyncSteps = useAction(garminSyncStepsAction);
+    var deleteUser = useAction(deleteUserAction);
 
     useEffect(() {
-      getUserLatestUpload();
+      if (user.id != 'all') {
+        getUserLatestUpload();
+      }
+      return;
     }, []);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
     var syncSteps = useAction(syncStepsAction);
@@ -53,34 +57,65 @@ class Settings extends HookWidget {
                 ),
                 SizedBox(height: 40),
                 if (user.id != 'all')
-                  _syncStepsWidget(user, syncSteps, garminSyncSteps),
-                SizedBox(height: 15),
-                Center(
-                  child: StyledButton(
-                    icon: Icon(Icons.add),
-                    title: 'Add data source',
-                    onPressed: () {
-                      globalAnalytics.observer.analytics
-                          .logEvent(name: 'addDataSource');
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SelectDataSource(),
-                          settings: RouteSettings(name: 'Select data source'),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                  ..._loggedInUserWidgets(
+                      context, user, syncSteps, garminSyncSteps, deleteUser),
+                if (user.id == 'all') ..._noUserWidgets(context, deleteUser)
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(25),
-            child: Text('User: ${user.id}'),
-          ),
+          if (user.id != 'all')
+            Container(
+              padding: EdgeInsets.all(25),
+              child: Text('User: ${user.id}'),
+            ),
         ],
       ),
     );
+  }
+
+  List<Widget> _noUserWidgets(BuildContext context, deleteUser) {
+    return [
+      Center(
+        child: StyledButton(
+          icon: Icon(Icons.redo),
+          title: 'Redo introduction',
+          onPressed: () {
+            deleteUser();
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _loggedInUserWidgets(
+      BuildContext context, User user, syncSteps, garminSyncSteps, deleteUser) {
+    return [
+      _syncStepsWidget(user, syncSteps, garminSyncSteps),
+      SizedBox(height: 15),
+      Center(
+        child: StyledButton(
+          icon: Icon(Icons.add),
+          title: 'Add data source',
+          onPressed: () {
+            globalAnalytics.observer.analytics.logEvent(name: 'addDataSource');
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SelectDataSource(),
+                settings: RouteSettings(name: 'Select data source'),
+              ),
+            );
+          },
+        ),
+      ),
+      Center(
+        child: StyledButton(
+          icon: Icon(Icons.delete),
+          title: 'Delete account',
+          onPressed: () => _onDeleteUserPressed(context, deleteUser),
+        ),
+      ),
+    ];
   }
 
   Widget _syncStepsWidget(User user, syncSteps, garminSyncSteps) {
@@ -143,5 +178,39 @@ class Settings extends HookWidget {
       user.setCompareDate(DateTime(date.year, date.month, date.day));
       updateUserCompareDate();
     }
+  }
+
+  void _onDeleteUserPressed(BuildContext context, deleteUser) async {
+    Widget cancelButton = FlatButton(
+      child: Text('Cancel'),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget confirmButton = FlatButton(
+      child: Text('Yes'),
+      onPressed: () {
+        deleteUser();
+        Navigator.of(context).pop();
+      },
+    );
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Confirm',
+          ),
+          content: Text(
+            'Are you sure you want to delete your account and data?',
+          ),
+          actions: [
+            cancelButton,
+            confirmButton,
+          ],
+        );
+      },
+    );
   }
 }

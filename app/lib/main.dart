@@ -10,15 +10,7 @@ import 'package:wfhmovement/pages/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
-void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
-    print("Native called background task: $task");
-    return Future.value(true);
-  });
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +19,6 @@ void main() async {
   globalAnalytics.init(analytics);
 
   runApp(App(analytics));
-
-  Workmanager.initialize(
-    callbackDispatcher,
-    isInDebugMode: true,
-  );
 }
 
 class App extends StatelessWidget {

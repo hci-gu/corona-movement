@@ -81,6 +81,24 @@ class User extends ValueNotifier {
     gaveEstimate = value;
     notifyListeners();
   }
+
+  reset() {
+    inited = true;
+    unlocked = true;
+    id = null;
+    compareDate = null;
+    latestUploadDate = null;
+    dataSource = null;
+    division = null;
+    code = '';
+    loading = false;
+    awaitingDataSource = false;
+    gaveEstimate = false;
+    lastSync = null;
+    stepsEstimate = 0.0;
+
+    notifyListeners();
+  }
 }
 
 var userAtom = Atom('user', User());
@@ -137,6 +155,7 @@ Action proceedWithoutStepsAction = (get) async {
   User user = get(userAtom);
   OnboardingModel onboarding = get(onboardingAtom);
 
+  user.setGaveEstimate(true);
   user.setUser(fakeUser(onboarding));
   onboarding.setDone();
 
@@ -247,5 +266,27 @@ Action shouldUnlockAction = (get) async {
 
   if (!locked) {
     user.setUnlocked();
+  }
+};
+
+Action deleteUserAction = (get) async {
+  User user = get(userAtom);
+  OnboardingModel onboarding = get(onboardingAtom);
+  user.setLoading(true);
+
+  bool deleted;
+  if (user.id != 'all') {
+    deleted = await api.deleteUser(user.id);
+  } else {
+    deleted = true;
+  }
+
+  if (deleted) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('id');
+    user.reset();
+    onboarding.reset();
+  } else {
+    user.setLoading(false);
   }
 };
