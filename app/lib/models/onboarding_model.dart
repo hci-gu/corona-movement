@@ -78,6 +78,22 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
+  reset() {
+    date = null;
+    division = null;
+    dataSource = null;
+    availableData = [];
+    dataChunks = [];
+    initialDataDate = null;
+    fetching = false;
+    authorized = false;
+    gaveConsent = false;
+    uploading = false;
+    done = false;
+
+    notifyListeners();
+  }
+
   static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
 }
 

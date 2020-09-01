@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
 
-// const API_URL = 'http://10.0.2.2:4000';
+const API_URL = 'http://10.0.2.2:4000';
 // const API_URL = 'http://192.168.0.32:4000';
-const API_URL = 'https://api.mycoronamovement.com';
+// const API_URL = 'https://api.mycoronamovement.com';
 
 Future postData(String userId, List<HealthDataPoint> healthData) async {
   var url = '$API_URL/health-data';
@@ -157,6 +157,18 @@ Future<UserResponse> getUser(String userId) async {
   );
 
   return UserResponse.fromJson(json.decode(response.body));
+}
+
+Future<bool> deleteUser(String userId) async {
+  var url = '$API_URL/user/$userId';
+  var response = await http.delete(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+
+  return response.statusCode == 200;
 }
 
 Future updateUserCompareDate(String userId, DateTime compareDate) async {
