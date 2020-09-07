@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:feedback/feedback.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:wfhmovement/global-analytics.dart';
@@ -11,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:wfhmovement/api.dart' as api;
+import 'package:image/image.dart' as img;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +23,28 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics();
   globalAnalytics.init(analytics);
 
-  runApp(App(analytics));
+  runApp(
+    BetterFeedback(
+      // You can customize the background color, ...
+      backgroundColor: Colors.grey,
+      // ... the colors with which the user can draw..
+      drawColors: [Colors.red, Colors.green, Colors.blue, Colors.yellow],
+      // ... and the language used by BetterFeedback.
+      // You can pass any subclass of [FeedbackTranslation] to change the
+      // the text.
+      child: App(analytics),
+      onFeedback: (
+        BuildContext context,
+        String feedbackText, // the feedback from the user
+        Uint8List feedbackScreenshot, // raw png encoded image data
+      ) async {
+        img.Image decoded = img.decodeImage(feedbackScreenshot);
+        img.Image image = img.copyResize(decoded, width: 160);
+        await api.feedback(feedbackText, image.getBytes());
+        BetterFeedback.of(context).hide();
+      },
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -40,6 +66,10 @@ class App extends StatelessWidget {
         home: Scaffold(
           backgroundColor: Color.fromARGB(255, 250, 250, 250),
           body: ScreenSelector(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => BetterFeedback.of(context).show(),
+            child: Icon(Icons.feedback_outlined),
+          ),
         ),
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: analytics),

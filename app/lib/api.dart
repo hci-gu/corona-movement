@@ -1,12 +1,16 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:health/health.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 
-const API_URL = 'http://10.0.2.2:4000';
+// const API_URL = 'http://10.0.2.2:4000';
 // const API_URL = 'http://192.168.0.32:4000';
-// const API_URL = 'https://api.mycoronamovement.com';
+const API_URL = 'https://api.mycoronamovement.com';
 
 Future postData(String userId, List<HealthDataPoint> healthData) async {
   var url = '$API_URL/health-data';
@@ -267,6 +271,32 @@ Future<bool> unlock(String code) async {
       'code': code,
     }),
   );
+
+  return response.statusCode == 200;
+}
+
+Future<bool> feedback(String text, Uint8List screenshot) async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  const url = '$API_URL/feedback';
+  var response = await http.post(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'text': text,
+      'os': Platform.operatingSystem,
+      'version': Platform.operatingSystemVersion,
+      'appName': packageInfo.appName,
+      'packageName': packageInfo.packageName,
+      'appVersion': packageInfo.version,
+      'appBuild': packageInfo.buildNumber
+    }),
+  );
+  var result = jsonDecode(response.body);
+
+  await http.put(result['uploadImageUrl'], body: screenshot);
 
   return response.statusCode == 200;
 }
