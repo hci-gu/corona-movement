@@ -1,4 +1,6 @@
-# corona-movement
+![wfh-movement-app](https://repository-images.githubusercontent.com/264223478/00232480-e7c8-11ea-9732-c0b2c5038e24)
+
+WFH movement is a mobile application that lets users compare their physical activity before and after working from home. By selecting the date they did and uploading historical and current data from their phone or external activity tracking service they are presented with views to explore their data.
 
 ## Running the project
 
