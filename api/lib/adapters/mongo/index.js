@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb')
 const userCollection = require('./users')
 const stepsCollection = require('./steps')
 const codesCollection = require('./codes')
-const steps = require('./steps')
+const feedbackCollection = require('./feedback')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 let inited
@@ -24,6 +24,7 @@ const init = async () => {
     userCollection.init(db),
     stepsCollection.init(db),
     codesCollection.init(db),
+    feedbackCollection.init(db),
   ])
   inited = true
 }

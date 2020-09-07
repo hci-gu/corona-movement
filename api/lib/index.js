@@ -5,6 +5,7 @@ const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
 const fitbit = require('./adapters/fitbit')
 const db = require('./adapters/db')
+const { uploadFeedback } = require('./adapters/mongo/feedback')
 const fs = require('fs')
 const cors = require('cors')
 const moment = require('moment')
@@ -13,7 +14,7 @@ const PORT = process.env.PORT ? process.env.PORT : 4000
 
 const app = express()
 app.use(cors())
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '25mb' }))
 app.use(async (_, __, next) => {
   await db.inited()
   next()
@@ -129,6 +130,13 @@ app.post('/unlock', async (req, res) => {
   const exists = await db.codeExists(code)
 
   res.sendStatus(exists ? 200 : 401)
+})
+
+app.post('/feedback', async (req, res) => {
+  const uploadImageUrl = await uploadFeedback(req.body)
+  res.send({
+    uploadImageUrl,
+  })
 })
 
 app.post('/ping', async (req, res) => {
