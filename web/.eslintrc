@@ -1,0 +1,14 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "extends": ["standard", "prettier"],
+  "plugins": ["prettier", "html"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-fallthrough": "off"
+  },
+  "env": {
+    "node": true
+  }
+}
