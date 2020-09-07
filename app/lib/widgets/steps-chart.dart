@@ -6,6 +6,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/style.dart';
 
 class StepsChart extends HookWidget {
+  bool share;
+  StepsChart({this.share = false, key}) : super(key: key);
+
   final Color beforeColor = AppColors.secondary;
   final Color afterColor = AppColors.main;
 
@@ -28,7 +31,7 @@ class StepsChart extends HookWidget {
       child: Container(
         child: Column(
           children: [
-            _totalSteps(totalSteps[0], totalSteps[1]),
+            _totalSteps(context, totalSteps[0], totalSteps[1]),
             _chart(context, data),
           ],
         ),
@@ -36,7 +39,7 @@ class StepsChart extends HookWidget {
     );
   }
 
-  Widget _totalSteps(int stepsBefore, int stepsAfter) {
+  Widget _totalSteps(BuildContext context, int stepsBefore, int stepsAfter) {
     TextStyle textStyle = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w300,
@@ -45,6 +48,9 @@ class StepsChart extends HookWidget {
     );
 
     return Container(
+      width: share
+          ? MediaQuery.of(context).size.width * 0.75
+          : MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,8 +102,10 @@ class StepsChart extends HookWidget {
   Widget _chartBody(BuildContext context, Widget child) {
     return Container(
       clipBehavior: Clip.antiAlias,
-      width: MediaQuery.of(context).size.width,
-      height: 250,
+      width: share
+          ? MediaQuery.of(context).size.width * 0.75
+          : MediaQuery.of(context).size.width,
+      height: share ? 150 : 250,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         gradient: AppColors.backgroundGradient,

@@ -24,7 +24,9 @@ class SyncData extends HookWidget {
               ),
             ),
             Text(
-              'Uploading your steps...',
+              onboarding.dataChunks != null && onboarding.dataChunks.length > 0
+                  ? 'Uploading your steps...'
+                  : 'Upload done',
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),

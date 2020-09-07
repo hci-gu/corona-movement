@@ -24,8 +24,23 @@ class Settings extends HookWidget {
       }
       return;
     }, []);
+    useEffect(() {
+      if (user.id == null) {
+        Navigator.of(context).pop();
+      }
+      return;
+    }, [user.id]);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
     var syncSteps = useAction(syncStepsAction);
+
+    if (user.loading) {
+      return Scaffold(
+        appBar: AppWidgets.appBar(context, 'Settings', false),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppWidgets.appBar(context, 'Settings', false),
@@ -35,25 +50,24 @@ class Settings extends HookWidget {
             child: ListView(
               padding: EdgeInsets.all(25),
               children: [
-                Text(
-                  'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
-                  style: TextStyle(
-                    fontSize: 18,
+                if (user.compareDate != null)
+                  Text(
+                    'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
-                ),
                 SizedBox(height: 20),
                 Center(
-                  child: user.loading
-                      ? CircularProgressIndicator()
-                      : StyledButton(
-                          icon: Icon(Icons.date_range),
-                          title: 'Change date',
-                          onPressed: () => _onChangeDatePressed(
-                            context,
-                            user,
-                            updateUserCompareDate,
-                          ),
-                        ),
+                  child: StyledButton(
+                    icon: Icon(Icons.date_range),
+                    title: 'Change date',
+                    onPressed: () => _onChangeDatePressed(
+                      context,
+                      user,
+                      updateUserCompareDate,
+                    ),
+                  ),
                 ),
                 SizedBox(height: 40),
                 if (user.id != 'all')
@@ -63,7 +77,7 @@ class Settings extends HookWidget {
               ],
             ),
           ),
-          if (user.id != 'all')
+          if (user.id != 'all' && user.id != null)
             Container(
               padding: EdgeInsets.all(25),
               child: Text('User: ${user.id}'),
@@ -108,6 +122,7 @@ class Settings extends HookWidget {
           },
         ),
       ),
+      SizedBox(height: 15),
       Center(
         child: StyledButton(
           icon: Icon(Icons.delete),
@@ -124,33 +139,28 @@ class Settings extends HookWidget {
         children: [
           Text('Login with your Garmin to credentials'),
           GarminLogin(),
-          user.loading
-              ? CircularProgressIndicator()
-              : StyledButton(
-                  icon: Icon(Icons.sync),
-                  title: 'Sync Garmin',
-                  onPressed: () {
-                    garminSyncSteps();
-                  },
-                )
+          StyledButton(
+            icon: Icon(Icons.sync),
+            title: 'Sync Garmin',
+            onPressed: () {
+              garminSyncSteps();
+            },
+          )
         ],
       );
     }
     return Center(
       child: Column(
         children: [
-          user.loading
-              ? CircularProgressIndicator()
-              : StyledButton(
-                  icon: Icon(Icons.sync),
-                  title: 'Sync steps',
-                  onPressed: () {
-                    globalAnalytics.observer.analytics
-                        .logEvent(name: 'syncSteps');
-                    syncSteps();
-                  },
-                ),
-          if (!user.loading)
+          StyledButton(
+            icon: Icon(Icons.sync),
+            title: 'Sync steps',
+            onPressed: () {
+              globalAnalytics.observer.analytics.logEvent(name: 'syncSteps');
+              syncSteps();
+            },
+          ),
+          if (user.latestUploadDate != null)
             Container(
               padding: EdgeInsets.all(10),
               child: Text(
@@ -190,6 +200,7 @@ class Settings extends HookWidget {
     Widget confirmButton = FlatButton(
       child: Text('Yes'),
       onPressed: () {
+        globalAnalytics.observer.analytics.logEvent(name: 'deleteAccount');
         deleteUser();
         Navigator.of(context).pop();
       },

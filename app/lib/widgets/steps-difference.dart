@@ -5,27 +5,38 @@ import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/style.dart';
 
 class StepsDifference extends HookWidget {
+  bool share;
+
+  StepsDifference({
+    key,
+    this.share: false,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var diff = useModel(stepsDiffBeforeAndAfterSelector);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 60, vertical: 25),
+      padding: EdgeInsets.symmetric(
+          horizontal: share ? 20 : 60, vertical: share ? 0 : 25),
       child: Column(children: [
         Text(
           '${diff != null ? diff : '-'}%',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.primaryText,
-            fontSize: 48,
+            fontSize: share ? 32 : 48,
             fontWeight: FontWeight.w800,
             height: 1,
           ),
         ),
         Text(
-          _textForDiff(diff),
+          _textForDiff(
+            diff,
+          ),
           textAlign: TextAlign.center,
           style: TextStyle(
+            fontSize: share ? 16 : 16,
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -34,9 +45,14 @@ class StepsDifference extends HookWidget {
   }
 
   String _textForDiff(diff) {
-    if (diff == null) {
-      return 'Your average daily steps have\n changed by -%.';
+    String who = 'Your';
+    if (share) {
+      who = 'My';
     }
-    return 'Your average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff%.';
+
+    if (diff == null) {
+      return '$who average daily steps have\n changed by -%.';
+    }
+    return '$who average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff%.';
   }
 }
