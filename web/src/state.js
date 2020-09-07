@@ -22,7 +22,7 @@ const group = (array, keyFn) => {
 
 const putDataInBuckets = (data) =>
   Array.from({ length: 24 }).map((_, i) => {
-    const match = data.find((o) => o.key == i)
+    const match = data.find((o) => o.key === i)
     if (match) {
       return match
     }
