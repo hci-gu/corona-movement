@@ -88,4 +88,22 @@ class AppWidgets {
       ),
     );
   }
+
+  static void showAlert(BuildContext context, String title, String text) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: [
+          FlatButton(
+            child: Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
 }

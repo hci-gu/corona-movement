@@ -85,6 +85,11 @@ class DetailedSteps extends HookWidget {
             FlatButton(
               child: Text('Share'),
               onPressed: () {
+                return AppWidgets.showAlert(
+                  context,
+                  'Share not available',
+                  'Share functionality will be available in the next version',
+                );
                 _onSharePressed(context);
                 Navigator.of(context).pop();
               },

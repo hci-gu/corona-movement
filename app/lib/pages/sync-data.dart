@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/pages/onboarding/user_form.dart';
+import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/steps-estimate.dart';
@@ -67,6 +68,11 @@ class SyncData extends HookWidget {
                         setUserFormData();
                         return;
                       }
+                      AppWidgets.showAlert(
+                        context,
+                        'Form not completed',
+                        'Please fill out the fields above to proceed.',
+                      );
                     },
                   ),
           )
