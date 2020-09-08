@@ -157,9 +157,11 @@ Action registerAction = (get) async {
 Action proceedWithoutStepsAction = (get) async {
   User user = get(userAtom);
   OnboardingModel onboarding = get(onboardingAtom);
+  FormModel form = get(formAtom);
 
   user.setGaveEstimate(true);
   user.setUser(fakeUser(onboarding));
+  form.setUploaded();
   onboarding.setDone();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -216,7 +218,7 @@ Action syncStepsAction = (get) async {
       if (DateTime.now().difference(from).inDays == 0) {
         return user.setLoading(false);
       }
-      user.setAwaitingDataSource(true);
+      if (user.dataSource != null) user.setAwaitingDataSource(true);
     } else {
       List<HealthDataPoint> steps = await Health.getHealthDataFromType(
         from,
