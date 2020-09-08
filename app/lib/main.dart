@@ -57,9 +57,7 @@ class App extends StatelessWidget {
           String feedbackText, // the feedback from the user
           Uint8List feedbackScreenshot, // raw png encoded image data
         ) async {
-          img.Image decoded = img.decodeImage(feedbackScreenshot);
-          img.Image image = img.copyResize(decoded, width: 160);
-          await api.feedback(feedbackText, image.getBytes());
+          await api.feedback(feedbackText, feedbackScreenshot);
           BetterFeedback.of(context).hide();
         },
       ),

@@ -8,8 +8,8 @@ api:
     handler: ./lib/index.handler
     env:
       CONNECT_TO: ${env.CONNECT_TO}
-      AWS_ACCESS_KEY_ID: ${env.AWS_ACCESS_KEY_ID}
-      AWS_ACCESS_KEY_SECRET: ${env.AWS_ACCESS_KEY_SECRET}
+      AWS_S3_ACCESS_KEY_ID: ${env.AWS_S3_ACCESS_KEY_ID}
+      AWS_S3_ACCESS_KEY_SECRET: ${env.AWS_S3_ACCESS_KEY_SECRET}
       AWS_S3_BUCKET_NAME: appfeedback
       AWS_S3_BUCKET_REGION: eu-north-1
       DB: mongo
@@ -34,6 +34,9 @@ apiGateway:
       - path: /user/{id}
         method: PATCH
         function: ${api.arn}
+      - path: /user/{id}
+        method: DELETE
+        function: ${api.arn}
       - path: /health-data
         method: POST
         function: ${api.arn}
@@ -45,6 +48,12 @@ apiGateway:
         function: ${api.arn}
       - path: /{id}/last-upload
         method: GET
+        function: ${api.arn}
+      - path: should-unlock
+        method: GET
+        function: ${api.arn}
+      - path: feedback
+        method: POST
         function: ${api.arn}
 web:
   component: '@serverless/website'
