@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/steps-difference.dart';
 
 class CompareSteps extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Compare', false),
-      body: Container(
+      child: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),
           children: [

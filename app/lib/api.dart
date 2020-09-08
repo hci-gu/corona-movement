@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:wfhmovement/models/form_model.dart';
 
 // const API_URL = 'http://10.0.2.2:4000';
 // const API_URL = 'http://192.168.0.32:4000';
@@ -197,6 +198,24 @@ Future updateUserEstimate(String userId, double stepsEstimate) async {
     },
     body: jsonEncode({
       'stepsEstimate': stepsEstimate,
+    }),
+  );
+}
+
+Future setUserFormData(String userId, FormModel form) async {
+  var url = '$API_URL/user/$userId';
+  await http.patch(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'country': form.country,
+      'gender': form.gender,
+      'ageRange': form.ageRange,
+      'education': form.education,
+      'profession': form.profession,
+      'organisation': form.organisation,
     }),
   );
 }

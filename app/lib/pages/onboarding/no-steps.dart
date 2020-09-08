@@ -6,15 +6,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class NoSteps extends HookWidget {
   @override
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
 
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, 'No steps', false),
-      body: _body(context, onboarding),
+      child: _body(context, onboarding),
     );
   }
 

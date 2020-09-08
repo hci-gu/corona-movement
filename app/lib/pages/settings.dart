@@ -9,6 +9,7 @@ import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/garmin-login.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class Settings extends HookWidget {
   @override
@@ -34,17 +35,17 @@ class Settings extends HookWidget {
     var syncSteps = useAction(syncStepsAction);
 
     if (user.loading) {
-      return Scaffold(
+      return MainScaffold(
         appBar: AppWidgets.appBar(context, 'Settings', false),
-        body: Center(
+        child: Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
 
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Settings', false),
-      body: Column(
+      child: Column(
         children: [
           Expanded(
             child: ListView(

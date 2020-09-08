@@ -9,6 +9,7 @@ import 'package:wfhmovement/pages/today-before.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
 import 'package:wfhmovement/widgets/days-bar-chart.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/page-widget.dart';
 import 'package:wfhmovement/widgets/steps-chart.dart';
 import 'package:wfhmovement/widgets/steps-difference.dart';
@@ -26,9 +27,9 @@ class Home extends HookWidget {
       return;
     }, [user.compareDate, user.lastSync]);
 
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, null, true),
-      body: Container(
+      child: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),
           children: [
