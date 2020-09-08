@@ -30,6 +30,8 @@ dependencies:
   feedback: ^0.3.0
   image: ^2.1.14
   package_info: ^0.4.3
+  country_list_pick: ^1.0.0+5
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:

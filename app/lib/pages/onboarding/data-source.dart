@@ -7,6 +7,7 @@ import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/garmin-login.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class DataSource extends HookWidget {
   @override
@@ -21,9 +22,9 @@ class DataSource extends HookWidget {
       return;
     }, [onboarding.authorized]);
 
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, onboarding.dataSource, false),
-      body: _body(context, onboarding),
+      child: _body(context, onboarding),
     );
   }
 

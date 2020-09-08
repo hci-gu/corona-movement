@@ -8,6 +8,7 @@ import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/widgets/button.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class Introduction extends HookWidget {
   @override
@@ -24,33 +25,35 @@ class Introduction extends HookWidget {
       return;
     }, []);
 
-    return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 25),
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Text(
-              'WFH Movement',
-              style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Have your movement patterns changed?',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
-              textAlign: TextAlign.center,
-            ),
-            Container(
-              margin: EdgeInsets.all(25),
-              child: SvgPicture.asset(
-                'assets/svg/remote_work.svg',
-                height: 150,
+    return MainScaffold(
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 25),
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              Text(
+                'WFH Movement',
+                style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
+                textAlign: TextAlign.center,
               ),
-            ),
-            user.unlocked
-                ? pickDateWidget(context, onboarding)
-                : unlockWidget(user, code, unlock)
-          ],
+              Text(
+                'Have your movement patterns changed?',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
+                textAlign: TextAlign.center,
+              ),
+              Container(
+                margin: EdgeInsets.all(25),
+                child: SvgPicture.asset(
+                  'assets/svg/remote_work.svg',
+                  height: 150,
+                ),
+              ),
+              user.unlocked
+                  ? pickDateWidget(context, onboarding)
+                  : unlockWidget(user, code, unlock)
+            ],
+          ),
         ),
       ),
     );

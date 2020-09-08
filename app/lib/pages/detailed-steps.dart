@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -13,6 +11,7 @@ import 'package:path/path.dart' show join;
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/day-select.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/steps-chart.dart';
 import 'package:wfhmovement/widgets/steps-difference.dart';
 
@@ -21,9 +20,9 @@ class DetailedSteps extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Detailed steps', true),
-      body: ListView(
+      child: ListView(
         padding: EdgeInsets.only(top: 25),
         children: [
           DaySelect(),
@@ -55,20 +54,6 @@ class DetailedSteps extends HookWidget {
   }
 
   _presentShareView(BuildContext context) async {
-    Widget cancelButton = FlatButton(
-      child: Text('Cancel'),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    Widget confirmButton = FlatButton(
-      child: Text('Share'),
-      onPressed: () {
-        _onSharePressed(context);
-        Navigator.of(context).pop();
-      },
-    );
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -90,7 +75,21 @@ class DetailedSteps extends HookWidget {
               ),
             ),
           ),
-          actions: [cancelButton, confirmButton],
+          actions: [
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Share'),
+              onPressed: () {
+                _onSharePressed(context);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );

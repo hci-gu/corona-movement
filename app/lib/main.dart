@@ -4,6 +4,7 @@ import 'package:feedback/feedback.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:wfhmovement/global-analytics.dart';
+import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/home.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:wfhmovement/api.dart' as api;
 import 'package:image/image.dart' as img;
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,28 +25,7 @@ void main() async {
   FirebaseAnalytics analytics = FirebaseAnalytics();
   globalAnalytics.init(analytics);
 
-  runApp(
-    BetterFeedback(
-      // You can customize the background color, ...
-      backgroundColor: Colors.grey,
-      // ... the colors with which the user can draw..
-      drawColors: [Colors.red, Colors.green, Colors.blue, Colors.yellow],
-      // ... and the language used by BetterFeedback.
-      // You can pass any subclass of [FeedbackTranslation] to change the
-      // the text.
-      child: App(analytics),
-      onFeedback: (
-        BuildContext context,
-        String feedbackText, // the feedback from the user
-        Uint8List feedbackScreenshot, // raw png encoded image data
-      ) async {
-        img.Image decoded = img.decodeImage(feedbackScreenshot);
-        img.Image image = img.copyResize(decoded, width: 160);
-        await api.feedback(feedbackText, image.getBytes());
-        BetterFeedback.of(context).hide();
-      },
-    ),
-  );
+  runApp(App(analytics));
 }
 
 class App extends StatelessWidget {
@@ -56,24 +37,31 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider(
       create: (context) => StateStore(),
-      child: MaterialApp(
-        title: 'Work from home movement',
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-          primarySwatch: Colors.amber,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: Color.fromARGB(255, 250, 250, 250),
-          body: ScreenSelector(),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => BetterFeedback.of(context).show(),
-            child: Icon(Icons.feedback_outlined),
+      child: BetterFeedback(
+        backgroundColor: Colors.grey,
+        drawColors: [Colors.red, Colors.green, Colors.blue, Colors.yellow],
+        child: MaterialApp(
+          title: 'Work from home movement',
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            primarySwatch: Colors.amber,
           ),
+          debugShowCheckedModeBanner: false,
+          home: ScreenSelector(),
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics),
+          ],
         ),
-        navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics),
-        ],
+        onFeedback: (
+          BuildContext context,
+          String feedbackText, // the feedback from the user
+          Uint8List feedbackScreenshot, // raw png encoded image data
+        ) async {
+          img.Image decoded = img.decodeImage(feedbackScreenshot);
+          img.Image image = img.copyResize(decoded, width: 160);
+          await api.feedback(feedbackText, image.getBytes());
+          BetterFeedback.of(context).hide();
+        },
       ),
     );
   }
@@ -83,6 +71,7 @@ class ScreenSelector extends HookWidget {
   @override
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
+    FormModel form = useModel(formAtom);
     User user = useModel(userAtom);
     var init = useAction(initAction);
     useEffect(() {
@@ -90,15 +79,18 @@ class ScreenSelector extends HookWidget {
       return;
     }, []);
 
-    if (!user.inited)
-      return Center(
-        child: CircularProgressIndicator(),
+    if (!user.inited) {
+      return MainScaffold(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
+    }
 
     if ((user.id == null || !onboarding.done) && !onboarding.uploading) {
       return Introduction();
     }
-    if (onboarding.uploading || !user.gaveEstimate) {
+    if (onboarding.uploading || !user.gaveEstimate || !form.uploaded) {
       return SyncData();
     }
     return Home();

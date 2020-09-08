@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/style.dart';
-import 'package:wfhmovement/widgets/steps-difference.dart';
+import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class TodayBefore extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Today & Before', false),
-      body: Hero(
+      child: Hero(
         tag: 'today-before',
         child: TodayBeforeText(),
         flightShuttleBuilder: AppWidgets.flightShuttleBuilder,

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api.dart' as api;
@@ -116,6 +117,7 @@ var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
 Action initAction = (get) async {
   User user = get(userAtom);
   OnboardingModel onboarding = get(onboardingAtom);
+  FormModel form = get(formAtom);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userId = prefs.getString('id');
@@ -128,6 +130,7 @@ Action initAction = (get) async {
     }
     user.setUser(response);
     user.setGaveEstimate(true);
+    form.setUploaded();
     onboarding.setDone();
   }
   user.setInited();

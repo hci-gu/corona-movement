@@ -11,7 +11,6 @@ class StepsEstimate extends HookWidget {
     var updateEstimate = useAction(updateEstimateAction);
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 25),
       child: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -25,7 +24,7 @@ class StepsEstimate extends HookWidget {
   List<Widget> giveEstimate(BuildContext context, User user, updateEstimate) {
     return [
       Text(
-        'While your steps are being uploaded, please use the slider below to give an estimate of how much you think your average daily steps have changed.',
+        'Use the slider below to give an estimate of how much you think your average daily steps have changed.',
       ),
       Slider(
         value: user.stepsEstimate,
