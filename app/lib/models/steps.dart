@@ -243,7 +243,7 @@ var stepsTodaySelector = Selector('steps-today', (GetStateValue get) {
       .toInt();
 });
 
-var typicalStepsSelector = Selector('steps-today', (GetStateValue get) {
+var typicalStepsSelector = Selector('typical-steps', (GetStateValue get) {
   StepsModel steps = get(stepsAtom);
   var todaysDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   var hour = DateTime.now().hour;

@@ -32,7 +32,6 @@ class App extends StatelessWidget {
   final FirebaseAnalytics analytics;
 
   App(this.analytics);
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Provider(
@@ -57,7 +56,29 @@ class App extends StatelessWidget {
           String feedbackText, // the feedback from the user
           Uint8List feedbackScreenshot, // raw png encoded image data
         ) async {
+          BuildContext dialogContext;
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              dialogContext = context;
+              return Dialog(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 20),
+                      Text('Sending feedback'),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
           await api.feedback(feedbackText, feedbackScreenshot);
+          Navigator.pop(dialogContext);
           BetterFeedback.of(context).hide();
         },
       ),

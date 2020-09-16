@@ -5,6 +5,7 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/onboarding/user_form.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
@@ -14,6 +15,8 @@ import 'package:wfhmovement/widgets/steps-estimate.dart';
 class SyncData extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final step = useState(0);
+    User user = useModel(userAtom);
     OnboardingModel onboarding = useModel(onboardingAtom);
     FormModel form = useModel(formAtom);
     bool formDone = useModel(formDoneSelector);
@@ -51,21 +54,27 @@ class SyncData extends HookWidget {
                 : 'Your upload is complete, please finish filling in the form below to proceed.',
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 20),
-          UserForm(),
-          SizedBox(height: 20),
-          StepsEstimate(),
-          SizedBox(height: 20),
+          SizedBox(height: 40),
+          if (step.value == 0) UserForm(),
+          if (step.value == 1) StepsEstimate(),
+          SizedBox(height: 40),
           Opacity(
-            opacity: formDone ? 1.0 : 0.5,
+            opacity:
+                step.value == 0 && formDone || user.gaveEstimate ? 1.0 : 0.5,
             child: form.loading
-                ? CircularProgressIndicator()
+                ? Center(child: CircularProgressIndicator())
                 : StyledButton(
                     icon: Icon(Icons.done),
                     title: 'Done',
                     onPressed: () {
                       if (formDone) {
-                        setUserFormData();
+                        if (step.value == 0) {
+                          step.value++;
+                          return;
+                        }
+                        if (step.value == 1) {
+                          setUserFormData();
+                        }
                         return;
                       }
                       AppWidgets.showAlert(
