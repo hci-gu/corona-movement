@@ -90,7 +90,7 @@ app.get('/:id/hours', async (req, res) => {
   const data = await db.getHours({
     id,
     from,
-    to,
+    to: moment(to).add(1, 'day').format(),
   })
 
   res.send(data)

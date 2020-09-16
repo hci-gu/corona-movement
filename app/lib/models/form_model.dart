@@ -81,14 +81,12 @@ class FormModel extends ValueNotifier {
 var formAtom = Atom('form', FormModel());
 
 var formDoneSelector = Selector('form-done-selector', (GetStateValue get) {
-  User user = get(userAtom);
   FormModel form = get(formAtom);
 
   return form.country != null &&
       form.gender != null &&
       form.ageRange != null &&
-      form.education != null &&
-      user.gaveEstimate;
+      form.education != null;
 });
 
 Action setUserFormDataAction = (get) async {

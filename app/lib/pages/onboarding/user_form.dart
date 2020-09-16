@@ -91,7 +91,6 @@ class UserForm extends HookWidget {
             .map((e) => DropdownMenuItem(child: Text(e), value: e))
             .toList(),
       ],
-      // selectedItemBuilder: (),
       value: value,
       onChanged: (val) => onChange(type, val),
     );
@@ -100,7 +99,7 @@ class UserForm extends HookWidget {
   Widget _freeForm(String type, String value, onChange) {
     return TextField(
       decoration: InputDecoration(
-        hintText: 'Name of profession',
+        hintText: 'Name of $type',
       ),
       onChanged: (val) => onChange(type, val),
     );

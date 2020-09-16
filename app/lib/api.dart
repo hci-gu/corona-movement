@@ -104,7 +104,8 @@ class LatestUpload {
   String dataSource;
 
   LatestUpload(Map<String, dynamic> json) {
-    date = DateTime.parse(json['date']);
+    var sthlm = tz.getLocation('Europe/Stockholm');
+    date = tz.TZDateTime.parse(sthlm, '${json['date']}');
     dataSource = json['platform_type'];
   }
 

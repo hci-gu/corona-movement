@@ -8,7 +8,7 @@ import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/steps.dart';
 
 class User extends ValueNotifier {
-  bool unlocked = false;
+  bool unlocked = true;
   bool inited = false;
   String id;
   DateTime compareDate;
@@ -214,7 +214,7 @@ Action syncStepsAction = (get) async {
     DateTime from = user.latestUploadDate;
     DateTime to = DateTime.now();
 
-    if (user.dataSource == 'Garmin' || user.dataSource == null) {
+    if (user.dataSource == 'Garmin') {
       if (DateTime.now().difference(from).inDays == 0) {
         return user.setLoading(false);
       }
