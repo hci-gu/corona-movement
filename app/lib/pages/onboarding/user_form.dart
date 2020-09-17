@@ -76,7 +76,7 @@ class UserForm extends HookWidget {
         ),
         UserFormField(
           name: 'Company / Organisation',
-          child: _freeForm('organisation', form.profession, form.setField),
+          child: _freeForm('organisation', form.organisation, form.setField),
         ),
       ],
     );
@@ -97,7 +97,10 @@ class UserForm extends HookWidget {
   }
 
   Widget _freeForm(String type, String value, onChange) {
+    final controller = useTextEditingController(text: value);
+
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         hintText: 'Name of $type',
       ),

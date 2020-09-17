@@ -19,8 +19,6 @@ class SyncData extends HookWidget {
     User user = useModel(userAtom);
     OnboardingModel onboarding = useModel(onboardingAtom);
     FormModel form = useModel(formAtom);
-    bool formDone = useModel(formDoneSelector);
-    var setUserFormData = useAction(setUserFormDataAction);
 
     bool isUploading =
         onboarding.dataChunks != null && onboarding.dataChunks.length > 0;
@@ -58,35 +56,59 @@ class SyncData extends HookWidget {
           if (step.value == 0) UserForm(),
           if (step.value == 1) StepsEstimate(),
           SizedBox(height: 40),
-          Opacity(
-            opacity:
-                step.value == 0 && formDone || user.gaveEstimate ? 1.0 : 0.5,
-            child: form.loading
-                ? Center(child: CircularProgressIndicator())
-                : StyledButton(
-                    icon: Icon(Icons.done),
-                    title: 'Done',
-                    onPressed: () {
-                      if (formDone) {
-                        if (step.value == 0) {
-                          step.value++;
-                          return;
-                        }
-                        if (step.value == 1) {
-                          setUserFormData();
-                        }
-                        return;
-                      }
-                      AppWidgets.showAlert(
-                        context,
-                        'Form not completed',
-                        'Please fill out the fields above to proceed.',
-                      );
-                    },
-                  ),
-          )
+          _formButtons(context, step, form, user),
         ],
       ),
+    );
+  }
+
+  Widget _formButtons(BuildContext context, step, form, user) {
+    bool formDone = useModel(formDoneSelector);
+    var setUserFormData = useAction(setUserFormDataAction);
+
+    Widget proceedButton = Opacity(
+      opacity: step.value == 0 && formDone || user.gaveEstimate ? 1.0 : 0.5,
+      child: form.loading
+          ? Center(child: CircularProgressIndicator())
+          : StyledButton(
+              icon: Icon(
+                step.value == 0 ? Icons.arrow_forward : Icons.done,
+              ),
+              title: step.value == 0 ? 'Next' : 'Done',
+              onPressed: () {
+                if (formDone) {
+                  if (step.value == 0) {
+                    step.value++;
+                    return;
+                  }
+                  if (step.value == 1) {
+                    setUserFormData();
+                  }
+                  return;
+                }
+                AppWidgets.showAlert(
+                  context,
+                  'Form not completed',
+                  'Please fill out the fields above to proceed.',
+                );
+              },
+            ),
+    );
+    if (step.value == 0) return proceedButton;
+
+    return Row(
+      children: [
+        StyledButton(
+          icon: Icon(Icons.arrow_back),
+          title: 'Back',
+          onPressed: () {
+            step.value = 0;
+          },
+          small: true,
+        ),
+        SizedBox(width: 10),
+        proceedButton,
+      ],
     );
   }
 }

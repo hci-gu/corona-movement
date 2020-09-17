@@ -24,6 +24,11 @@ class StepsEstimate extends HookWidget {
   List<Widget> giveEstimate(BuildContext context, User user, updateEstimate) {
     return [
       Text(
+        'Estimate your change',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      SizedBox(height: 25),
+      Text(
         'Use the slider below to give an estimate of how much you think your average daily steps have changed.',
       ),
       Slider(

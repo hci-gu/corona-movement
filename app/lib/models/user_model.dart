@@ -8,7 +8,7 @@ import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/steps.dart';
 
 class User extends ValueNotifier {
-  bool unlocked = true;
+  bool unlocked = false;
   bool inited = false;
   String id;
   DateTime compareDate;
