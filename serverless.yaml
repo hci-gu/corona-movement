@@ -55,6 +55,9 @@ apiGateway:
       - path: feedback
         method: POST
         function: ${api.arn}
+      - path: /fitbit/callback
+        method: GET
+        function: ${api.arn}
 web:
   component: '@serverless/website'
   inputs:

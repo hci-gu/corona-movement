@@ -3,10 +3,8 @@ require('dotenv').config()
 const express = require('express')
 const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
-const fitbit = require('./adapters/fitbit')
 const db = require('./adapters/db')
 const { uploadFeedback } = require('./adapters/mongo/feedback')
-const fs = require('fs')
 const cors = require('cors')
 const moment = require('moment')
 
@@ -20,10 +18,7 @@ app.use(async (_, __, next) => {
   next()
 })
 
-app.get('/auth', (_, res) => fitbit.redirect(res))
-app.get('/callback', (req, res) =>
-  fitbit.handleCallback(req).then((token) => res.send({ token }))
-)
+app.get('/fitbit/callback', (_, res) => res.redirect('wfhmovement:/'))
 app.get('/', (_, res) => res.send('hello'))
 
 app.post('/register', async (req, res) => {
