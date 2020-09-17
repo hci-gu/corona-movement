@@ -142,6 +142,12 @@ class SelectDataSource extends HookWidget {
           padding: EdgeInsets.symmetric(vertical: 5),
           child: Image(image: AssetImage('assets/png/garmin_logo.png')),
         );
+      case 'Fitbit':
+        return Container(
+          width: 40,
+          padding: EdgeInsets.symmetric(vertical: 15),
+          child: Image(image: AssetImage('assets/png/fitbit_logo.png')),
+        );
       default:
         return null;
     }

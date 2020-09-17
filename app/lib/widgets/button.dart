@@ -4,6 +4,7 @@ class StyledButton extends StatefulWidget {
   final GestureTapCallback onPressed;
   final String title;
   final Widget icon;
+  final bool small;
 
   final List<BoxShadow> boxShadow;
 
@@ -13,6 +14,7 @@ class StyledButton extends StatefulWidget {
     @required this.title,
     this.icon,
     this.boxShadow = const [],
+    this.small = false,
   }) : super(key: key);
 
   @override
@@ -84,13 +86,18 @@ class _OutlinedButtonState extends State<StyledButton>
       ),
     );
 
+    double width = widget.title.length > 12 ? 250 : 200;
+    if (widget.small) {
+      width = 130;
+    }
+
     return GestureDetector(
       onTapDown: _onTapDown,
       onTapCancel: _onTapCancel,
       onTapUp: _onTapUp,
       onTap: widget.onPressed,
       child: Container(
-        width: widget.title.length > 12 ? 250 : 200,
+        width: width,
         height: 44,
         decoration: BoxDecoration(
           color: _colorTween.value,

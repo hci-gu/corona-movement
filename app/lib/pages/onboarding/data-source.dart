@@ -1,3 +1,4 @@
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -77,11 +78,19 @@ class DataSource extends HookWidget {
         StyledButton(
           icon: Icon(Icons.check),
           title: 'Give access',
-          onPressed: () {
+          onPressed: () async {
             getHealthAuthorization();
           },
         ),
       ],
+    );
+  }
+
+  void _authorizeFitbit() async {
+    final result = await FlutterWebAuth.authenticate(
+      url:
+          'https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=22BSFZ&redirect_uri=https%3A%2F%2Fapi.mycoronamovement.com%2Ffitbit%2Fcallback&scope=activity&expires_in=604800',
+      callbackUrlScheme: 'wfhmovement',
     );
   }
 
