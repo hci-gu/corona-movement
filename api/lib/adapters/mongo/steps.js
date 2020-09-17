@@ -57,9 +57,6 @@ const getAverageHour = async ({ id, from, to, weekDays }) => {
 
   const result = (
     await collection
-      .query({
-        duration: { $lte: 360000000 },
-      })
       .aggregate([
         {
           $match: getQuery({ id, from, to, weekDays }),
