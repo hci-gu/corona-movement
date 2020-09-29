@@ -191,24 +191,9 @@ class Settings extends HookWidget {
     }
   }
 
-  void _onDeleteUserPressed(BuildContext context, deleteUser) async {
-    Widget cancelButton = FlatButton(
-      child: Text('Cancel'),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    Widget confirmButton = FlatButton(
-      child: Text('Yes'),
-      onPressed: () {
-        globalAnalytics.observer.analytics.logEvent(name: 'deleteAccount');
-        deleteUser();
-        Navigator.of(context).pop();
-      },
-    );
-
+  void _onDeleteUserPressed(BuildContext parentContext, deleteUser) async {
     return showDialog(
-      context: context,
+      context: parentContext,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
@@ -218,8 +203,22 @@ class Settings extends HookWidget {
             'Are you sure you want to delete your account and data?',
           ),
           actions: [
-            cancelButton,
-            confirmButton,
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () {
+                globalAnalytics.observer.analytics.logEvent(
+                  name: 'deleteAccount',
+                );
+                deleteUser();
+                Navigator.of(context).pop();
+              },
+            ),
           ],
         );
       },

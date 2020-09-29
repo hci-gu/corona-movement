@@ -155,7 +155,8 @@ Action getAvailableStepsAction = (get) async {
 };
 
 Future syncHealthData(OnboardingModel onboarding, String userId) async {
-  await api.postData(userId, onboarding.dataChunks[0]);
+  await api.postData(
+      userId, onboarding.dataChunks[0], onboarding.dataChunks.length == 1);
 
   onboarding.removeDataChunk();
 

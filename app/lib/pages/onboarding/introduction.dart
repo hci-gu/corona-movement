@@ -131,7 +131,7 @@ class Introduction extends HookWidget {
   void _onSelectDatePressed(BuildContext context, onboarding) async {
     var date = await showDatePicker(
       context: context,
-      initialDate: DateTime.parse('2020-03-18'),
+      initialDate: DateTime.parse('2020-03-01'),
       firstDate: DateTime.parse(StepsModel.fromDate),
       lastDate: DateTime.now(),
     );

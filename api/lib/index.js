@@ -50,30 +50,28 @@ app.patch('/user/:id', async (req, res) => {
   res.send(user)
 })
 app.post('/health-data', async (req, res) => {
-  await db.saveSteps(req.body)
+  const { id, dataPoints, createAggregation } = req.body
+
+  await db.saveSteps({ id, dataPoints })
+
+  if (createAggregation) {
+    await Promise.all([
+      db.saveAggregatedSteps(id),
+      db.saveAggregatedSummary(id),
+    ])
+  }
 
   res.send({
     ok: true,
   })
 })
-app.get('/:id/weeks', async (req, res) => {
-  const {
-    from = moment().subtract('6', 'months').format(),
-    to = moment().format(),
-    weekDays = true,
-  } = req.query
+app.get('/:id/update', async (req, res) => {
   const { id } = req.params
-  console.log(`GET ${id}, from: ${from}, to: ${to}, weekDays: ${weekDays}`)
-
-  const data = await db.getAverageHour({
-    id,
-    from,
-    to,
-    weekDays: weekDays === 'true',
-  })
-
-  res.send(data)
+  await db.saveAggregatedSteps(id)
+  await db.saveAggregatedSummary(id)
+  res.send({ ok: true })
 })
+
 app.get('/:id/hours', async (req, res) => {
   const {
     from = moment().subtract('6', 'months').format(),
@@ -103,16 +101,6 @@ app.get('/:id/last-upload', async (req, res) => {
   console.log('GET last-upload', id)
 
   const data = await db.getLastUpload({ id })
-
-  res.send(data)
-})
-
-app.get('/:id/daily-averages', async (req, res) => {
-  const { to, from } = req.query
-  const { id } = req.params
-  console.log('GET daily averages', id)
-
-  const data = await db.getDailyAverages({ id, to, from })
 
   res.send(data)
 })

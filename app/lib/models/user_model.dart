@@ -145,7 +145,7 @@ Action registerAction = (get) async {
   api.UserResponse response = await api.register(
     onboarding.date,
     onboarding.initialDataDate,
-    onboarding.division,
+    onboarding.dataSource,
     user.code,
   );
   user.setUser(response);
@@ -187,7 +187,7 @@ Action updateUserCompareDateAction = (get) async {
 };
 
 Future uploadChunks(String userId, List chunks) async {
-  await api.postData(userId, chunks[0]);
+  await api.postData(userId, chunks[0], chunks.length == 1);
 
   chunks.removeAt(0);
 

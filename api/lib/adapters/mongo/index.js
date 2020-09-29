@@ -2,6 +2,7 @@ const fs = require('fs')
 const { MongoClient } = require('mongodb')
 const userCollection = require('./users')
 const stepsCollection = require('./steps')
+const aggregatedStepsCollection = require('./aggregatedSteps')
 const codesCollection = require('./codes')
 const feedbackCollection = require('./feedback')
 
@@ -23,6 +24,7 @@ const init = async () => {
   await Promise.all([
     userCollection.init(db),
     stepsCollection.init(db),
+    aggregatedStepsCollection.init(db),
     codesCollection.init(db),
     feedbackCollection.init(db),
   ])
@@ -32,12 +34,13 @@ const init = async () => {
 module.exports = {
   // steps
   saveSteps: stepsCollection.save,
-  getAverageHour: stepsCollection.getAverageHour,
-  getHours: stepsCollection.getHours,
-  getDailyAverages: stepsCollection.getDailyAverages,
-  getSummary: stepsCollection.getSummary,
   getLastUpload: stepsCollection.getLastUpload,
   removeStepsForUser: stepsCollection.removeStepsForUser,
+  // aggregatedSteps
+  saveAggregatedSteps: aggregatedStepsCollection.saveSteps,
+  saveAggregatedSummary: aggregatedStepsCollection.saveSummary,
+  getHours: aggregatedStepsCollection.getSteps,
+  getSummary: aggregatedStepsCollection.getSummary,
   // users
   createUser: userCollection.create,
   getUser: userCollection.get,

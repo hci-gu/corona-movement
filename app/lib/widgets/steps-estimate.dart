@@ -31,6 +31,10 @@ class StepsEstimate extends HookWidget {
       Text(
         'Use the slider below to give an estimate of how much you think your average daily steps have changed.',
       ),
+      Text(
+        textForEstimate(user.stepsEstimate),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
       Slider(
         value: user.stepsEstimate,
         min: -1,
@@ -39,10 +43,6 @@ class StepsEstimate extends HookWidget {
         onChanged: (double value) {
           user.setStepsEstimate(value);
         },
-      ),
-      Text(
-        textForEstimate(user.stepsEstimate),
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
       SizedBox(height: 20),
       StyledButton(

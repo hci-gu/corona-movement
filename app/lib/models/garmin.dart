@@ -63,7 +63,7 @@ Future syncHealthData(GarminClient garminClient, OnboardingModel onboarding,
     String userId) async {
   String date = onboarding.dataChunks[0];
   List<HealthDataPoint> steps = await garminClient.fetchSteps(date);
-  await api.postData(userId, steps);
+  await api.postData(userId, steps, onboarding.dataChunks.length == 1);
 
   onboarding.removeDataChunk();
 
@@ -122,7 +122,7 @@ Future uploadGarminDataForDays(
   String userId,
 ) async {
   List<HealthDataPoint> steps = await garminClient.fetchSteps(days[0]);
-  await api.postData(userId, steps);
+  await api.postData(userId, steps, days.length == 1);
   days.removeAt(0);
   if (days.length > 0) {
     return uploadGarminDataForDays(garminClient, days, userId);
