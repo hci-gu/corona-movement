@@ -80,6 +80,7 @@ class App extends StatelessWidget {
           await api.feedback(feedbackText, feedbackScreenshot);
           Navigator.pop(dialogContext);
           BetterFeedback.of(context).hide();
+          feedbackText = '';
         },
       ),
     );

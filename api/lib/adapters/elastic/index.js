@@ -1,5 +1,4 @@
 const { Client } = require('@elastic/elasticsearch')
-const moment = require('moment')
 const elastic = new Client({ node: 'http://localhost:9200' })
 const weeklyQuery = require('./queries/weekly')
 const averageForHourQuery = require('./queries/averageForHour')

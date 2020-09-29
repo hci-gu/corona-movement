@@ -7,15 +7,14 @@ const transformHealthData = (healthDataPoint) => {
     healthDataPoint.date_to - healthDataPoint.date_from
   )
   const date = moment(Math.round(healthDataPoint.date_from + duration / 2))
-  const remainder = 10 - (date.minute() % 10)
-
   const rounded = Math.round(moment(date).minute() / 15) * 15
   const time = moment(date).minute(rounded)
 
   return {
     value: healthDataPoint.value,
     platform: healthDataPoint.platform,
-    date: moment(date).add(remainder, 'minutes').valueOf(),
+    date: moment(date).valueOf(),
+    dateFrom: healthDataPoint.date_from,
     duration,
     day: moment(date).day(),
     time: time.hours() * 60 + time.minutes(),

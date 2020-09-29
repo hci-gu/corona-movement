@@ -107,7 +107,7 @@ class SyncData extends HookWidget {
           small: true,
         ),
         SizedBox(width: 10),
-        proceedButton,
+        Flexible(child: proceedButton),
       ],
     );
   }

@@ -13,7 +13,8 @@ import 'package:wfhmovement/models/form_model.dart';
 // const API_URL = 'http://192.168.0.32:4000';
 const API_URL = 'https://api.mycoronamovement.com';
 
-Future postData(String userId, List<HealthDataPoint> healthData) async {
+Future postData(String userId, List<HealthDataPoint> healthData,
+    bool createAggregation) async {
   var url = '$API_URL/health-data';
   var response = await http.post(
     url,
@@ -23,6 +24,7 @@ Future postData(String userId, List<HealthDataPoint> healthData) async {
     body: jsonEncode({
       'id': userId,
       'dataPoints': healthData.map((point) => point.toJson()).toList(),
+      'createAggregation': createAggregation,
     }),
   );
   print('Response status: ${response.statusCode}');
@@ -135,7 +137,7 @@ class HealthSummary {
 }
 
 Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
-    String division, String code) async {
+    String dataSource, String code) async {
   const url = '$API_URL/register';
   var response = await http.post(
     url,
@@ -145,8 +147,9 @@ Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
     body: jsonEncode({
       'compareDate': compareDate.toIso8601String().substring(0, 10),
       'initialDataDate': initialDataDate.toIso8601String().substring(0, 10),
-      'division': division,
-      'code': code
+      'code': code,
+      'os': Platform.operatingSystem,
+      'dataSource': dataSource
     }),
   );
 
