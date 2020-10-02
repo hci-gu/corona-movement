@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wfhmovement/global-analytics.dart';
+import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -17,41 +20,88 @@ import 'package:wfhmovement/widgets/steps-difference.dart';
 import 'detailed-steps.dart';
 
 class Home extends HookWidget {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
+    StepsModel steps = useModel(stepsAtom);
     var getStepsChart = useAction(getStepsAction);
     useEffect(() {
       globalAnalytics.observer.analytics.setCurrentScreen(screenName: 'Home');
       getStepsChart();
       return;
     }, [user.compareDate, user.lastSync]);
+    useEffect(() {
+      if (!steps.fetching) {
+        _refreshController.refreshCompleted();
+      }
+      return;
+    }, [steps.fetching]);
+
+    if (steps.data == null) {}
 
     return MainScaffold(
       appBar: AppWidgets.appBar(context, null, true),
-      child: Container(
+      child: SmartRefresher(
+        enablePullDown: true,
+        header: WaterDropHeader(),
+        onRefresh: () {
+          getStepsChart();
+        },
+        controller: _refreshController,
         child: ListView(
           padding: EdgeInsets.only(top: 25),
-          children: [
-            DaysBarChart(),
-            AppWidgets.chartDescription(
-              'This is your steps data. Below you can pick different views of this data.',
-            ),
-            Text(
-              'I want to see',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primaryText,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-            _grid(context),
-          ],
+          children: steps.data == null ? _empty(context) : _body(context),
         ),
       ),
     );
+  }
+
+  List<Widget> _empty(BuildContext context) {
+    return [
+      Center(
+        child: Text('Steps processing',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      ),
+      Container(
+        margin: EdgeInsets.all(25),
+        child: SvgPicture.asset(
+          'assets/svg/data_processing.svg',
+          height: 150,
+        ),
+      ),
+      Center(
+        child: Text(
+          'Your steps are still processing...\n Pull to refresh.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _body(BuildContext context) {
+    return [
+      DaysBarChart(),
+      AppWidgets.chartDescription(
+        'This is your steps data. Below you can pick different views of this data.',
+      ),
+      Text(
+        'I want to see',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: AppColors.primaryText,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      SizedBox(height: 20),
+      _grid(context),
+    ];
   }
 
   Widget _grid(BuildContext context) {

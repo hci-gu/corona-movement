@@ -236,10 +236,12 @@ Future<List<HealthData>> getSteps(
   );
   ChartResult chart = ChartResult.fromJson(json.decode(response.body));
 
-  List<HealthData> steps =
-      chart.result.map((d) => HealthData.fromJson(d)).toList();
-
-  return steps;
+  if (chart.result != null) {
+    List<HealthData> steps =
+        chart.result.map((d) => HealthData.fromJson(d)).toList();
+    return steps;
+  }
+  return null;
 }
 
 Future<HealthComparison> getComparison(String userId) async {

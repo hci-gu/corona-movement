@@ -19,8 +19,6 @@ const getHoursForEveryone = async ({ from, to }) => {
     .map((doc) => doc.data.result)
     .flat()
 
-  console.log(usersHours)
-
   const result = dates
     .map((date) =>
       Array.from({
@@ -36,8 +34,6 @@ const getHoursForEveryone = async ({ from, to }) => {
       })
     )
     .flat()
-
-  console.log({ result })
 
   return {
     result,
@@ -93,18 +89,23 @@ const getSteps = async ({ id }) => {
     type: 'steps',
   })
 
+  if (!doc) {
+    return {
+      result: null,
+    }
+  }
+
   return doc.data
 }
 
 const getSummary = async ({ id }) => {
   let user = { before: null, after: null }
   if (id !== 'all') {
-    user = (
-      await collection.findOne({
-        id,
-        type: 'summary',
-      })
-    ).data
+    const doc = await collection.findOne({
+      id,
+      type: 'summary',
+    })
+    if (doc && doc.data) user = doc.data
   }
 
   let others = { before: null, after: null }

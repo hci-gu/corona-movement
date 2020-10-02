@@ -33,6 +33,7 @@ dependencies:
   country_list_pick: ^1.0.0+5
   auto_size_text: ^2.1.0
   flutter_web_auth: ^0.2.4
+  pull_to_refresh: ^1.6.2
 
 dev_dependencies:
   flutter_test:
