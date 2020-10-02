@@ -15,6 +15,11 @@ class StepsModel extends ValueNotifier {
 
   StepsModel() : super(null);
 
+  setFetching() {
+    fetching = true;
+    notifyListeners();
+  }
+
   setData(List<api.HealthData> steps) {
     data = steps;
     fetching = false;
@@ -225,7 +230,7 @@ Action getStepsComparisonAction = (get) async {
 Action getStepsAction = (get) async {
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
-
+  steps.setFetching();
   List<api.HealthData> data = await api.getSteps(
     user.id,
     steps.from,

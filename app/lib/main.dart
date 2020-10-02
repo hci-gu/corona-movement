@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:feedback/feedback.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/physics.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
@@ -39,17 +41,31 @@ class App extends StatelessWidget {
       child: BetterFeedback(
         backgroundColor: Colors.grey,
         drawColors: [Colors.red, Colors.green, Colors.blue, Colors.yellow],
-        child: MaterialApp(
-          title: 'Work from home movement',
-          theme: ThemeData(
-            fontFamily: 'Poppins',
-            primarySwatch: Colors.amber,
+        child: RefreshConfiguration(
+          headerBuilder: () => WaterDropHeader(),
+          headerTriggerDistance: 80.0,
+          springDescription: SpringDescription(
+            stiffness: 170,
+            damping: 16,
+            mass: 1.9,
           ),
-          debugShowCheckedModeBanner: false,
-          home: ScreenSelector(),
-          navigatorObservers: [
-            FirebaseAnalyticsObserver(analytics: analytics),
-          ],
+          maxOverScrollExtent: 100,
+          maxUnderScrollExtent: 0,
+          enableScrollWhenRefreshCompleted: true,
+          enableLoadingWhenFailed: true,
+          enableBallisticLoad: true,
+          child: MaterialApp(
+            title: 'Work from home movement',
+            theme: ThemeData(
+              fontFamily: 'Poppins',
+              primarySwatch: Colors.amber,
+            ),
+            debugShowCheckedModeBanner: false,
+            home: ScreenSelector(),
+            navigatorObservers: [
+              FirebaseAnalyticsObserver(analytics: analytics),
+            ],
+          ),
         ),
         onFeedback: (
           BuildContext context,
