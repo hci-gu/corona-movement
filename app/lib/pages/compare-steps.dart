@@ -9,7 +9,7 @@ class CompareSteps extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Compare', false),
+      appBar: AppWidgets.appBar(context, 'You vs others', false),
       child: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),

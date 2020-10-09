@@ -88,14 +88,14 @@ class Home extends HookWidget {
     return [
       DaysBarChart(),
       AppWidgets.chartDescription(
-        'This is your steps data. Below you can pick different views of this data.',
+        'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.',
       ),
       Text(
-        'I want to see',
+        'Explore your steps',
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w700,
-          color: AppColors.primaryText,
+          color: AppColors.secondary,
         ),
         textAlign: TextAlign.center,
       ),
@@ -123,11 +123,11 @@ class Home extends HookWidget {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => DetailedSteps(),
-                settings: RouteSettings(name: 'Detailed Steps'),
+                settings: RouteSettings(name: 'Before & after'),
               ));
             },
           ),
-          'Detailed steps',
+          'Before & after',
         ),
         _pageItem(
           PageWidget(
@@ -140,11 +140,11 @@ class Home extends HookWidget {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => CompareSteps(),
-                settings: RouteSettings(name: 'Compare Steps'),
+                settings: RouteSettings(name: 'You vs others'),
               ));
             },
           ),
-          'Me vs others',
+          'You vs others',
         ),
         _pageItem(
           PageWidget(
@@ -182,9 +182,7 @@ class Home extends HookWidget {
           child: InkWell(
             child: Column(
               children: [
-                Flexible(
-                  child: widget,
-                ),
+                Flexible(child: widget),
                 FittedBox(
                   child: Text(
                     title,

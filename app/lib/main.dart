@@ -20,6 +20,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:wfhmovement/api.dart' as api;
 import 'package:image/image.dart' as img;
 import 'package:wfhmovement/widgets/main_scaffold.dart';
+import 'package:wfhmovement/widgets/steps-estimate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

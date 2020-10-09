@@ -46,13 +46,6 @@ class SyncData extends HookWidget {
               ),
             ],
           ),
-          Text(
-            isUploading
-                ? 'While your steps are uploading, please fill in the information below.'
-                : 'Your upload is complete, please finish filling in the form below to proceed.',
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 40),
           if (step.value == 0) UserForm(),
           if (step.value == 1) StepsEstimate(),
           SizedBox(height: 40),

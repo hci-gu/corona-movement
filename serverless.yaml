@@ -40,6 +40,9 @@ apiGateway:
       - path: /health-data
         method: POST
         function: ${api.arn}
+      - path: /{id}/update
+        method: GET
+        function: ${api.arn}
       - path: /{id}/hours
         method: GET
         function: ${api.arn}

@@ -41,7 +41,7 @@ class StepsChart extends HookWidget {
 
   Widget _totalSteps(BuildContext context, int stepsBefore, int stepsAfter) {
     TextStyle textStyle = TextStyle(
-      fontSize: 14,
+      fontSize: share ? 11 : 14,
       fontWeight: FontWeight.w300,
       color: Colors.black,
       height: 0.9,
@@ -49,7 +49,7 @@ class StepsChart extends HookWidget {
 
     return Container(
       width: share
-          ? MediaQuery.of(context).size.width * 0.75
+          ? MediaQuery.of(context).size.width * 0.85
           : MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
@@ -64,7 +64,7 @@ class StepsChart extends HookWidget {
                   child: Text(
                     stepsBefore.toString(),
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: share ? 20 : 36,
                       height: 1,
                       fontWeight: FontWeight.w900,
                       color: beforeColor,
@@ -84,7 +84,7 @@ class StepsChart extends HookWidget {
                   child: Text(
                     stepsAfter.toString(),
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: share ? 20 : 36,
                       height: 1,
                       fontWeight: FontWeight.w900,
                       color: afterColor,
@@ -158,7 +158,7 @@ class StepsChart extends HookWidget {
               textStyle: TextStyle(
                 color: Colors.grey[400],
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: share ? 10 : 14,
               ),
               margin: 10,
               getTitles: (value) {

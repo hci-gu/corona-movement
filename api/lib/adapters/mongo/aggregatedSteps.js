@@ -44,7 +44,7 @@ const getHoursForEveryone = async ({ from, to }) => {
 
 const saveSteps = async (id) => {
   const from = '2020-01-01'
-  const to = moment().format('YYYY-MM-DD')
+  const to = moment().add(1, 'days').format('YYYY-MM-DD')
 
   let data
   if (id === 'all') {
