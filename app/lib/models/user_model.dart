@@ -37,7 +37,6 @@ class User extends ValueNotifier {
   setUser(api.UserResponse response) {
     id = response.id;
     compareDate = response.compareDate;
-    division = response.division;
     unlocked = true;
     notifyListeners();
   }
@@ -102,6 +101,7 @@ class User extends ValueNotifier {
   }
 }
 
+int chunkSize = 750;
 var userAtom = Atom('user', User());
 
 var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
@@ -129,8 +129,10 @@ Action initAction = (get) async {
       response = await api.getUser(userId);
     }
     user.setUser(response);
-    user.setGaveEstimate(true);
-    form.setUploaded();
+    if (response.stepsEstimate != null) {
+      user.setGaveEstimate(true);
+      form.setUploaded();
+    }
     onboarding.setDone();
   }
   user.setInited();
@@ -227,10 +229,10 @@ Action syncStepsAction = (get) async {
       );
       List dataChunks = [];
       while (steps.length > 0) {
-        dataChunks.add(steps.take(750).toList());
+        dataChunks.add(steps.take(chunkSize).toList());
         steps.removeRange(
           0,
-          steps.length > 750 ? 750 : steps.length,
+          steps.length > chunkSize ? chunkSize : steps.length,
         );
       }
       await uploadChunks(user.id, dataChunks);
@@ -266,12 +268,14 @@ Action updateEstimateAction = (get) async {
 
 Action shouldUnlockAction = (get) async {
   User user = get(userAtom);
+  user.setLoading(true);
 
   bool locked = await api.shouldUnlock();
 
   if (!locked) {
     user.setUnlocked();
   }
+  user.setLoading(false);
 };
 
 Action deleteUserAction = (get) async {

@@ -36,7 +36,7 @@ class StepsDifference extends HookWidget {
           ),
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: share ? 16 : 16,
+            fontSize: share ? 14 : 16,
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -53,6 +53,6 @@ class StepsDifference extends HookWidget {
     if (diff == null) {
       return '$who average daily steps have\n changed by -%.';
     }
-    return '$who average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff%.';
+    return '$who average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff% since working from home';
   }
 }

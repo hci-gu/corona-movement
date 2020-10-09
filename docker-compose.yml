@@ -10,6 +10,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: username
       MONGO_INITDB_ROOT_PASSWORD: password
   mongo-express:
+    depends_on:
+      - mongo
     image: mongo-express
     restart: always
     ports:
@@ -17,17 +19,17 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: username
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
-  elasticsearch:
-    image: 'elasticsearch:7.6.2'
-    environment:
-      - discovery.type=single-node
-    ports:
-      - '9200:9200'
-  kibana:
-    image: 'kibana:7.6.2'
-    depends_on:
-      - elasticsearch
-    environment:
-      - ELASTICSEARCH=http://elasticsearch:9200
-    ports:
-      - '5601:5601'
+  # elasticsearch:
+  #   image: 'elasticsearch:7.6.2'
+  #   environment:
+  #     - discovery.type=single-node
+  #   ports:
+  #     - '9200:9200'
+  # kibana:
+  #   image: 'kibana:7.6.2'
+  #   depends_on:
+  #     - elasticsearch
+  #   environment:
+  #     - ELASTICSEARCH=http://elasticsearch:9200
+  #   ports:
+  #     - '5601:5601'

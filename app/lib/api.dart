@@ -35,12 +35,14 @@ Future postData(String userId, List<HealthDataPoint> healthData,
 class UserResponse {
   String id;
   DateTime compareDate;
-  String division;
+  double stepsEstimate;
 
   UserResponse(Map<String, dynamic> json) {
     id = json['_id'];
     compareDate = DateTime.parse(json['compareDate']);
-    division = json['division'];
+    if (json['stepsEstimate'] != null) {
+      stepsEstimate = json['stepsEstimate'];
+    }
   }
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {

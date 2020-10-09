@@ -38,15 +38,25 @@ class DataSource extends HookWidget {
     return Center(
       child: Container(
         child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+          padding: EdgeInsets.only(left: 25, right: 25, top: 10, bottom: 50),
           children: <Widget>[
             Container(
-              margin: EdgeInsets.all(25),
+              margin: EdgeInsets.all(15),
               child: SvgPicture.asset(
                 'assets/svg/access.svg',
-                height: 150,
+                height: 100,
               ),
             ),
+            Text(
+              'This app is part of an exploratory research project investigating the impact of the pandemic on our physical movement. For this purpose, we will collect and store the following data:',
+              style: TextStyle(fontSize: 12),
+            ),
+            _dataInformation(context, onboarding.dataSource),
+            Text(
+              'Any data stored will be removed upon opting out of the study by deleting your account.',
+              style: TextStyle(fontSize: 12),
+            ),
+            SizedBox(height: 20),
             if (!onboarding.authorized &&
                 !onboarding.fetching &&
                 onboarding.availableData.length == 0)
@@ -67,12 +77,62 @@ class DataSource extends HookWidget {
     );
   }
 
+  Widget _dataInformation(BuildContext context, String dataSource) {
+    final List<String> entries = [
+      'Step data',
+      'Demographic data',
+      'App interactions'
+    ];
+    final List<String> descriptions = [
+      'Collected from $dataSource.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for working from home. ( for comparisons before/after )',
+      'The following points are collected by filling out the form in the next step:\n\n- Gender\n- Age range\n- Education\n- Profession\n- Company/organisation',
+      'Automatically sent via app usage.\n\n- App open/close\n- Navigating through views\n- Sync steps button pressed\n- Change work from home date\n- Day selection in Before & after\n- Using share feature'
+    ];
+
+    return Container(
+      height: 140,
+      child: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(8),
+        itemCount: entries.length,
+        itemBuilder: (BuildContext context, int i) {
+          return GestureDetector(
+            onTap: () => AppWidgets.showAlert(
+              context,
+              entries[i],
+              descriptions[i],
+            ),
+            child: Container(
+              height: 35,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '- ${entries[i]}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(
+                    Icons.info_outline,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _getAccess(
       OnboardingModel onboarding, Function getHealthAuthorization) {
     return Column(
       children: [
         Text(
-            'To proceeed you must grant access for us to collect data from ${onboarding.dataSource}.'),
+          'To proceeed you must grant access for us to retrieve data from ${onboarding.dataSource}.',
+          style: TextStyle(fontSize: 12),
+        ),
         SizedBox(height: 25),
         if (onboarding.dataSource == 'Garmin') GarminLogin(),
         StyledButton(
@@ -86,13 +146,13 @@ class DataSource extends HookWidget {
     );
   }
 
-  void _authorizeFitbit() async {
-    final result = await FlutterWebAuth.authenticate(
-      url:
-          'https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=22BSFZ&redirect_uri=https%3A%2F%2Fapi.mycoronamovement.com%2Ffitbit%2Fcallback&scope=activity&expires_in=604800',
-      callbackUrlScheme: 'wfhmovement',
-    );
-  }
+  // void _authorizeFitbit() async {
+  //   final result = await FlutterWebAuth.authenticate(
+  //     url:
+  //         'https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=22BSFZ&redirect_uri=https%3A%2F%2Fapi.mycoronamovement.com%2Ffitbit%2Fcallback&scope=activity&expires_in=604800',
+  //     callbackUrlScheme: 'wfhmovement',
+  //   );
+  // }
 
   Widget _hasData(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent, Function uploadSteps) {
@@ -102,11 +162,6 @@ class DataSource extends HookWidget {
           child: Text(
             'Found data from ${onboarding.initialDataDate.toString().substring(0, 10)}',
           ),
-        ),
-        SizedBox(height: 20),
-        Text(
-          'This is part of a design reserach project on how we can design for living in a pandemic, during a pandemic. For this, we want to collect some data.\n\nThe data we collect through this app is the step data, associated with a device id, as well as interaction logs. The research is exploratory, but we currently have two primary research questions. 1) have and if so how have people’s movement patterns been affected by the ongoing pandemic. and 2) how can we design for wellbeing during the pandemic.\n\nIf you agree to us gathering your data, please tick the checkbox below and get started.',
-          style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 20),
         Row(
@@ -157,7 +212,10 @@ class DataSource extends HookWidget {
 
     return Column(
       children: [
-        Text(description),
+        Text(
+          description,
+          style: TextStyle(fontSize: 12),
+        ),
         SizedBox(height: 25),
         StyledButton(
           icon: Icon(Icons.arrow_back),

@@ -105,7 +105,7 @@ app.get('/:id/last-upload', async (req, res) => {
   res.send(data)
 })
 
-app.get('/should-unlock', async (_, res) => res.send(true))
+app.get('/should-unlock', async (_, res) => res.send(false))
 
 app.post('/unlock', async (req, res) => {
   const { code } = req.body

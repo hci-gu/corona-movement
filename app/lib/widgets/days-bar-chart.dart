@@ -90,7 +90,7 @@ class DaysBarChart extends HookWidget {
           maxY: empty ? 10 : maxValue + (maxValue / 10),
           alignment: BarChartAlignment.spaceAround,
           barTouchData: BarTouchData(
-            enabled: false,
+            enabled: true,
             touchTooltipData: BarTouchTooltipData(
               tooltipBgColor: Colors.transparent,
               tooltipPadding: const EdgeInsets.all(0),
@@ -101,10 +101,21 @@ class DaysBarChart extends HookWidget {
                 BarChartRodData rod,
                 int rodIndex,
               ) {
+                var day = days[groupIndex];
+                if (compareDate.compareTo(day['date']) == 0) {
+                  return BarTooltipItem(
+                    'Started working from home',
+                    TextStyle(
+                      color: AppColors.secondaryText,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+                var date = DateTime.parse(day['date']);
                 return BarTooltipItem(
-                  'Started working from home',
+                  '${_labelforDate(date)} - ${day['value']} steps',
                   TextStyle(
-                    color: AppColors.secondaryText,
+                    color: AppColors.secondary,
                     fontWeight: FontWeight.bold,
                   ),
                 );

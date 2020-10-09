@@ -60,6 +60,11 @@ class Introduction extends HookWidget {
   }
 
   Widget unlockWidget(user, code, unlock) {
+    if (user.loading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Column(
       children: [
         SizedBox(height: 50),

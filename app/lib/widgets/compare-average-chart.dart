@@ -45,7 +45,7 @@ class CompareAverageChart extends HookWidget {
                 enabled: false,
                 touchTooltipData: BarTouchTooltipData(
                   tooltipBgColor: Colors.transparent,
-                  tooltipPadding: const EdgeInsets.all(0),
+                  tooltipPadding: EdgeInsets.all(0),
                   tooltipBottomMargin: 5,
                   getTooltipItem: (
                     BarChartGroupData group,

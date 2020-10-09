@@ -107,22 +107,22 @@ class Settings extends HookWidget {
       BuildContext context, User user, syncSteps, garminSyncSteps, deleteUser) {
     return [
       _syncStepsWidget(user, syncSteps, garminSyncSteps),
-      SizedBox(height: 15),
-      Center(
-        child: StyledButton(
-          icon: Icon(Icons.add),
-          title: 'Add data source',
-          onPressed: () {
-            globalAnalytics.observer.analytics.logEvent(name: 'addDataSource');
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SelectDataSource(),
-                settings: RouteSettings(name: 'Select data source'),
-              ),
-            );
-          },
-        ),
-      ),
+      // SizedBox(height: 15),
+      // Center(
+      //   child: StyledButton(
+      //     icon: Icon(Icons.add),
+      //     title: 'Add data source',
+      //     onPressed: () {
+      //       globalAnalytics.observer.analytics.logEvent(name: 'addDataSource');
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => SelectDataSource(),
+      //           settings: RouteSettings(name: 'Select data source'),
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // ),
       SizedBox(height: 15),
       Center(
         child: StyledButton(

@@ -6,7 +6,7 @@ let caBundle = fs.readFileSync(
   `${__dirname}/lib/adapters/mongo/rds-combined-ca-bundle.pem`
 )
 const DB_NAME = 'coronamovement'
-const COLLECTION_NAME = 'steps'
+const COLLECTION_NAME = 'users'
 
 const { transformHealthData } = require('./lib/adapters/db')
 
@@ -56,7 +56,11 @@ const run = async () => {
     sslCA: caBundle,
   })
   const collection = client.db(DB_NAME).collection(COLLECTION_NAME)
-  await syncDocs(collection, 0)
+  const users = await collection.find({}).toArray()
+  console.log(
+    'users',
+    users.map((u) => u._id)
+  )
 
   console.log('all done!')
 }

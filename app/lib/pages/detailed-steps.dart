@@ -21,7 +21,7 @@ class DetailedSteps extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Detailed steps', true),
+      appBar: AppWidgets.appBar(context, 'Before & after', true),
       child: ListView(
         padding: EdgeInsets.only(top: 25),
         children: [
@@ -64,12 +64,13 @@ class DetailedSteps extends HookWidget {
             key: _globalKey,
             child: Container(
               padding: EdgeInsets.all(10),
+              constraints: BoxConstraints(maxHeight: 360),
               child: Column(
                 children: [
                   StepsDifference(share: true),
                   StepsChart(share: true),
                   AppWidgets.chartDescription(
-                    'Download the WFH movement app to try it out yourself.',
+                    'Download WFH movement app to try it out yourself.',
                   ),
                 ],
               ),
@@ -85,11 +86,6 @@ class DetailedSteps extends HookWidget {
             FlatButton(
               child: Text('Share'),
               onPressed: () {
-                return AppWidgets.showAlert(
-                  context,
-                  'Share not available',
-                  'Share functionality will be available in the next version',
-                );
                 _onSharePressed(context);
                 Navigator.of(context).pop();
               },
@@ -103,7 +99,9 @@ class DetailedSteps extends HookWidget {
   _onSharePressed(BuildContext context) async {
     RenderRepaintBoundary boundary =
         _globalKey.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage();
+    ui.Image image = await boundary.toImage(
+      pixelRatio: MediaQuery.of(context).devicePixelRatio,
+    );
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     var pngBytes = byteData.buffer.asUint8List();
 
@@ -115,6 +113,11 @@ class DetailedSteps extends HookWidget {
     final file = File(path);
     await file.writeAsBytes(pngBytes);
 
-    await Share.shareFiles([path], text: 'Testing testing', subject: 'test');
+    await Share.shareFiles(
+      [path],
+      text:
+          'This is how my movement have changed after working from home.\nTry yourself by downloading the app https://mycoronamovement.com/',
+      subject: 'This is how my movement have changed after working from home.',
+    );
   }
 }

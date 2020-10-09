@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,17 @@ class StepsEstimate extends HookWidget {
 
     return Container(
       child: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: user.gaveEstimate
-                ? gaveEstimate(context, user)
-                : giveEstimate(context, user, updateEstimate)),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            margin: EdgeInsets.all(25),
+            child: SvgPicture.asset(
+              'assets/svg/activity.svg',
+              height: 100,
+            ),
+          ),
+          if (user.gaveEstimate) ...gaveEstimate(context, user),
+          if (!user.gaveEstimate) ...giveEstimate(context, user, updateEstimate)
+        ]),
       ),
     );
   }
@@ -24,13 +31,15 @@ class StepsEstimate extends HookWidget {
   List<Widget> giveEstimate(BuildContext context, User user, updateEstimate) {
     return [
       Text(
-        'Estimate your change',
+        'How much do you think your movement have changed?',
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
       ),
       SizedBox(height: 25),
       Text(
         'Use the slider below to give an estimate of how much you think your average daily steps have changed.',
       ),
+      SizedBox(height: 15),
       Text(
         textForEstimate(user.stepsEstimate),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -60,7 +69,7 @@ class StepsEstimate extends HookWidget {
     return [
       SizedBox(height: 20),
       Text(
-        'You estimated a change of ${(user.stepsEstimate * 100).toStringAsFixed(1)}%.',
+        textForEstimate(user.stepsEstimate),
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
       SizedBox(height: 20),
@@ -76,6 +85,6 @@ class StepsEstimate extends HookWidget {
     if (estimate == 0) {
       return 'No change';
     }
-    return '${estimate > 0 ? 'An increase' : 'A decrease'} of ${(estimate * 100).toStringAsFixed(1)}%';
+    return 'Im moving ${(estimate * 100).abs().toStringAsFixed(1)}% ${estimate > 0 ? 'more' : 'less'}.';
   }
 }
