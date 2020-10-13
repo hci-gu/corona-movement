@@ -20,7 +20,8 @@ const s3 = new AWS.S3({
 
 module.exports = {
   init: async (db) => {
-    await db.createCollection(COLLECTION)
+    if (process.env.NODE_ENV != 'production')
+      await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
   },
   collection,

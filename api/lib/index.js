@@ -121,6 +121,12 @@ app.post('/feedback', async (req, res) => {
   })
 })
 
+app.post('/analytics', async (req, res) => {
+  await db.saveAnalyticsEvent(req.body)
+
+  res.sendStatus(200)
+})
+
 app.post('/ping', async (_, res) => res.send({ ok: true }))
 
 app.get('/total', async (_, res) => {

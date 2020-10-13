@@ -5,6 +5,7 @@ const stepsCollection = require('./steps')
 const aggregatedStepsCollection = require('./aggregatedSteps')
 const codesCollection = require('./codes')
 const feedbackCollection = require('./feedback')
+const analyticsCollection = require('./analytics')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 let inited
@@ -27,6 +28,7 @@ const init = async () => {
     aggregatedStepsCollection.init(db),
     codesCollection.init(db),
     feedbackCollection.init(db),
+    analyticsCollection.init(db),
   ])
   inited = true
 }
@@ -51,6 +53,8 @@ module.exports = {
   getAllUsers: () => userCollection.getAllExcept(),
   // codes
   codeExists: codesCollection.codeExists,
+  // analytics
+  saveAnalyticsEvent: analyticsCollection.saveEvent,
   inited: async () => {
     if (!inited) await init()
     return true

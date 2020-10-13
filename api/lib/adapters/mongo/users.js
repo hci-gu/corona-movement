@@ -2,7 +2,14 @@ const { ObjectId } = require('mongodb')
 const COLLECTION = 'users'
 let collection
 
-const create = async ({ initialDataDate, compareDate, endDate, os, dataSource, code }) => {
+const create = async ({
+  initialDataDate,
+  compareDate,
+  endDate,
+  os,
+  dataSource,
+  code,
+}) => {
   const result = await collection.insert({
     created: new Date(),
     compareDate: new Date(compareDate),
@@ -55,7 +62,8 @@ const getInitialDataDate = async (id) => {
 
 module.exports = {
   init: async (db) => {
-    await db.createCollection(COLLECTION)
+    if (process.env.NODE_ENV != 'production')
+      await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
   },
   insert,
