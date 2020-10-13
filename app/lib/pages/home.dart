@@ -29,7 +29,6 @@ class Home extends HookWidget {
     StepsModel steps = useModel(stepsAtom);
     var getStepsChart = useAction(getStepsAction);
     useEffect(() {
-      globalAnalytics.observer.analytics.setCurrentScreen(screenName: 'Home');
       getStepsChart();
       return;
     }, [user.compareDate, user.lastSync]);

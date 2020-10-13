@@ -44,6 +44,7 @@ class DetailedSteps extends HookWidget {
                 'This is how my movement have changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
             subject:
                 'This is how my movement have changed after working from home.',
+            screen: 'Before & after',
           ),
         ],
       ),

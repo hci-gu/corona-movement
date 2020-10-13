@@ -1,11 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:feedback/feedback.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/physics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -18,23 +15,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:wfhmovement/api.dart' as api;
-import 'package:image/image.dart' as img;
 import 'package:wfhmovement/widgets/main_scaffold.dart';
-import 'package:wfhmovement/widgets/steps-estimate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
-  FirebaseAnalytics analytics = FirebaseAnalytics();
-  globalAnalytics.init(analytics);
 
-  runApp(App(analytics));
+  runApp(App());
 }
 
 class App extends StatelessWidget {
-  final FirebaseAnalytics analytics;
-
-  App(this.analytics);
   @override
   Widget build(BuildContext context) {
     return Provider(
@@ -63,9 +53,6 @@ class App extends StatelessWidget {
             ),
             debugShowCheckedModeBanner: false,
             home: ScreenSelector(),
-            navigatorObservers: [
-              FirebaseAnalyticsObserver(analytics: analytics),
-            ],
           ),
         ),
         onFeedback: (

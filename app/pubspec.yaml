@@ -24,7 +24,6 @@ dependencies:
   dio_retry: ^0.1.9-beta
   timezone: any
   intl: any
-  firebase_analytics: ^5.0.15
   path_provider: ^1.6.14
   share: ^0.6.5
   feedback: ^0.3.0

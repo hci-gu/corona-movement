@@ -16,12 +16,14 @@ class ShareButton extends StatelessWidget {
   final String text;
   final String subject;
   final List<Widget> widgets;
+  final String screen;
 
   ShareButton({
     Key key,
     @required this.widgets,
     @required this.text,
     @required this.subject,
+    this.screen,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class ShareButton extends StatelessWidget {
   }
 
   _presentShareView(BuildContext context) {
+    globalAnalytics.sendEvent('openShare', {'screen': screen});
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -66,6 +69,7 @@ class ShareButton extends StatelessWidget {
               child: Text('Share'),
               onPressed: () {
                 _onSharePressed(context);
+                globalAnalytics.sendEvent('share', {'screen': screen});
                 Navigator.of(context).pop();
               },
             ),

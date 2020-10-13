@@ -20,8 +20,6 @@ class Introduction extends HookWidget {
     var shouldUnlock = useAction(shouldUnlockAction);
     useEffect(() {
       shouldUnlock();
-      globalAnalytics.observer.analytics
-          .setCurrentScreen(screenName: 'Introduction');
       return;
     }, []);
 

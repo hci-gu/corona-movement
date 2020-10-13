@@ -1,11 +1,15 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
+import 'package:wfhmovement/api.dart' as api;
 
 class GlobalAnalytics {
-  FirebaseAnalyticsObserver observer;
+  String userId;
 
-  init(FirebaseAnalytics firebaseAnalytics) {
-    observer = FirebaseAnalyticsObserver(analytics: firebaseAnalytics);
+  init(String id) {
+    userId = id;
+    sendEvent('openApp');
+  }
+
+  sendEvent(String event, [Map<String, dynamic> parameters]) {
+    api.sendAnalyticsEvent(event, parameters, userId);
   }
 
   static final GlobalAnalytics _analytics = GlobalAnalytics._internal();
