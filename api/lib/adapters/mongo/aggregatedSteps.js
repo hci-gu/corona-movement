@@ -44,7 +44,11 @@ const getHoursForEveryone = async ({ from, to }) => {
 }
 
 const getFromToForUser = async (id) => {
-  if (id === 'all') return { from: '2020-01-01', to: moment().add(1, 'days').format('YYYY-MM-DD') }
+  if (id === 'all')
+    return {
+      from: '2020-01-01',
+      to: moment().add(1, 'days').format('YYYY-MM-DD'),
+    }
   const initialDate = await usersCollection.getInitialDataDate(id)
   let from = '2020-01-01'
   if (initialDate && moment(initialDate).isAfter(moment(from))) {
@@ -151,9 +155,12 @@ const getSummary = async ({ id }) => {
   }
 }
 
+console.log(process.env.NODE_ENV)
+
 module.exports = {
   init: async (db) => {
-    await db.createCollection(COLLECTION)
+    if (process.env.NODE_ENV != 'production')
+      await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
   },
   collection,

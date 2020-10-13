@@ -1,10 +1,6 @@
-const COLLECTION = 'codes'
-let collection
+const COLLECTION = 'analytics'
 
-const codeExists = async (code) => {
-  const doc = await collection.findOne({ code })
-  return !!doc
-}
+let collection
 
 module.exports = {
   init: async (db) => {
@@ -13,5 +9,10 @@ module.exports = {
     collection = db.collection(COLLECTION)
   },
   collection,
-  codeExists,
+  saveEvent: async (body) => {
+    await collection.insert({
+      date: new Date(),
+      ...body,
+    })
+  },
 }
