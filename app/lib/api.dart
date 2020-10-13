@@ -35,11 +35,15 @@ Future postData(String userId, List<HealthDataPoint> healthData,
 class UserResponse {
   String id;
   DateTime compareDate;
+  DateTime initialDataDate;
   double stepsEstimate;
 
   UserResponse(Map<String, dynamic> json) {
     id = json['_id'];
     compareDate = DateTime.parse(json['compareDate']);
+    if (json['initialDataDate'] != null) {
+      initialDataDate = DateTime.parse(json['initialDataDate']);
+    }
     if (json['stepsEstimate'] != null) {
       stepsEstimate = json['stepsEstimate'];
     }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,12 +9,23 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/style.dart';
 
 class CompareAverageChart extends HookWidget {
+  final bool share;
+
+  CompareAverageChart({
+    key,
+    this.share: false,
+  }) : super(key: key);
+
   static const double barWidth = 22;
 
   @override
   Widget build(BuildContext context) {
     HealthComparison comparison = useModel(stepsComparisonSelector);
     var getStepsComparison = useAction(getStepsComparisonAction);
+    double maxY = 100;
+    if (comparison != null) {
+      maxY = maxValue(comparison);
+    }
 
     useEffect(() {
       getStepsComparison();
@@ -24,7 +37,7 @@ class CompareAverageChart extends HookWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 30),
         child: AspectRatio(
-          aspectRatio: 0.35,
+          aspectRatio: share ? 0.6 : 0.35,
           child: BarChart(
             BarChartData(
               gridData: FlGridData(
@@ -38,8 +51,8 @@ class CompareAverageChart extends HookWidget {
                 },
               ),
               alignment: BarChartAlignment.spaceEvenly,
-              maxY: 100,
-              minY: -100,
+              maxY: maxY,
+              minY: -maxY,
               groupsSpace: 12,
               barTouchData: BarTouchData(
                 enabled: false,
@@ -79,7 +92,7 @@ class CompareAverageChart extends HookWidget {
                   getTitles: (double value) {
                     switch (value.toInt()) {
                       case 0:
-                        return 'You';
+                        return share ? 'Me' : 'You';
                       case 1:
                         return 'Others';
                     }
@@ -131,6 +144,11 @@ class CompareAverageChart extends HookWidget {
         showingTooltipIndicators: [0],
       ),
     ];
+  }
+
+  double maxValue(HealthComparison comparison) {
+    return max(
+        _diffForSummary(comparison.user), _diffForSummary(comparison.others));
   }
 
   double _diffForSummary(HealthSummary summary) {

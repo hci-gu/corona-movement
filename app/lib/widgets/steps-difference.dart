@@ -5,7 +5,7 @@ import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/style.dart';
 
 class StepsDifference extends HookWidget {
-  bool share;
+  final bool share;
 
   StepsDifference({
     key,
@@ -45,14 +45,14 @@ class StepsDifference extends HookWidget {
   }
 
   String _textForDiff(diff) {
-    String who = 'Your';
+    String who = 'You\'re';
     if (share) {
-      who = 'My';
+      who = 'I\'m';
     }
 
     if (diff == null) {
-      return '$who average daily steps have\n changed by -%.';
+      return '$who movement hasn\'t changed';
     }
-    return '$who average daily steps have\n ${double.parse(diff) > 0 ? 'increased' : 'decreased'} by $diff% since working from home';
+    return '$who moving $diff% ${double.parse(diff) > 0 ? 'more' : 'less'}${share ? ' since working from home.' : '.'}';
   }
 }
