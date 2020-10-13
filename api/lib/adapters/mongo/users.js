@@ -2,10 +2,11 @@ const { ObjectId } = require('mongodb')
 const COLLECTION = 'users'
 let collection
 
-const create = async ({ compareDate, endDate, os, dataSource, code }) => {
+const create = async ({ initialDataDate, compareDate, endDate, os, dataSource, code }) => {
   const result = await collection.insert({
     created: new Date(),
     compareDate: new Date(compareDate),
+    initialDataDate: new Date(initialDataDate),
     endDate: endDate ? new Date(endDate) : undefined,
     os,
     dataSource,
@@ -44,15 +45,25 @@ const getAllExcept = async (id, code) => {
   return collection.find({ _id: { $ne: ObjectId(id) } }).toArray()
 }
 
+const insert = (d) => collection.insert(d)
+
+const getInitialDataDate = async (id) => {
+  const user = await get(id)
+
+  if (user) return user.initialDataDate
+}
+
 module.exports = {
   init: async (db) => {
     await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
   },
+  insert,
   collection,
   create,
   get,
   update,
   remove,
   getAllExcept,
+  getInitialDataDate,
 }

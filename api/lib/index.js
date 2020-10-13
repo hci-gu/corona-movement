@@ -67,9 +67,9 @@ app.post('/health-data', async (req, res) => {
 })
 app.get('/:id/update', async (req, res) => {
   const { id } = req.params
-  await db.saveAggregatedSteps(id)
-  await db.saveAggregatedSummary(id)
-  res.send({ ok: true })
+  let time = new Date()
+  await Promise.all([db.saveAggregatedSteps(id), db.saveAggregatedSummary(id)])
+  res.send({ ok: true, time: new Date() - time })
 })
 
 app.get('/:id/hours', async (req, res) => {
@@ -109,7 +109,6 @@ app.get('/should-unlock', async (_, res) => res.send(false))
 
 app.post('/unlock', async (req, res) => {
   const { code } = req.body
-
   const exists = await db.codeExists(code)
 
   res.sendStatus(exists ? 200 : 401)
@@ -122,9 +121,24 @@ app.post('/feedback', async (req, res) => {
   })
 })
 
-app.post('/ping', async (req, res) => {
-  console.log('PING', req.body)
-  res.send({ ok: true })
+app.post('/ping', async (_, res) => res.send({ ok: true }))
+
+app.get('/total', async (_, res) => {
+  const result = await db.getTotalSteps()
+  res.send(result)
+})
+
+app.get('/update-everyone', async (req, res) => {
+  let time = new Date()
+  const users = await db.getAllUsers()
+
+  await Promise.all(
+    users.map(async (u) => {
+      await db.saveAggregatedSteps(u._id)
+      await db.saveAggregatedSummary(u._id)
+    })
+  )
+  res.send({ ok: true, time: new Date() - time })
 })
 
 if (process.env.NODE_ENV !== 'production')

@@ -1,6 +1,7 @@
 const moment = require('moment')
 const COLLECTION = 'aggregated-steps'
 const stepsCollection = require('./steps')
+const usersCollection = require('./users')
 let collection
 
 const getHoursForEveryone = async ({ from, to }) => {
@@ -42,9 +43,20 @@ const getHoursForEveryone = async ({ from, to }) => {
   }
 }
 
-const saveSteps = async (id) => {
-  const from = '2020-01-01'
+const getFromToForUser = async (id) => {
+  if (id === 'all') return { from: '2020-01-01', to: moment().add(1, 'days').format('YYYY-MM-DD') }
+  const initialDate = await usersCollection.getInitialDataDate(id)
+  let from = '2020-01-01'
+  if (initialDate && moment(initialDate).isAfter(moment(from))) {
+    from = moment(initialDate).add(1, 'day').format('YYYY-MM-DD')
+  }
   const to = moment().add(1, 'days').format('YYYY-MM-DD')
+
+  return { from, to }
+}
+
+const saveSteps = async (id) => {
+  const { from, to } = await getFromToForUser(id)
 
   let data
   if (id === 'all') {
@@ -62,9 +74,10 @@ const saveSteps = async (id) => {
 
 const saveSummary = async (id) => {
   if (id === 'all') return
+  const { from } = await getFromToForUser(id)
   const data = await stepsCollection.getSummaryForUser({
     id,
-    from: '2020-01-01',
+    from,
   })
 
   await save({ id, type: 'summary', data })

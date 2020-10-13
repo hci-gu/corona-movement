@@ -36,6 +36,7 @@ module.exports = {
   saveSteps: stepsCollection.save,
   getLastUpload: stepsCollection.getLastUpload,
   removeStepsForUser: stepsCollection.removeStepsForUser,
+  getTotalSteps: stepsCollection.getTotalSteps,
   // aggregatedSteps
   saveAggregatedSteps: aggregatedStepsCollection.saveSteps,
   saveAggregatedSummary: aggregatedStepsCollection.saveSummary,
@@ -46,6 +47,8 @@ module.exports = {
   getUser: userCollection.get,
   updateUser: userCollection.update,
   removeUser: userCollection.remove,
+  insertUser: userCollection.insert,
+  getAllUsers: () => userCollection.getAllExcept(),
   // codes
   codeExists: codesCollection.codeExists,
   inited: async () => {

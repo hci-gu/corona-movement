@@ -37,7 +37,6 @@ const getQuery = ({ id, from, to, weekDays }) => {
       $gte: new Date(from),
       $lt: new Date(to),
     },
-    duration: { $lte: 360000000 },
   }
   if (weekDays !== undefined) {
     query['day'] = { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] }
@@ -99,9 +98,6 @@ const getAverageStepsForUser = async ({ id, from, to }) => {
           value: { $sum: '$value' },
         },
       },
-      {
-        $sort: { _id: 1 },
-      },
     ])
     .toArray()
 
@@ -137,10 +133,28 @@ const getSummaryForUser = async ({ from, id }) => {
   }
 }
 
-const getLastUpload = async ({ id }) =>
+const getLastUpload = ({ id }) =>
   collection.findOne({ id }, { sort: { date: -1 } })
 
+const getFirstUpload = ({ id }) =>
+  collection.findOne({ id }, { sort: { date: 1 } })
+
 const removeStepsForUser = async (id) => collection.deleteMany({ id })
+
+const getTotalSteps = async () => {
+  const result = await collection
+    .aggregate([
+      {
+        $group: {
+          _id: 'total',
+          value: { $sum: '$value' },
+        },
+      },
+    ])
+    .toArray()
+
+  return result
+}
 
 module.exports = {
   init: async (db) => {
@@ -158,6 +172,8 @@ module.exports = {
     ),
   getHours,
   getSummaryForUser,
+  getFirstUpload,
   getLastUpload,
   removeStepsForUser,
+  getTotalSteps,
 }
