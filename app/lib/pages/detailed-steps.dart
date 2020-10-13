@@ -37,7 +37,7 @@ class DetailedSteps extends HookWidget {
               StepsDifference(share: true),
               StepsChart(share: true),
               AppWidgets.chartDescription(
-                'Download WFH movement app to try it out yourself.',
+                'Download WFH movement app to see how your movement has changed.',
               ),
             ],
             text:
