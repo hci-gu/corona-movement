@@ -157,7 +157,7 @@ class Settings extends HookWidget {
             icon: Icon(Icons.sync),
             title: 'Sync steps',
             onPressed: () {
-              globalAnalytics.observer.analytics.logEvent(name: 'syncSteps');
+              globalAnalytics.sendEvent('syncSteps');
               syncSteps();
             },
           ),
@@ -176,7 +176,7 @@ class Settings extends HookWidget {
   void _onChangeDatePressed(
       BuildContext context, user, updateUserCompareDate) async {
     DateTime compareDate = user.compareDate;
-    globalAnalytics.observer.analytics.logEvent(name: 'openChangeCompareDate');
+    globalAnalytics.sendEvent('openChangeCompareDate');
 
     var date = await showDatePicker(
       context: context,
@@ -185,7 +185,7 @@ class Settings extends HookWidget {
       lastDate: DateTime.now(),
     );
     if (date != null) {
-      globalAnalytics.observer.analytics.logEvent(name: 'changeCompareDate');
+      globalAnalytics.sendEvent('changeCompareDate');
       user.setCompareDate(DateTime(date.year, date.month, date.day));
       updateUserCompareDate();
     }
@@ -212,9 +212,7 @@ class Settings extends HookWidget {
             FlatButton(
               child: Text('Yes'),
               onPressed: () {
-                globalAnalytics.observer.analytics.logEvent(
-                  name: 'deleteAccount',
-                );
+                globalAnalytics.sendEvent('deleteAccount');
                 deleteUser();
                 Navigator.of(context).pop();
               },

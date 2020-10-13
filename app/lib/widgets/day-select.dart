@@ -21,7 +21,7 @@ class DaySelect extends HookWidget {
   }
 
   _onPressed(BuildContext context, StepsModel steps) {
-    globalAnalytics.observer.analytics.logEvent(name: 'showDaySelect');
+    globalAnalytics.sendEvent('showDaySelect');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -37,9 +37,9 @@ class DaySelect extends HookWidget {
                 ),
               ),
               onPressed: () {
-                globalAnalytics.observer.analytics.logEvent(
-                  name: 'daySelect',
-                  parameters: {
+                globalAnalytics.sendEvent(
+                  'daySelect',
+                  {
                     'days': steps.days.toString(),
                   },
                 );

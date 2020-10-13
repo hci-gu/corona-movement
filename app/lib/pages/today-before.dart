@@ -58,6 +58,7 @@ class TodayBeforeText extends HookWidget {
                 'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
             subject:
                 'This is how my movement have changed after working from home.',
+            screen: 'Today & before',
           ),
         ],
       ),

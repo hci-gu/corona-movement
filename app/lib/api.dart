@@ -332,6 +332,30 @@ Future<bool> feedback(String text, Uint8List screenshot) async {
   return response.statusCode == 200;
 }
 
+Future sendAnalyticsEvent(String event,
+    [Map<String, dynamic> parameters, String userId]) async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  const url = '$API_URL/analytics';
+  await http.post(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'userId': userId,
+      'event': event,
+      'device': {
+        'os': Platform.operatingSystem,
+        'version': Platform.operatingSystemVersion,
+        'appVersion': packageInfo.version,
+        'appBuild': packageInfo.buildNumber
+      },
+      'parameters': parameters
+    }),
+  );
+}
+
 Future<bool> ping() async {
   print('pingpong');
   const url = '$API_URL/ping';

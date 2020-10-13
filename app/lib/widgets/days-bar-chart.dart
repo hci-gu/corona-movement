@@ -51,9 +51,7 @@ class DaysBarChart extends HookWidget {
             if (notification is ScrollEndNotification) {
               double offset = _scrollOffsetForDays(days, dates[1]);
               if (scrollController.offset != offset) {
-                globalAnalytics.observer.analytics.logEvent(
-                  name: 'dayBarChartScroll',
-                );
+                globalAnalytics.sendEvent('dayBarChartScroll');
               }
             }
           },
