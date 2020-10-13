@@ -13,6 +13,7 @@ class User extends ValueNotifier {
   String id;
   DateTime compareDate;
   DateTime latestUploadDate;
+  DateTime initialDataDate = DateTime.parse('2020-01-01');
   String dataSource;
   String division;
   String code = '';
@@ -37,6 +38,10 @@ class User extends ValueNotifier {
   setUser(api.UserResponse response) {
     id = response.id;
     compareDate = response.compareDate;
+    if (response.initialDataDate != null &&
+        response.initialDataDate.isAfter(DateTime.parse('2020-01-01'))) {
+      initialDataDate = response.initialDataDate.add(Duration(days: 1));
+    }
     unlocked = true;
     notifyListeners();
   }
@@ -108,7 +113,7 @@ var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
   User user = get(userAtom);
 
   return [
-    StepsModel.fromDate,
+    user.initialDataDate.toIso8601String().substring(0, 10),
     user.compareDate.toIso8601String().substring(0, 10),
     DateTime.now().toIso8601String().substring(0, 10),
   ];

@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
-import 'package:wfhmovement/widgets/steps-difference.dart';
+import 'package:wfhmovement/widgets/share.dart';
 
 class CompareSteps extends HookWidget {
   @override
@@ -23,8 +23,23 @@ class CompareSteps extends HookWidget {
               ),
             ),
             AppWidgets.chartDescription(
-              'Your\'s and other\'s progress before and after starting working from home.',
-            )
+              'Your\'s and other\'s difference in movement before and after working from home.',
+            ),
+            ShareButton(
+              widgets: [
+                AppWidgets.chartDescription(
+                  'My change in movement compared to others before and after working from home.',
+                ),
+                CompareAverageChart(share: true),
+                AppWidgets.chartDescription(
+                  'Download WFH movement app to try it out yourself.',
+                ),
+              ],
+              text:
+                  'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
+              subject:
+                  'This is how my movement have changed after working from home.',
+            ),
           ],
         ),
       ),
