@@ -11,6 +11,7 @@ import 'package:wfhmovement/models/form_model.dart';
 
 // const API_URL = 'http://10.0.2.2:4000';
 // const API_URL = 'http://192.168.0.32:4000';
+const API_KEY = 'some-key';
 const API_URL = 'https://api.mycoronamovement.com';
 
 Future postData(String userId, List<HealthDataPoint> healthData,
@@ -20,6 +21,7 @@ Future postData(String userId, List<HealthDataPoint> healthData,
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'id': userId,
@@ -149,6 +151,7 @@ Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'compareDate': compareDate.toIso8601String().substring(0, 10),
@@ -168,6 +171,7 @@ Future<UserResponse> getUser(String userId) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
   );
 
@@ -180,6 +184,7 @@ Future<bool> deleteUser(String userId) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
   );
 
@@ -192,6 +197,7 @@ Future updateUserCompareDate(String userId, DateTime compareDate) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'compareDate': compareDate.toIso8601String().substring(0, 10),
@@ -205,6 +211,7 @@ Future updateUserEstimate(String userId, double stepsEstimate) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'stepsEstimate': stepsEstimate,
@@ -218,6 +225,7 @@ Future setUserFormData(String userId, FormModel form) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'country': form.country,
@@ -238,6 +246,7 @@ Future<List<HealthData>> getSteps(
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
   );
   ChartResult chart = ChartResult.fromJson(json.decode(response.body));
@@ -256,6 +265,7 @@ Future<HealthComparison> getComparison(String userId) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
   );
   HealthComparison comparison =
@@ -270,6 +280,7 @@ Future<LatestUpload> getLatestUpload(String userId) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
   );
   Map<String, dynamic> data = json.decode(response.body);
@@ -283,6 +294,7 @@ Future<bool> shouldUnlock() async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
   );
 
@@ -297,6 +309,7 @@ Future<bool> unlock(String code) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'code': code,
@@ -314,6 +327,7 @@ Future<bool> feedback(String text, Uint8List screenshot) async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'text': text,
@@ -341,6 +355,7 @@ Future sendAnalyticsEvent(String event,
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode({
       'userId': userId,
@@ -363,6 +378,7 @@ Future<bool> ping() async {
     url,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
     },
     body: jsonEncode(
       {'date': DateTime.now().toIso8601String()},

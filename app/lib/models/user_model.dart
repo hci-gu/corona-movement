@@ -140,8 +140,8 @@ Action initAction = (get) async {
       form.setUploaded();
     }
     onboarding.setDone();
-    globalAnalytics.init(userId);
   }
+  globalAnalytics.init(userId);
   user.setInited();
 };
 

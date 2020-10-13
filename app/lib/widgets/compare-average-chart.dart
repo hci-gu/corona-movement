@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/api.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 
 class CompareAverageChart extends HookWidget {
@@ -20,6 +21,7 @@ class CompareAverageChart extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = useModel(userAtom);
     HealthComparison comparison = useModel(stepsComparisonSelector);
     var getStepsComparison = useAction(getStepsComparisonAction);
     double maxY = 100;
@@ -30,7 +32,7 @@ class CompareAverageChart extends HookWidget {
     useEffect(() {
       getStepsComparison();
       return;
-    }, []);
+    }, [user.compareDate, user.lastSync]);
 
     return RotatedBox(
       quarterTurns: 1,
@@ -147,8 +149,12 @@ class CompareAverageChart extends HookWidget {
   }
 
   double maxValue(HealthComparison comparison) {
-    return max(
-        _diffForSummary(comparison.user), _diffForSummary(comparison.others));
+    return (max(
+              _diffForSummary(comparison.user).abs(),
+              _diffForSummary(comparison.others).abs(),
+            ) *
+            1.4)
+        .roundToDouble();
   }
 
   double _diffForSummary(HealthSummary summary) {

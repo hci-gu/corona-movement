@@ -33,8 +33,14 @@ class SelectDataSource extends HookWidget {
           height: 10,
         ),
         _textInfo(context),
+        SizedBox(height: 20),
+        Text(
+          'Please select where you keep your step data.',
+          style: TextStyle(fontSize: 14),
+          textAlign: TextAlign.center,
+        ),
         SizedBox(
-          height: 50,
+          height: 20,
         ),
         ..._dataSources(context),
         Card(
@@ -59,28 +65,29 @@ class SelectDataSource extends HookWidget {
 
   Widget _textInfo(BuildContext context) {
     return InkWell(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(5),
-              child: Icon(Icons.info),
-            ),
-            Expanded(
-              child: Text(
-                'To continue, select where you keep your step data.',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(5),
+            child: Icon(Icons.info),
+          ),
+          Expanded(
+            child: Text(
+              'For us to tell you how your moment patterns have changed we need access to your step data.',
+              style: TextStyle(
+                fontSize: 16,
               ),
             ),
-          ],
-        ),
-        onTap: () => AppWidgets.showAlert(
-              context,
-              'Selecting a data source',
-              'The app will fetch data from a source where you may have step data. Some people with android use google fitness (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.',
-            ));
+          ),
+        ],
+      ),
+      onTap: () => AppWidgets.showAlert(
+        context,
+        'Selecting a data source',
+        'The app will fetch data from a source where you may have step data. Some people with android use google fitness (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.',
+      ),
+    );
   }
 
   List<Widget> _dataSources(BuildContext context) {

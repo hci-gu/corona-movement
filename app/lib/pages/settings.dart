@@ -96,7 +96,6 @@ class Settings extends HookWidget {
           title: 'Redo introduction',
           onPressed: () {
             deleteUser();
-            Navigator.of(context).pop();
           },
         ),
       ),

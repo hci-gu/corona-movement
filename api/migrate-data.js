@@ -6,7 +6,7 @@ let caBundle = fs.readFileSync(
   `${__dirname}/lib/adapters/mongo/rds-combined-ca-bundle.pem`
 )
 const DB_NAME = 'coronamovement'
-const COLLECTION_NAME = 'users'
+const COLLECTION_NAME = 'steps'
 
 const { transformHealthData } = require('./lib/adapters/db')
 
@@ -26,21 +26,21 @@ const syncDocs = async (collection, offset) => {
   console.log('sync, ', res.length, 'totalt, ', total)
   if (res.length > 0) {
     try {
-      // await mongo.saveSteps(res)
-      await elastic.save(
-        res.map((d) => {
-          return {
-            value: d.value,
-            date: new Date(d.date),
-            date_from: new Date(d.date_from),
-            date_to: new Date(d.date_to),
-            duration: d.duration,
-            day: d.day,
-            time: d.time,
-            id: d.id,
-          }
-        })
-      )
+      await mongo.saveSteps(res)
+      // await elastic.save(
+      //   res.map((d) => {
+      //     return {
+      //       value: d.value,
+      //       date: new Date(d.date),
+      //       date_from: new Date(d.date_from),
+      //       date_to: new Date(d.date_to),
+      //       duration: d.duration,
+      //       day: d.day,
+      //       time: d.time,
+      //       id: d.id,
+      //     }
+      //   })
+      // )
     } catch (e) {
       console.log(e)
     }
@@ -55,12 +55,9 @@ const run = async () => {
     sslValidate: false,
     sslCA: caBundle,
   })
+  await mongo.inited()
   const collection = client.db(DB_NAME).collection(COLLECTION_NAME)
-  const users = await collection.find({}).toArray()
-  console.log(
-    'users',
-    users.map((u) => u._id)
-  )
+  syncDocs(collection, 0)
 
   console.log('all done!')
 }
