@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb')
+const stepsCollection = require('./steps')
 const COLLECTION = 'users'
 let collection
 
@@ -22,7 +23,13 @@ const create = async ({
   return result.ops[0]
 }
 
-const get = async (id) => collection.findOne({ _id: ObjectId(id) })
+const get = async (id) => {
+  const user = await collection.findOne({ _id: ObjectId(id) })
+  if (user && user.stepsEstimate) {
+    user.stepsEstimate = user.stepsEstimate + 0.000000001
+  }
+  return user
+}
 
 const update = async ({ id, update }) => {
   const _update = Object.keys(update).reduce((obj, key) => {
@@ -56,6 +63,12 @@ const insert = (d) => collection.insert(d)
 
 const getInitialDataDate = async (id) => {
   const user = await get(id)
+
+  if (!user.initialDataDate) {
+    user.initialDataDate = new Date(
+      (await stepsCollection.getFirstUpload({ id })).date
+    )
+  }
 
   if (user) return user.initialDataDate
 }

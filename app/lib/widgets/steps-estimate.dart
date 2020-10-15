@@ -85,6 +85,6 @@ class StepsEstimate extends HookWidget {
     if (estimate == 0) {
       return 'No change';
     }
-    return 'Im moving ${(estimate * 100).abs().toStringAsFixed(1)}% ${estimate > 0 ? 'more' : 'less'}.';
+    return 'I\'m moving ${(estimate * 100).abs().toStringAsFixed(1)}% ${estimate > 0 ? 'more' : 'less'}.';
   }
 }

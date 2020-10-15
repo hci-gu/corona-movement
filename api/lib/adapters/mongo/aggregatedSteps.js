@@ -59,6 +59,15 @@ const getFromToForUser = async (id) => {
   return { from, to }
 }
 
+const shouldPopulateUntilDate = async (id) => {
+  const initalDataDate = await usersCollection.getInitialDataDate(id)
+  const user = await usersCollection.get(id)
+
+  if (moment(initalDataDate).isAfter(moment(user.compareDate))) {
+    return moment(user.compareDate).subtract(10, 'days')
+  }
+}
+
 const saveSteps = async (id) => {
   const { from, to } = await getFromToForUser(id)
 
@@ -105,12 +114,29 @@ const getSteps = async ({ id }) => {
     id,
     type: 'steps',
   })
+  const addEmptyToDataToDate = await shouldPopulateUntilDate(id)
+  let dataPointsToAdd = []
+  if (addEmptyToDataToDate) {
+    const firstDate = moment(doc.data.result[0].key.substring(0, 10))
+    const daysToAdd = firstDate.diff(moment(addEmptyToDataToDate), 'days')
+    dataPointsToAdd = Array.from({ length: daysToAdd }).map((_, i) => {
+      const key = `${moment(addEmptyToDataToDate)
+        .add(i, 'days')
+        .format('YYYY-MM-DD')} 00`
+      return {
+        _id: key,
+        value: 0,
+        key,
+      }
+    })
+  }
 
   if (!doc) {
     return {
       result: null,
     }
   }
+  doc.data.result = [...dataPointsToAdd, ...doc.data.result]
 
   return doc.data
 }
@@ -154,8 +180,6 @@ const getSummary = async ({ id }) => {
     others,
   }
 }
-
-console.log(process.env.NODE_ENV)
 
 module.exports = {
   init: async (db) => {
