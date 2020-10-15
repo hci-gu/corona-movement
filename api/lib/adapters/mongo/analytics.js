@@ -10,6 +10,10 @@ module.exports = {
   },
   collection,
   saveEvent: async (body) => {
+    if (!body.userId) {
+      return
+    }
+
     await collection.insert({
       date: new Date(),
       ...body,
