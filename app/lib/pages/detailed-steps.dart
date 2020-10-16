@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/models/user_model.dart';
 
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/day-select.dart';
@@ -14,6 +16,8 @@ class DetailedSteps extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    User user = useModel(userAtom);
+
     return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Before & after', true),
       child: ListView(
@@ -30,7 +34,9 @@ class DetailedSteps extends HookWidget {
             ),
           ),
           AppWidgets.chartDescription(
-            'Above you can see how your activity has changed over a typical day before and after working from home.',
+            user.id == 'all'
+                ? 'Above you can see how working from home has affected how people move throughout the day.'
+                : 'Above you can see how your activity has changed over a typical day before and after working from home.',
           ),
           ShareButton(
             widgets: [
@@ -41,9 +47,9 @@ class DetailedSteps extends HookWidget {
               ),
             ],
             text:
-                'This is how my movement has changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
+                'This is how people\'s movement has changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
             subject:
-                'This is how my movement has changed after working from home.',
+                'This is how how people\'s movement has changed after working from home.',
             screen: 'Before & after',
           ),
         ],

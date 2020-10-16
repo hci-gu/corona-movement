@@ -10,6 +10,7 @@ import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/compare-steps.dart';
 import 'package:wfhmovement/pages/today-before.dart';
 import 'package:wfhmovement/style.dart';
+import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
 import 'package:wfhmovement/widgets/days-bar-chart.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
@@ -28,6 +29,7 @@ class Home extends HookWidget {
     User user = useModel(userAtom);
     StepsModel steps = useModel(stepsAtom);
     var getStepsChart = useAction(getStepsAction);
+    var deleteUser = useAction(deleteUserAction);
     useEffect(() {
       getStepsChart();
       return;
@@ -52,7 +54,9 @@ class Home extends HookWidget {
         controller: _refreshController,
         child: ListView(
           padding: EdgeInsets.only(top: 25),
-          children: steps.data == null ? _empty(context) : _body(context, user),
+          children: steps.data == null
+              ? _empty(context)
+              : _body(context, user, deleteUser),
         ),
       ),
     );
@@ -83,7 +87,7 @@ class Home extends HookWidget {
     ];
   }
 
-  List<Widget> _body(BuildContext context, User user) {
+  List<Widget> _body(BuildContext context, User user, deleteUser) {
     String description = user.id == 'all'
         ? 'This is the number of steps others have taken each day (on average). Below you can see how working from home has affected how people move throughout the day.'
         : 'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.';
@@ -92,6 +96,14 @@ class Home extends HookWidget {
       if (user.id == 'all')
         AppWidgets.chartDescription(
             'Since you don’t have any data before working from home, you can\'t compare yourself to others. Below you can see other people’s data.'),
+      if (user.id == 'all')
+        Center(
+          child: StyledButton(
+            icon: Icon(Icons.add),
+            title: 'Add data source',
+            onPressed: () => deleteUser(),
+          ),
+        ),
       DaysBarChart(),
       AppWidgets.chartDescription(description),
       if (user.id != 'all')

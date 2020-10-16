@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -140,6 +142,13 @@ class DataSource extends HookWidget {
           title: 'Give access',
           onPressed: () async {
             if (onboarding.dataSource == 'Apple health') {
+              if (Platform.operatingSystem == 'android') {
+                return AppWidgets.showAlert(
+                  context,
+                  'Apple health',
+                  'Apple health is not available on an Android device.',
+                );
+              }
               AppWidgets.showConfirmDialog(context, 'Apple health',
                   'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure you scroll down and check the box for steps before pressing allow, we will not access any other data even if you check those options.',
                   () {

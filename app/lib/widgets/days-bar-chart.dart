@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -58,7 +59,7 @@ class DaysBarChart extends HookWidget {
           },
           child: ListView(
             controller: scrollController,
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
             scrollDirection: Axis.horizontal,
             children: [
               _barChart(days.length > 0 ? days : emptyDays, user, dates[1],
@@ -111,8 +112,10 @@ class DaysBarChart extends HookWidget {
                   );
                 }
                 var date = DateTime.parse(day['date']);
+                var formattedNumber = NumberFormat.decimalPattern('sv-se')
+                    .format(day['value'].toInt());
                 return BarTooltipItem(
-                  '${_labelforDate(date)} - ${day['value']} steps',
+                  '${_labelforDate(date)} - ${formattedNumber} steps',
                   TextStyle(
                     color: AppColors.secondary,
                     fontWeight: FontWeight.bold,

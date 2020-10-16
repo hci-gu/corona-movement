@@ -6,6 +6,7 @@ import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/pages/onboarding/introduction.dart';
 import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
@@ -27,10 +28,9 @@ class Settings extends HookWidget {
       return;
     }, []);
     useEffect(() {
-      if (user.id == null) {
+      if (user.id == null && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      return;
     }, [user.id]);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
     var syncSteps = useAction(syncStepsAction);
@@ -52,55 +52,49 @@ class Settings extends HookWidget {
             child: ListView(
               padding: EdgeInsets.all(25),
               children: [
-                if (user.compareDate != null)
-                  Text(
-                    'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                SizedBox(height: 20),
-                Center(
-                  child: StyledButton(
-                    icon: Icon(Icons.date_range),
-                    title: 'Change date',
-                    onPressed: () => _onChangeDatePressed(
-                      context,
-                      user,
-                      updateUserCompareDate,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 40),
+                if (user.id != 'all')
+                  ..._userWidgets(context, user, updateUserCompareDate),
                 if (user.id != 'all')
                   ..._loggedInUserWidgets(
                       context, user, syncSteps, garminSyncSteps, deleteUser),
-                if (user.id == 'all') ..._noUserWidgets(context, deleteUser),
                 _appInformation(context),
+                if (user.id != 'all' && user.id != null)
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.all(25),
+                      child: Text('User id: ${user.id}'),
+                    ),
+                  ),
               ],
             ),
           ),
-          if (user.id != 'all' && user.id != null)
-            Container(
-              padding: EdgeInsets.all(25),
-              child: Text('User: ${user.id}'),
-            ),
         ],
       ),
     );
   }
 
-  List<Widget> _noUserWidgets(BuildContext context, deleteUser) {
+  List<Widget> _userWidgets(BuildContext context, user, updateUserCompareDate) {
     return [
+      if (user.compareDate != null)
+        Text(
+          'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      SizedBox(height: 20),
       Center(
         child: StyledButton(
-          icon: Icon(Icons.redo),
-          title: 'Redo introduction',
-          onPressed: () {
-            deleteUser();
-          },
+          icon: Icon(Icons.date_range),
+          title: 'Change date',
+          onPressed: () => _onChangeDatePressed(
+            context,
+            user,
+            updateUserCompareDate,
+          ),
         ),
       ),
+      SizedBox(height: 40),
     ];
   }
 
