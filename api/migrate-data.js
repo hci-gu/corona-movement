@@ -6,9 +6,7 @@ let caBundle = fs.readFileSync(
   `${__dirname}/lib/adapters/mongo/rds-combined-ca-bundle.pem`
 )
 const DB_NAME = 'coronamovement'
-const COLLECTION_NAME = 'steps'
-
-const { transformHealthData } = require('./lib/adapters/db')
+const COLLECTION_NAME = 'users'
 
 const mongo = require('./lib/adapters/mongo/index')
 const elastic = require('./lib/adapters/elastic/index')
@@ -57,7 +55,12 @@ const run = async () => {
   })
   await mongo.inited()
   const collection = client.db(DB_NAME).collection(COLLECTION_NAME)
-  syncDocs(collection, 0)
+  const users = await collection.find({}).toArray()
+  console.log('users', users)
+
+  users.forEach((u) => mongo.insertUser(u))
+
+  // await syncDocs(collection, 0)
 
   console.log('all done!')
 }
