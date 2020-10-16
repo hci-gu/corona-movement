@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -104,6 +105,28 @@ class AppWidgets {
           )
         ],
       ),
+    );
+  }
+
+  static void showConfirmDialog(
+      BuildContext context, String title, String text, Function onComplete) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(text),
+          actions: [
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                onComplete();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

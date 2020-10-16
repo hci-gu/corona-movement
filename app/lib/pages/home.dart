@@ -52,7 +52,7 @@ class Home extends HookWidget {
         controller: _refreshController,
         child: ListView(
           padding: EdgeInsets.only(top: 25),
-          children: steps.data == null ? _empty(context) : _body(context),
+          children: steps.data == null ? _empty(context) : _body(context, user),
         ),
       ),
     );
@@ -83,30 +83,38 @@ class Home extends HookWidget {
     ];
   }
 
-  List<Widget> _body(BuildContext context) {
+  List<Widget> _body(BuildContext context, User user) {
+    String description = user.id == 'all'
+        ? 'This is the number of steps others have taken each day (on average). Below you can see how working from home has affected how people move throughout the day.'
+        : 'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.';
+
     return [
+      if (user.id == 'all')
+        AppWidgets.chartDescription(
+            'Since you don’t have any data before working from home, you can\'t compare yourself to others. Below you can see other people’s data.'),
       DaysBarChart(),
-      AppWidgets.chartDescription(
-        'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.',
-      ),
-      Text(
-        'Explore your steps',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: AppColors.secondary,
+      AppWidgets.chartDescription(description),
+      if (user.id != 'all')
+        Text(
+          'Explore your steps',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: AppColors.secondary,
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
-      ),
       SizedBox(height: 20),
-      _grid(context),
+      _grid(context, user),
     ];
   }
 
-  Widget _grid(BuildContext context) {
+  Widget _grid(BuildContext context, User user) {
+    double padding =
+        user.id == 'all' ? (MediaQuery.of(context).size.width / 4) : 12;
     return GridView.count(
-      padding: EdgeInsets.only(left: 12, right: 12, bottom: 25),
-      crossAxisCount: 2,
+      padding: EdgeInsets.only(left: padding, right: padding, bottom: 25),
+      crossAxisCount: user.id == 'all' ? 1 : 2,
       shrinkWrap: true,
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
@@ -128,45 +136,47 @@ class Home extends HookWidget {
           ),
           'Before & after',
         ),
-        _pageItem(
-          PageWidget(
-            child: Hero(
-              tag: 'compare-chart',
-              child: CompareAverageChart(),
-              flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
-            ),
-            scale: 1.2,
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CompareSteps(),
-                settings: RouteSettings(name: 'You vs others'),
-              ));
-            },
-          ),
-          'You vs others',
-        ),
-        _pageItem(
-          PageWidget(
-            child: Hero(
-              tag: 'today-before',
-              child: TodayBeforeText(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                  vertical: 75,
-                ),
+        if (user.id != 'all')
+          _pageItem(
+            PageWidget(
+              child: Hero(
+                tag: 'compare-chart',
+                child: CompareAverageChart(),
+                flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
               ),
-              flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
+              scale: 1.2,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CompareSteps(),
+                  settings: RouteSettings(name: 'You vs others'),
+                ));
+              },
             ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TodayBefore(),
-                settings: RouteSettings(name: 'Today & Before'),
-              ));
-            },
-            scale: 1.25,
+            'You vs others',
           ),
-          'Today & Before',
-        ),
+        if (user.id != 'all')
+          _pageItem(
+            PageWidget(
+              child: Hero(
+                tag: 'today-before',
+                child: TodayBeforeText(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 75,
+                  ),
+                ),
+                flightShuttleBuilder: AppWidgets.flightShuttleBuilder,
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => TodayBefore(),
+                  settings: RouteSettings(name: 'Today & Before'),
+                ));
+              },
+              scale: 1.25,
+            ),
+            'Today & Before',
+          ),
       ],
     );
   }

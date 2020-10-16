@@ -135,7 +135,7 @@ Action initAction = (get) async {
       response = await api.getUser(userId);
     }
     user.setUser(response);
-    if (response.stepsEstimate != null) {
+    if (response.stepsEstimate != null || userId == 'all') {
       user.setGaveEstimate(true);
       form.setUploaded();
     }
