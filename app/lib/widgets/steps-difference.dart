@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 
 class StepsDifference extends HookWidget {
@@ -15,6 +16,7 @@ class StepsDifference extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var diff = useModel(stepsDiffBeforeAndAfterSelector);
+    User user = useModel(userAtom);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -31,9 +33,7 @@ class StepsDifference extends HookWidget {
           ),
         ),
         Text(
-          _textForDiff(
-            diff,
-          ),
+          _textForDiff(diff, user),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: share ? 14 : 16,
@@ -44,10 +44,15 @@ class StepsDifference extends HookWidget {
     );
   }
 
-  String _textForDiff(diff) {
+  String _textForDiff(diff, User user) {
     String who = 'You\'re';
     if (share) {
       who = 'I\'m';
+    }
+
+    if (user.id == 'all') {
+      if (diff == null) return 'People\'s movement hasn\'t changed.';
+      return 'People are moving $diff% ${double.parse(diff) > 0 ? 'more' : 'less'}.';
     }
 
     if (diff == null) {
