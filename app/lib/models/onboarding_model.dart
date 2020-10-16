@@ -114,6 +114,29 @@ Action getHealthAuthorizationAction = (get) async {
   }
 };
 
+List<HealthDataPoint> mockSteps(DateTime from, DateTime to) {
+  int days = to.difference(from).inDays;
+  List<HealthDataPoint> data = [];
+  List.generate(days, (index) {
+    DateTime date = from.add(Duration(days: index));
+
+    List.generate(
+        24 * 15,
+        (index) => {
+              data.add(HealthDataPoint(
+                5,
+                'STEPS',
+                date.millisecondsSinceEpoch,
+                date.millisecondsSinceEpoch,
+                '',
+                '',
+              ))
+            });
+  }).toList();
+
+  return data;
+}
+
 Future<List<HealthDataPoint>> getSteps(
     DateTime from, DateTime to, List<HealthDataPoint> totalSteps) async {
   List<HealthDataPoint> steps = await Health.getHealthDataFromType(
@@ -121,6 +144,7 @@ Future<List<HealthDataPoint>> getSteps(
     to,
     HealthDataType.STEPS,
   );
+
   if (steps.length > 0) {
     totalSteps.addAll(steps);
     DateTime threeYearsAgo = DateTime.now().subtract(Duration(days: 365 * 3));

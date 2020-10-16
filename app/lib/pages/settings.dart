@@ -180,7 +180,7 @@ class Settings extends HookWidget {
     var date = await showDatePicker(
       context: context,
       initialDate: compareDate,
-      firstDate: compareDate.subtract(Duration(days: 120)),
+      firstDate: DateTime.parse('2010-01-01'),
       lastDate: DateTime.now(),
     );
     if (date != null) {

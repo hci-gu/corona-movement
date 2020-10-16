@@ -30,7 +30,7 @@ class DetailedSteps extends HookWidget {
             ),
           ),
           AppWidgets.chartDescription(
-            'Above you can see how your activity have changed over a typical day before and after working from home.',
+            'Above you can see how your activity has changed over a typical day before and after working from home.',
           ),
           ShareButton(
             widgets: [
@@ -41,9 +41,9 @@ class DetailedSteps extends HookWidget {
               ),
             ],
             text:
-                'This is how my movement have changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
+                'This is how my movement has changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
             subject:
-                'This is how my movement have changed after working from home.',
+                'This is how my movement has changed after working from home.',
             screen: 'Before & after',
           ),
         ],
