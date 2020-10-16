@@ -26,9 +26,10 @@ class DaysBarChart extends HookWidget {
   @override
   Widget build(BuildContext context) {
     List days = useModel(stepsDayTotalSelector);
+    User user = useModel(userAtom);
     List<String> dates = useModel(userDatesSelector);
     useEffect(() {
-      if (days.length > 0) {
+      if (days.length > 0 && user.id != 'all') {
         if (scrollController.hasClients) {
           scrollController.animateTo(
             _scrollOffsetForDays(days, dates[1]),
@@ -60,7 +61,7 @@ class DaysBarChart extends HookWidget {
             padding: EdgeInsets.all(10),
             scrollDirection: Axis.horizontal,
             children: [
-              _barChart(days.length > 0 ? days : emptyDays, dates[1],
+              _barChart(days.length > 0 ? days : emptyDays, user, dates[1],
                   days.length == 0),
             ],
           ),
@@ -75,7 +76,7 @@ class DaysBarChart extends HookWidget {
     return index * barWidth - 50;
   }
 
-  Widget _barChart(days, String compareDate, [bool empty]) {
+  Widget _barChart(days, user, String compareDate, [bool empty]) {
     double maxValue = days.length > 0
         ? days.fold(
             0.0, (value, day) => value > day['value'] ? value : day['value'])
@@ -150,7 +151,7 @@ class DaysBarChart extends HookWidget {
           borderData: FlBorderData(
             show: false,
           ),
-          barGroups: _barGroupsForDays(days, compareDate, maxValue),
+          barGroups: _barGroupsForDays(days, user, compareDate, maxValue),
         ),
       ),
     );
@@ -192,11 +193,11 @@ class DaysBarChart extends HookWidget {
   }
 
   List<BarChartGroupData> _barGroupsForDays(
-      List days, String compareDate, double maxValue) {
+      List days, User user, String compareDate, double maxValue) {
     List<BarChartGroupData> barGroups = [];
     days.forEach((day) {
       int index = days.indexOf(day);
-      if (compareDate.compareTo(day['date']) == 0) {
+      if (compareDate.compareTo(day['date']) == 0 && user.id != 'all') {
         barGroups.add(
           BarChartGroupData(
             x: index,
@@ -205,20 +206,22 @@ class DaysBarChart extends HookWidget {
               BarChartRodData(
                 y: maxValue - (maxValue / 10),
                 color: Colors.black,
-                width: 2,
+                width: 1,
               )
             ],
             showingTooltipIndicators: [0],
           ),
         );
       } else {
+        Color rodColor = compareDate.compareTo(day['date']) >= 1
+            ? AppColors.secondary
+            : AppColors.main;
+        if (user.id == 'all') rodColor = AppColors.main;
         barGroups.add(
           BarChartGroupData(x: index, barRods: [
             BarChartRodData(
               y: day['value'],
-              color: compareDate.compareTo(day['date']) >= 1
-                  ? AppColors.secondary
-                  : AppColors.main,
+              color: rodColor,
             )
           ]),
         );

@@ -48,7 +48,7 @@ class DataSource extends HookWidget {
               ),
             ),
             Text(
-              'This app is part of an exploratory research project investigating the impact of the pandemic on our physical movement. For this purpose, we will collect and store the following data:',
+              'This app is part of an exploratory research project at the University of Gothenburg investigating the impact of the pandemic on our physical movement. For this purpose, we will collect and store the following data:',
               style: TextStyle(fontSize: 12),
             ),
             _dataInformation(context, onboarding.dataSource),
@@ -60,7 +60,7 @@ class DataSource extends HookWidget {
             if (!onboarding.authorized &&
                 !onboarding.fetching &&
                 onboarding.availableData.length == 0)
-              _getAccess(onboarding, getHealthAuthorization),
+              _getAccess(context, onboarding, getHealthAuthorization),
             if (onboarding.availableData.length > 500)
               _hasData(context, onboarding, register, consent, uploadSteps),
             if (onboarding.authorized &&
@@ -125,8 +125,8 @@ class DataSource extends HookWidget {
     );
   }
 
-  Widget _getAccess(
-      OnboardingModel onboarding, Function getHealthAuthorization) {
+  Widget _getAccess(BuildContext context, OnboardingModel onboarding,
+      Function getHealthAuthorization) {
     return Column(
       children: [
         Text(
@@ -139,7 +139,15 @@ class DataSource extends HookWidget {
           icon: Icon(Icons.check),
           title: 'Give access',
           onPressed: () async {
-            getHealthAuthorization();
+            if (onboarding.dataSource == 'Apple health') {
+              AppWidgets.showConfirmDialog(context, 'Apple health',
+                  'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure you scroll down and check the box for steps before pressing allow, we will not access any other data even if you check those options.',
+                  () {
+                getHealthAuthorization();
+              });
+            } else {
+              getHealthAuthorization();
+            }
           },
         ),
       ],

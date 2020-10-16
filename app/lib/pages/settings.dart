@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -74,7 +75,8 @@ class Settings extends HookWidget {
                 if (user.id != 'all')
                   ..._loggedInUserWidgets(
                       context, user, syncSteps, garminSyncSteps, deleteUser),
-                if (user.id == 'all') ..._noUserWidgets(context, deleteUser)
+                if (user.id == 'all') ..._noUserWidgets(context, deleteUser),
+                _appInformation(context),
               ],
             ),
           ),
@@ -126,7 +128,7 @@ class Settings extends HookWidget {
       Center(
         child: StyledButton(
           icon: Icon(Icons.delete),
-          title: 'Delete account',
+          title: 'Delete data',
           onPressed: () => _onDeleteUserPressed(context, deleteUser),
         ),
       ),
@@ -190,6 +192,44 @@ class Settings extends HookWidget {
     }
   }
 
+  Widget _appInformation(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 25),
+        Text(
+          'The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.',
+          style: TextStyle(fontSize: 12),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fitness or Garmin.',
+          style: TextStyle(fontSize: 12),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Read more about the project here:',
+          style: TextStyle(fontSize: 12),
+        ),
+        InkWell(
+          child: Text('https://hci-gu.github.io/wfh-movement'),
+          onTap: () async {
+            const url = 'https://hci-gu.github.io/wfh-movement';
+            if (await canLaunch(url)) {
+              await launch(url);
+            } else {
+              throw 'Could not launch $url';
+            }
+          },
+        ),
+        SizedBox(height: 20),
+        Image.asset(
+          'assets/png/gu_logo.png',
+          height: 80,
+        )
+      ],
+    );
+  }
+
   void _onDeleteUserPressed(BuildContext parentContext, deleteUser) async {
     return showDialog(
       context: parentContext,
@@ -199,7 +239,7 @@ class Settings extends HookWidget {
             'Confirm',
           ),
           content: Text(
-            'Are you sure you want to delete your account and data?',
+            'Are you sure you want to delete your data?\n\nThis will remove all data from the app, and from our servers. You will no longer praticipate in the research project.\n\nIf you want to use the app again, you are welcome to do so.',
           ),
           actions: [
             FlatButton(
