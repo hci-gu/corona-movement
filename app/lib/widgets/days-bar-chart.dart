@@ -104,7 +104,7 @@ class DaysBarChart extends HookWidget {
                   return BarTooltipItem(
                     'Started working from home',
                     TextStyle(
-                      color: AppColors.secondaryText,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   );
@@ -204,8 +204,8 @@ class DaysBarChart extends HookWidget {
             barRods: [
               BarChartRodData(
                 y: maxValue - (maxValue / 10),
-                color: AppColors.secondaryText,
-                width: 5,
+                color: Colors.black,
+                width: 2,
               )
             ],
             showingTooltipIndicators: [0],

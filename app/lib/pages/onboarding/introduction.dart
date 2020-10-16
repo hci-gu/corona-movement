@@ -116,18 +116,21 @@ class Introduction extends HookWidget {
           height: 50,
         ),
         Text(
-          'Pick the day you started working from home.',
+          'To start, pick the day you started working from home.',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
-        SizedBox(
-          height: 20,
-        ),
+        SizedBox(height: 20),
         StyledButton(
           icon: Icon(Icons.date_range),
           title: 'Select date',
           onPressed: () => _onSelectDatePressed(context, onboarding),
         ),
+        SizedBox(height: 20),
+        Image.asset(
+          'assets/png/gu_logo.png',
+          height: 80,
+        )
       ],
     );
   }
@@ -136,7 +139,7 @@ class Introduction extends HookWidget {
     var date = await showDatePicker(
       context: context,
       initialDate: DateTime.parse('2020-03-01'),
-      firstDate: DateTime.parse(StepsModel.fromDate),
+      firstDate: DateTime.parse('2010-01-01'),
       lastDate: DateTime.now(),
     );
     if (date != null) {

@@ -70,7 +70,7 @@ class SelectDataSource extends HookWidget {
         children: [
           Container(
             padding: EdgeInsets.all(5),
-            child: Icon(Icons.info),
+            child: Icon(Icons.info_outline),
           ),
           Expanded(
             child: Text(

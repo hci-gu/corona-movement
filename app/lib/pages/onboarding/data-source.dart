@@ -156,6 +156,9 @@ class DataSource extends HookWidget {
 
   Widget _hasData(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent, Function uploadSteps) {
+    if (onboarding.date.isBefore(onboarding.initialDataDate)) {
+      return _onlyDataAfterCompareDate(context, onboarding);
+    }
     return Column(
       children: [
         Container(
@@ -196,6 +199,32 @@ class DataSource extends HookWidget {
               }
             },
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _onlyDataAfterCompareDate(
+      BuildContext context, OnboardingModel onboarding) {
+    return Column(
+      children: [
+        Container(
+          child: Text(
+            'Found steps from ${onboarding.initialDataDate.toString().substring(0, 10)}',
+          ),
+        ),
+        SizedBox(height: 20),
+        Text(
+          'You don\'t have any steps from before the date you selected, so we can\'t create a comparison for you. If you want to explore the app anyway, you can go back and pick the option "I don\'t have any steps saved."',
+          style: TextStyle(fontSize: 14),
+        ),
+        SizedBox(height: 25),
+        StyledButton(
+          icon: Icon(Icons.arrow_back),
+          title: 'Go back',
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       ],
     );
