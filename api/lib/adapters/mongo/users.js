@@ -1,5 +1,4 @@
 const { ObjectId } = require('mongodb')
-const stepsCollection = require('./steps')
 const COLLECTION = 'users'
 let collection
 
@@ -61,18 +60,6 @@ const getAllExcept = async (id, code) => {
 
 const insert = (d) => collection.insert(d)
 
-const getInitialDataDate = async (id) => {
-  const user = await get(id)
-
-  if (!user.initialDataDate) {
-    user.initialDataDate = new Date(
-      (await stepsCollection.getFirstUpload({ id })).date
-    )
-  }
-
-  if (user) return user.initialDataDate
-}
-
 module.exports = {
   init: async (db) => {
     if (process.env.NODE_ENV != 'production')
@@ -86,5 +73,4 @@ module.exports = {
   update,
   remove,
   getAllExcept,
-  getInitialDataDate,
 }

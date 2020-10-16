@@ -43,13 +43,30 @@ const getHoursForEveryone = async ({ from, to }) => {
   }
 }
 
+const getInitialDataDate = async (id) => {
+  const user = await usersCollection.get(id)
+
+  if (!user) {
+    return
+  }
+
+  if (!user.initialDataDate) {
+    const initalStepData = await stepsCollection.getFirstUpload({ id })
+    if (initalStepData) {
+      return new Date(initalStepData.date)
+    }
+  }
+
+  return user.initialDataDate
+}
+
 const getFromToForUser = async (id) => {
   if (id === 'all')
     return {
       from: '2020-01-01',
       to: moment().add(1, 'days').format('YYYY-MM-DD'),
     }
-  const initialDate = await usersCollection.getInitialDataDate(id)
+  const initialDate = await getInitialDataDate(id)
   let from = '2020-01-01'
   if (initialDate && moment(initialDate).isAfter(moment(from))) {
     from = moment(initialDate).add(1, 'day').format('YYYY-MM-DD')
@@ -60,7 +77,7 @@ const getFromToForUser = async (id) => {
 }
 
 const shouldPopulateUntilDate = async (id) => {
-  const initalDataDate = await usersCollection.getInitialDataDate(id)
+  const initalDataDate = await getInitialDataDate(id)
   const user = await usersCollection.get(id)
 
   if (moment(initalDataDate).isAfter(moment(user.compareDate))) {
@@ -117,7 +134,9 @@ const getSteps = async ({ id }) => {
   const addEmptyToDataToDate = await shouldPopulateUntilDate(id)
   let dataPointsToAdd = []
   if (addEmptyToDataToDate) {
-    const firstDate = moment(doc.data.result[0].key.substring(0, 10))
+    const firstDate = doc.data.result[0]
+      ? moment(doc.data.result[0].key.substring(0, 10))
+      : moment()
     const daysToAdd = firstDate.diff(moment(addEmptyToDataToDate), 'days')
     dataPointsToAdd = Array.from({ length: daysToAdd }).map((_, i) => {
       const key = `${moment(addEmptyToDataToDate)
