@@ -46,7 +46,15 @@ module.exports = {
   getSummary: aggregatedStepsCollection.getSummary,
   // users
   createUser: userCollection.create,
-  getUser: userCollection.get,
+  getUser: async (id) => {
+    const user = await userCollection.get(id)
+    const date = await aggregatedStepsCollection.shouldPopulateUntilDate(id)
+    if (date) {
+      user.initialDataDate = new Date(date.format())
+    }
+    console.log('user', user)
+    return user
+  },
   updateUser: userCollection.update,
   removeUser: userCollection.remove,
   insertUser: userCollection.insert,

@@ -53,7 +53,7 @@ const getInitialDataDate = async (id) => {
   if (!user.initialDataDate) {
     const initalStepData = await stepsCollection.getFirstUpload({ id })
     if (initalStepData) {
-      return new Date(initalStepData.date)
+      return initalStepData.date
     }
   }
 
@@ -131,23 +131,25 @@ const getSteps = async ({ id }) => {
     id,
     type: 'steps',
   })
-  const addEmptyToDataToDate = await shouldPopulateUntilDate(id)
   let dataPointsToAdd = []
-  if (addEmptyToDataToDate) {
-    const firstDate = doc.data.result[0]
-      ? moment(doc.data.result[0].key.substring(0, 10))
-      : moment()
-    const daysToAdd = firstDate.diff(moment(addEmptyToDataToDate), 'days')
-    dataPointsToAdd = Array.from({ length: daysToAdd }).map((_, i) => {
-      const key = `${moment(addEmptyToDataToDate)
-        .add(i, 'days')
-        .format('YYYY-MM-DD')} 00`
-      return {
-        _id: key,
-        value: 0,
-        key,
-      }
-    })
+  if (id !== 'all') {
+    const addEmptyToDataToDate = await shouldPopulateUntilDate(id)
+    if (addEmptyToDataToDate) {
+      const firstDate = doc.data.result[0]
+        ? moment(doc.data.result[0].key.substring(0, 10))
+        : moment()
+      const daysToAdd = firstDate.diff(moment(addEmptyToDataToDate), 'days')
+      dataPointsToAdd = Array.from({ length: daysToAdd }).map((_, i) => {
+        const key = `${moment(addEmptyToDataToDate)
+          .add(i, 'days')
+          .format('YYYY-MM-DD')} 00`
+        return {
+          _id: key,
+          value: 0,
+          key,
+        }
+      })
+    }
   }
 
   if (!doc) {
@@ -211,4 +213,5 @@ module.exports = {
   saveSummary,
   getSteps,
   getSummary,
+  shouldPopulateUntilDate,
 }
