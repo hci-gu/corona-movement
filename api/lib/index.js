@@ -140,16 +140,36 @@ app.get('/total', async (_, res) => {
   res.send(result)
 })
 
+const promiseSeries = (items, method) => {
+  const results = []
+
+  function runMethod(item) {
+    return new Promise((resolve, reject) => {
+      method(item)
+        .then((res) => {
+          results.push(res)
+          resolve(res)
+        })
+        .catch((err) => reject(err))
+    })
+  }
+
+  return items
+    .reduce(
+      (promise, item) => promise.then(() => runMethod(item)),
+      Promise.resolve()
+    )
+    .then(() => results)
+}
+
 app.get('/update-everyone', async (req, res) => {
   let time = new Date()
   const users = await db.getAllUsers()
 
-  await Promise.all(
-    users.map(async (u) => {
-      await db.saveAggregatedSteps(u._id)
-      await db.saveAggregatedSummary(u._id)
-    })
-  )
+  await promiseSeries(users, async (u) => {
+    await db.saveAggregatedSteps(u._id.toString())
+    await db.saveAggregatedSummary(u._id.toString())
+  })
   res.send({ ok: true, time: new Date() - time })
 })
 

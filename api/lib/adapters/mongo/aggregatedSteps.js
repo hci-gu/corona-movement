@@ -9,16 +9,16 @@ const getHoursForEveryone = async ({ from, to }) => {
     length: moment(to).diff(from, 'days'),
   }).map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
 
-  const usersHours = (
+  const usersSteps = (
     await collection
       .find({
         id: { $ne: 'all' },
         type: 'steps',
       })
       .toArray()
-  )
-    .map((doc) => doc.data.result)
-    .flat()
+  ).filter((d) => d.data && d.data.result.length > 2000)
+
+  const usersHours = usersSteps.map((doc) => doc.data.result).flat()
 
   const result = dates
     .map((date) =>
@@ -30,7 +30,9 @@ const getHoursForEveryone = async ({ from, to }) => {
         const data = usersHours.filter((date) => date.key === key)
         return {
           key,
-          value: data.reduce((sum, d) => sum + d.value, 0) / (data.length || 1),
+          value: parseInt(
+            data.reduce((sum, d) => sum + d.value, 0) / (data.length || 1)
+          ),
         }
       })
     )
@@ -131,6 +133,13 @@ const getSteps = async ({ id }) => {
     id,
     type: 'steps',
   })
+
+  if (!doc) {
+    return {
+      result: null,
+    }
+  }
+
   let dataPointsToAdd = []
   if (id !== 'all') {
     const addEmptyToDataToDate = await shouldPopulateUntilDate(id)
@@ -152,11 +161,6 @@ const getSteps = async ({ id }) => {
     }
   }
 
-  if (!doc) {
-    return {
-      result: null,
-    }
-  }
   doc.data.result = [...dataPointsToAdd, ...doc.data.result]
 
   return doc.data
