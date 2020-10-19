@@ -23,11 +23,15 @@ const create = async ({
 }
 
 const get = async (id) => {
-  const user = await collection.findOne({ _id: ObjectId(id) })
-  if (user && user.stepsEstimate) {
-    user.stepsEstimate = user.stepsEstimate + 0.000000001
+  try {
+    const user = await collection.findOne({ _id: ObjectId(id) })
+    if (user && user.stepsEstimate) {
+      user.stepsEstimate = user.stepsEstimate + 0.000000001
+    }
+    return user
+  } catch (e) {
+    return null
   }
-  return user
 }
 
 const update = async ({ id, update }) => {

@@ -48,6 +48,9 @@ module.exports = {
   createUser: userCollection.create,
   getUser: async (id) => {
     const user = await userCollection.get(id)
+    if (!user) {
+      return null
+    }
     const date = await aggregatedStepsCollection.shouldPopulateUntilDate(id)
     if (date) {
       user.initialDataDate = new Date(date.format())
