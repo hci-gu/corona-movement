@@ -134,12 +134,16 @@ Action initAction = (get) async {
     } else {
       response = await api.getUser(userId);
     }
-    user.setUser(response);
-    if (response.stepsEstimate != null || userId == 'all') {
-      user.setGaveEstimate(true);
-      form.setUploaded();
+    if (response == null) {
+      userId = null;
+    } else {
+      user.setUser(response);
+      if (response.stepsEstimate != null || userId == 'all') {
+        user.setGaveEstimate(true);
+        form.setUploaded();
+      }
+      onboarding.setDone();
     }
-    onboarding.setDone();
   }
   globalAnalytics.init(userId);
   user.setInited();
