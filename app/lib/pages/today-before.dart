@@ -50,9 +50,6 @@ class TodayBeforeText extends HookWidget {
           ShareButton(
             widgets: [
               _description(stepsToday, typicalSteps, true),
-              AppWidgets.chartDescription(
-                'Download WFH movement app to see how your movement has changed.',
-              ),
             ],
             text:
                 'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',

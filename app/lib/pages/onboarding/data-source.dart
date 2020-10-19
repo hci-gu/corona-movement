@@ -59,24 +59,43 @@ class DataSource extends HookWidget {
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(height: 20),
-            if (!onboarding.authorized &&
-                !onboarding.fetching &&
-                onboarding.availableData.length == 0)
-              _getAccess(context, onboarding, getHealthAuthorization),
-            if (onboarding.availableData.length > 500)
-              _hasData(context, onboarding, register, consent, uploadSteps),
-            if (onboarding.authorized &&
-                onboarding.availableData.length <= 500 &&
-                !onboarding.fetching)
-              _noData(context, onboarding, getHealthAuthorization),
-            if (onboarding.fetching)
-              Center(
-                child: CircularProgressIndicator(),
-              ),
+            _widgetForUserData(context, onboarding, getHealthAuthorization,
+                register, consent, uploadSteps),
           ],
         ),
       ),
     );
+  }
+
+  Widget _widgetForUserData(BuildContext context, OnboardingModel onboarding,
+      getHealthAuthorization, register, consent, uploadSteps) {
+    if (onboarding.fetching) {
+      return Center(
+        child: Column(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 10),
+            if (onboarding.loadingMessage != null)
+              Text(onboarding.loadingMessage),
+            if (onboarding.displayDateWhileLoading != null)
+              Text(
+                  'So far we\'ve found data until ${onboarding.displayDateWhileLoading.toString().substring(0, 10)}'),
+          ],
+        ),
+      );
+    }
+    if (!onboarding.authorized) {
+      return _getAccess(context, onboarding, getHealthAuthorization);
+    }
+    if (onboarding.availableData.length > 500 ||
+        (onboarding.dataSource == 'Garmin' &&
+            onboarding.initialDataDate != null)) {
+      return _hasData(context, onboarding, register, consent, uploadSteps);
+    }
+    if (onboarding.availableData.length <= 500) {
+      return _noData(context, onboarding, getHealthAuthorization);
+    }
+    return null;
   }
 
   Widget _dataInformation(BuildContext context, String dataSource) {
@@ -227,7 +246,7 @@ class DataSource extends HookWidget {
       children: [
         Container(
           child: Text(
-            'Found steps from ${onboarding.initialDataDate.toString().substring(0, 10)}',
+            'Found steps until ${onboarding.initialDataDate.toString().substring(0, 10)}',
           ),
         ),
         SizedBox(height: 20),

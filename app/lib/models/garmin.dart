@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:health/health.dart';
 import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -55,8 +54,13 @@ Action garminGetAvailableData = (get) async {
   GarminModel model = get(garminAtom);
   List<Map<String, dynamic>> steps =
       await model.client.fetchSteps(StepsModel.fromDate);
-
-  onboarding.setAvailableData(steps);
+  DateTime initialDataDate;
+  if (steps.length > 0) {
+    initialDataDate = DateTime.fromMillisecondsSinceEpoch(
+      steps[0]['date_from'],
+    );
+  }
+  onboarding.setAvailableData(steps, initialDataDate);
 };
 
 Future syncHealthData(GarminClient garminClient, OnboardingModel onboarding,

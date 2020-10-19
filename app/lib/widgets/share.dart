@@ -51,12 +51,33 @@ class ShareButton extends StatelessWidget {
           content: RepaintBoundary(
             key: paintKey,
             child: Container(
-              padding: EdgeInsets.all(10),
-              constraints: BoxConstraints(maxHeight: 360),
-              child: Column(
-                children: widgets,
-              ),
-            ),
+                color: Colors.white,
+                padding: EdgeInsets.all(10),
+                constraints: BoxConstraints(maxHeight: 360),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      bottom: 5,
+                      left: 5,
+                      child: Image.asset(
+                        'assets/png/gu_logo.png',
+                        height: 25,
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        ...widgets,
+                        SizedBox(height: 5),
+                        Text(
+                          'Download WFH movement app to see how your movement has changed.',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w300),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
           ),
           actions: [
             FlatButton(

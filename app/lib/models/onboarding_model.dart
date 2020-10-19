@@ -18,6 +18,8 @@ class OnboardingModel extends ValueNotifier {
   bool uploading = false;
   bool done = false;
   HealthFactory health;
+  String loadingMessage;
+  DateTime displayDateWhileLoading;
 
   OnboardingModel() : super(null);
 
@@ -39,16 +41,24 @@ class OnboardingModel extends ValueNotifier {
     authorized = success;
     if (healthFactory != null) {
       health = healthFactory;
+      Future.delayed(Duration(seconds: 3)).then((_) {
+        if (initialDataDate == null) {
+          loadingMessage = 'This process can take a while to finish...';
+          notifyListeners();
+        }
+      });
     }
     notifyListeners();
   }
 
-  setAvailableData(List steps) {
+  setAvailableData(List steps, [DateTime date]) {
     availableData = steps;
-    if (steps.length > 0) {
-      initialDataDate = availableData[0].dateFrom;
+    if (date != null) {
+      initialDataDate = date;
     }
     fetching = false;
+    loadingMessage = '';
+    displayDateWhileLoading = null;
     notifyListeners();
   }
 
@@ -64,11 +74,22 @@ class OnboardingModel extends ValueNotifier {
 
   setFetching(bool done) {
     fetching = done;
+    if (!fetching) {
+      loadingMessage = '';
+      displayDateWhileLoading = null;
+    }
     notifyListeners();
   }
 
   setGaveConsent() {
     gaveConsent = true;
+    notifyListeners();
+  }
+
+  setDisplayDateWhileLoading(DateTime date) {
+    displayDateWhileLoading = date;
+    if (loadingMessage == null)
+      loadingMessage = 'This process can take a while to finish...';
     notifyListeners();
   }
 
@@ -120,32 +141,9 @@ Action getHealthAuthorizationAction = (get) async {
   }
 };
 
-// List<HealthDataPoint> mockSteps(DateTime from, DateTime to) {
-//   int days = to.difference(from).inDays;
-//   List<HealthDataPoint> data = [];
-//   List.generate(days, (index) {
-//     DateTime date = from.add(Duration(days: index));
-
-//     List.generate(
-//         24 * 15,
-//         (index) => {
-//               data.add(HealthDataPoint(
-//                 5,
-//                 'STEPS',
-//                 date.millisecondsSinceEpoch,
-//                 date.millisecondsSinceEpoch,
-//                 '',
-//                 '',
-//               ))
-//             });
-//   }).toList();
-
-//   return data;
-// }
-
-Future<List<HealthDataPoint>> getSteps(HealthFactory health, DateTime from,
-    DateTime to, List<HealthDataPoint> totalSteps) async {
-  List<HealthDataPoint> steps = await health.getHealthDataFromTypes(
+Future<List<HealthDataPoint>> getSteps(OnboardingModel onboarding,
+    DateTime from, DateTime to, List<HealthDataPoint> totalSteps) async {
+  List<HealthDataPoint> steps = await onboarding.health.getHealthDataFromTypes(
     from,
     to,
     [HealthDataType.STEPS],
@@ -160,10 +158,12 @@ Future<List<HealthDataPoint>> getSteps(HealthFactory health, DateTime from,
       totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
       return totalSteps;
     }
+    await Future.delayed(Duration(seconds: 1));
 
+    onboarding.setDisplayDateWhileLoading(initialDataDate);
     return getSteps(
-      health,
-      from.subtract(Duration(days: 365)),
+      onboarding,
+      from.subtract(Duration(days: 30)),
       from,
       totalSteps,
     );
@@ -180,16 +180,22 @@ Action getAvailableStepsAction = (get) async {
     return garminGetAvailableData(get);
   }
   try {
+    await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
+    await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
     List<HealthDataPoint> steps = await getSteps(
-      onboarding.health,
-      now.subtract(Duration(days: 365)),
+      onboarding,
+      now.subtract(Duration(days: 30)),
       now,
       [],
     );
-    await api.postData('test', [steps[0]], false);
-    onboarding.setAvailableData(steps);
+    DateTime initialDataDate;
+    if (steps.length > 0) {
+      initialDataDate = steps[0].dateFrom;
+    }
+    onboarding.setAvailableData(steps, initialDataDate);
   } catch (exception) {
     print(exception.toString());
+    onboarding.setFetching(false);
   }
 };
 

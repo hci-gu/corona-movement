@@ -42,9 +42,6 @@ class DetailedSteps extends HookWidget {
             widgets: [
               StepsDifference(share: true),
               StepsChart(share: true),
-              AppWidgets.chartDescription(
-                'Download WFH movement app to see how your movement has changed.',
-              ),
             ],
             text:
                 'This is how people\'s movement has changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',

@@ -116,7 +116,7 @@ class Introduction extends HookWidget {
           height: 50,
         ),
         Text(
-          'To start, pick the day you started working from home.',
+          'Begin by picking the day you started working from home.',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
