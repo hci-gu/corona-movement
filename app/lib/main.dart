@@ -99,7 +99,11 @@ class ScreenSelector extends HookWidget {
     User user = useModel(userAtom);
     var init = useAction(initAction);
     useEffect(() {
-      init();
+      try {
+        init();
+      } catch (e) {
+        // deal with this better.
+      }
       return;
     }, []);
 
