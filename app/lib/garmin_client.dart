@@ -94,7 +94,7 @@ class GarminClient {
     }
   }
 
-  Future<List<HealthDataPoint>> fetchSteps(String dateString) async {
+  Future<List<Map<String, dynamic>>> fetchSteps(String dateString) async {
     Response response = await dio.get(
         'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySummaryChart?date=$dateString');
     List<dynamic> data = response.data;
@@ -103,16 +103,16 @@ class GarminClient {
     return transformSteps(steps);
   }
 
-  List<HealthDataPoint> transformSteps(List<GarminStep> steps) {
+  List<Map<String, dynamic>> transformSteps(List<GarminStep> steps) {
     return steps
-        .map((step) => HealthDataPoint.fromJson({
+        .map((step) => {
               'value': step.steps,
               'unit': 'COUNT',
               'date_from': step.startGMT.millisecondsSinceEpoch,
               'date_to': step.endGMT.millisecondsSinceEpoch,
               'data_type': 'STEPS',
               'platform_type': 'Garmin',
-            }))
+            })
         .toList();
   }
 }

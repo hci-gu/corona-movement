@@ -17,6 +17,7 @@ class OnboardingModel extends ValueNotifier {
   bool gaveConsent = false;
   bool uploading = false;
   bool done = false;
+  HealthFactory health;
 
   OnboardingModel() : super(null);
 
@@ -34,16 +35,18 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setAuthorized(bool success) {
+  setAuthorized(bool success, [HealthFactory healthFactory]) {
     authorized = success;
+    if (healthFactory != null) {
+      health = healthFactory;
+    }
     notifyListeners();
   }
 
   setAvailableData(List steps) {
     availableData = steps;
     if (steps.length > 0) {
-      initialDataDate =
-          DateTime.fromMillisecondsSinceEpoch(availableData[0].dateFrom);
+      initialDataDate = availableData[0].dateFrom;
     }
     fetching = false;
     notifyListeners();
@@ -107,53 +110,63 @@ Action getHealthAuthorizationAction = (get) async {
   }
   try {
     onboarding.setAuthorized(false);
-    bool _isAuthorized = await Health.requestAuthorization();
-    onboarding.setAuthorized(_isAuthorized);
+    HealthFactory health = HealthFactory();
+    bool _isAuthorized = await health.requestAuthorization(
+      [HealthDataType.STEPS],
+    );
+    onboarding.setAuthorized(_isAuthorized, health);
   } catch (e) {
     print(e);
   }
 };
 
-List<HealthDataPoint> mockSteps(DateTime from, DateTime to) {
-  int days = to.difference(from).inDays;
-  List<HealthDataPoint> data = [];
-  List.generate(days, (index) {
-    DateTime date = from.add(Duration(days: index));
+// List<HealthDataPoint> mockSteps(DateTime from, DateTime to) {
+//   int days = to.difference(from).inDays;
+//   List<HealthDataPoint> data = [];
+//   List.generate(days, (index) {
+//     DateTime date = from.add(Duration(days: index));
 
-    List.generate(
-        24 * 15,
-        (index) => {
-              data.add(HealthDataPoint(
-                5,
-                'STEPS',
-                date.millisecondsSinceEpoch,
-                date.millisecondsSinceEpoch,
-                '',
-                '',
-              ))
-            });
-  }).toList();
+//     List.generate(
+//         24 * 15,
+//         (index) => {
+//               data.add(HealthDataPoint(
+//                 5,
+//                 'STEPS',
+//                 date.millisecondsSinceEpoch,
+//                 date.millisecondsSinceEpoch,
+//                 '',
+//                 '',
+//               ))
+//             });
+//   }).toList();
 
-  return data;
-}
+//   return data;
+// }
 
-Future<List<HealthDataPoint>> getSteps(
-    DateTime from, DateTime to, List<HealthDataPoint> totalSteps) async {
-  List<HealthDataPoint> steps = await Health.getHealthDataFromType(
+Future<List<HealthDataPoint>> getSteps(HealthFactory health, DateTime from,
+    DateTime to, List<HealthDataPoint> totalSteps) async {
+  List<HealthDataPoint> steps = await health.getHealthDataFromTypes(
     from,
     to,
-    HealthDataType.STEPS,
+    [HealthDataType.STEPS],
   );
 
   if (steps.length > 0) {
     totalSteps.addAll(steps);
     DateTime threeYearsAgo = DateTime.now().subtract(Duration(days: 365 * 3));
-    if (from.isBefore(threeYearsAgo)) {
+    DateTime initialDataDate = steps.first.dateFrom;
+    if (from.isBefore(threeYearsAgo) ||
+        initialDataDate.difference(from).inDays > 10) {
       totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
       return totalSteps;
     }
 
-    return getSteps(from.subtract(Duration(days: 30)), from, totalSteps);
+    return getSteps(
+      health,
+      from.subtract(Duration(days: 365)),
+      from,
+      totalSteps,
+    );
   }
   totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
   return totalSteps;
@@ -168,10 +181,12 @@ Action getAvailableStepsAction = (get) async {
   }
   try {
     List<HealthDataPoint> steps = await getSteps(
-      now.subtract(Duration(days: 30)),
+      onboarding.health,
+      now.subtract(Duration(days: 365)),
       now,
       [],
     );
+    await api.postData('test', [steps[0]], false);
     onboarding.setAvailableData(steps);
   } catch (exception) {
     print(exception.toString());

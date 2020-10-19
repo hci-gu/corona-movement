@@ -229,11 +229,13 @@ Action syncStepsAction = (get) async {
       }
       if (user.dataSource != null) user.setAwaitingDataSource(true);
     } else {
-      List<HealthDataPoint> steps = await Health.getHealthDataFromType(
+      HealthFactory health = HealthFactory();
+      List<HealthDataPoint> steps = await health.getHealthDataFromTypes(
         from,
         to,
-        HealthDataType.STEPS,
+        [HealthDataType.STEPS],
       );
+      steps = HealthFactory.removeDuplicates(steps);
       List dataChunks = [];
       while (steps.length > 0) {
         dataChunks.add(steps.take(chunkSize).toList());
