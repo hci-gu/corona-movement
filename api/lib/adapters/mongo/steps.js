@@ -156,6 +156,8 @@ const getTotalSteps = async () => {
   return result
 }
 
+const insertSteps = (steps) => collection.insertMany(steps)
+
 module.exports = {
   init: async (db) => {
     if (process.env.NODE_ENV != 'production')
@@ -177,4 +179,5 @@ module.exports = {
   getLastUpload,
   removeStepsForUser,
   getTotalSteps,
+  insertSteps,
 }

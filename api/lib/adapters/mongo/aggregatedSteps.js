@@ -87,6 +87,12 @@ const shouldPopulateUntilDate = async (id) => {
   }
 }
 
+const sortSteps = (a, b) => {
+  if (a.key < b.key) return -1
+  if (b.key > a.key) return 1
+  return 0
+}
+
 const saveSteps = async (id) => {
   const { from, to } = await getFromToForUser(id)
 
@@ -99,6 +105,21 @@ const saveSteps = async (id) => {
       from,
       to,
     })
+    const days = moment(to).diff(moment(from), 'days')
+    const dates = Array.from({ length: days })
+      .map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
+      .filter((date) => data.result.every((d) => d.key.indexOf(date) === -1))
+      .map((date) => {
+        const key = `${date} 00`
+        return {
+          _id: key,
+          value: 0,
+          key,
+        }
+      })
+    if (dates.length > 1) {
+      data.result = [...data.result, ...dates].sort(sortSteps)
+    }
   }
 
   await save({ id, type: 'steps', data })

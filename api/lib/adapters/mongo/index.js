@@ -39,6 +39,7 @@ module.exports = {
   getLastUpload: stepsCollection.getLastUpload,
   removeStepsForUser: stepsCollection.removeStepsForUser,
   getTotalSteps: stepsCollection.getTotalSteps,
+  insertSteps: stepsCollection.insertSteps,
   // aggregatedSteps
   saveAggregatedSteps: aggregatedStepsCollection.saveSteps,
   saveAggregatedSummary: aggregatedStepsCollection.saveSummary,
@@ -55,7 +56,6 @@ module.exports = {
     if (date) {
       user.initialDataDate = new Date(date.format())
     }
-    console.log('user', user)
     return user
   },
   updateUser: userCollection.update,
