@@ -102,7 +102,7 @@ class UserForm extends HookWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Name of $type',
+        hintText: 'Name of $type (optional)',
       ),
       onChanged: (val) => onChange(type, val),
     );
