@@ -175,6 +175,9 @@ Future<UserResponse> getUser(String userId) async {
     },
   );
 
+  if (response.body == null || response.body == '')
+    return null;
+
   return UserResponse.fromJson(json.decode(response.body));
 }
 
