@@ -53,7 +53,7 @@ Action garminAuthorizationAction = (get) async {
 Action garminGetAvailableData = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   GarminModel model = get(garminAtom);
-  List<HealthDataPoint> steps =
+  List<Map<String, dynamic>> steps =
       await model.client.fetchSteps(StepsModel.fromDate);
 
   onboarding.setAvailableData(steps);
@@ -62,8 +62,8 @@ Action garminGetAvailableData = (get) async {
 Future syncHealthData(GarminClient garminClient, OnboardingModel onboarding,
     String userId) async {
   String date = onboarding.dataChunks[0];
-  List<HealthDataPoint> steps = await garminClient.fetchSteps(date);
-  await api.postData(userId, steps, onboarding.dataChunks.length == 1);
+  List<Map<String, dynamic>> steps = await garminClient.fetchSteps(date);
+  await api.postJsonData(userId, steps, onboarding.dataChunks.length == 1);
 
   onboarding.removeDataChunk();
 
@@ -121,8 +121,8 @@ Future uploadGarminDataForDays(
   List<String> days,
   String userId,
 ) async {
-  List<HealthDataPoint> steps = await garminClient.fetchSteps(days[0]);
-  await api.postData(userId, steps, days.length == 1);
+  List<Map<String, dynamic>> steps = await garminClient.fetchSteps(days[0]);
+  await api.postJsonData(userId, steps, days.length == 1);
   days.removeAt(0);
   if (days.length > 0) {
     return uploadGarminDataForDays(garminClient, days, userId);

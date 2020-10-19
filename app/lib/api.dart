@@ -14,7 +14,7 @@ const API_URL = 'http://192.168.0.32:4000';
 const API_KEY = 'some-key';
 // const API_URL = 'https://api.mycoronamovement.com';
 
-Future postData(String userId, List<HealthDataPoint> healthData,
+Future postJsonData(String userId, List<Map<String, dynamic>> data,
     bool createAggregation) async {
   var url = '$API_URL/health-data';
   var response = await http.post(
@@ -25,13 +25,31 @@ Future postData(String userId, List<HealthDataPoint> healthData,
     },
     body: jsonEncode({
       'id': userId,
-      'dataPoints': healthData.map((point) => point.toJson()).toList(),
+      'dataPoints': data,
       'createAggregation': createAggregation,
     }),
   );
   print('Response status: ${response.statusCode}');
   print('Response body: ${response.body}');
   return response.body;
+}
+
+Future postData(
+    String userId, List<HealthDataPoint> healthData, bool createAggregation) {
+  return postJsonData(
+    userId,
+    healthData.map((point) {
+      final Map<String, dynamic> data = new Map<String, dynamic>();
+      data['value'] = point.value;
+      data['unit'] = point.unit.toString();
+      data['date_from'] = point.dateFrom.millisecondsSinceEpoch;
+      data['date_to'] = point.dateTo.millisecondsSinceEpoch;
+      data['data_type'] = point.type.toString();
+      data['platform_type'] = point.platform.toString();
+      return data;
+    }).toList(),
+    createAggregation,
+  );
 }
 
 class UserResponse {

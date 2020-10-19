@@ -150,7 +150,7 @@ class DataSource extends HookWidget {
                 );
               }
               AppWidgets.showConfirmDialog(context, 'Apple health',
-                  'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure you scroll down and check the box for steps before pressing allow, we will not access any other data even if you check those options.',
+                  'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow.',
                   () {
                 getHealthAuthorization();
               });
