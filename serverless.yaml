@@ -47,9 +47,6 @@ apiGateway:
       - path: /update-everyone
         method: GET
         function: ${api.arn}
-      - path: /total
-        method: GET
-        function: ${api.arn}
       - path: /{id}/hours
         method: GET
         function: ${api.arn}
@@ -67,9 +64,6 @@ apiGateway:
         function: ${api.arn}
       - path: analytics
         method: POST
-        function: ${api.arn}
-      - path: /fitbit/callback
-        method: GET
         function: ${api.arn}
 web:
   component: '@serverless/website'

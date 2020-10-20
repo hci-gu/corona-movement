@@ -158,7 +158,6 @@ Future<List<HealthDataPoint>> getSteps(OnboardingModel onboarding,
       totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
       return totalSteps;
     }
-    await Future.delayed(Duration(seconds: 1));
 
     onboarding.setDisplayDateWhileLoading(initialDataDate);
     return getSteps(

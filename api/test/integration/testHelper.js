@@ -5,12 +5,14 @@ let db
 const STEPS_COLLECTION = 'steps'
 const USERS_COLLECTION = 'users'
 const CODES_COLLECTION = 'codes'
+const AGGREGATED_STEPS_COLLECTION = 'aggregated-steps'
 
 const cleanup = async () => {
   await Promise.all([
     db.collection(USERS_COLLECTION).deleteMany({}),
     db.collection(STEPS_COLLECTION).deleteMany({}),
     db.collection(CODES_COLLECTION).deleteMany({}),
+    db.collection(AGGREGATED_STEPS_COLLECTION).deleteMany({}),
   ])
 }
 
@@ -20,39 +22,36 @@ const init = async () => {
   await db.createCollection(STEPS_COLLECTION)
   await db.createCollection(USERS_COLLECTION)
   await db.createCollection(CODES_COLLECTION)
+  await db.createCollection(AGGREGATED_STEPS_COLLECTION)
 }
 
-/*
+const generateStepsForHour = (date, value) => {
+  return Array.from({ length: 6 }).map((_, i) => {
+    const _date = moment(date).add(10 * i, 'minutes')
+    console.log('date', _date.format())
+    return {
+      value,
+      unit: 'COUNT',
+      date_from: moment(_date).subtract(5, 'minutes').valueOf(),
+      date_to: moment(_date).add(5, 'minutes').valueOf(),
+      data_type: 'STEPS',
+      platform: 'test',
+    }
+  })
+}
 
-*/
-const generateHealthData = ({
-  from,
-  to,
-  steps = 10,
-  platform = 'PlatformType.IOS',
-}) => {
-  to = moment(to).add(1, 'days').format()
-  let length = 0
-  let diff = moment(to).diff(moment(from))
-  while (diff > 0) {
-    length++
+const generateHealthData = ({ from, to, steps = 10 }) => {
+  const days = moment(to).diff(moment(from), 'days') + 1
+  const hours = 24
 
-    to = moment(to).subtract(10, 'minutes')
-    diff = moment(to).diff(from)
+  let dataPoints = []
+  for (let day = 0; day < days; day++) {
+    for (let hour = 0; hour < hours; hour++) {
+      const date = moment(from).add(day, 'days').hour(hour)
+      dataPoints = [...dataPoints, ...generateStepsForHour(date, steps)]
+    }
   }
-
-  return Array.from({ length }).map((_, i) => ({
-    value: steps,
-    unit: 'COUNT',
-    date_from: moment(from)
-      .add(i * 10, 'minutes')
-      .valueOf(),
-    date_to: moment(from)
-      .add(i * 10 + 10, 'minutes')
-      .valueOf(),
-    data_type: 'STEPS',
-    platform,
-  }))
+  return dataPoints
 }
 
 module.exports = {

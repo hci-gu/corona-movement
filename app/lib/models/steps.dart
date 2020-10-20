@@ -149,7 +149,6 @@ var totalStepsBeforeAndAfterSelector =
   var beforeDays = getDaysBetween(start, compareDate, steps.days) + 1;
   var afterDays = getDaysBetween(compareDate,
       DateTime.now().toIso8601String().substring(0, 10), steps.days);
-
   var before = steps.data
       .where((o) =>
           (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0))

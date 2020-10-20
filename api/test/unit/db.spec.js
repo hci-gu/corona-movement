@@ -1,7 +1,7 @@
 const db = require(`${process.cwd()}/lib/adapters/db.js`)
 const moment = require('moment')
 
-describe('#db', () => {
+xdescribe('#db', () => {
   let testData
   beforeEach(() => {
     testData = [
