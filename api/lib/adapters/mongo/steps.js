@@ -86,7 +86,7 @@ const getHours = async ({ id, from, to }) => {
   }
 }
 
-const getAverageStepsForUser = async ({ id, from, to }) => {
+const getAverageStepsForUser = async ({ id, from, to, daysToPeriod = 0 }) => {
   const result = await collection
     .aggregate([
       {
@@ -101,13 +101,13 @@ const getAverageStepsForUser = async ({ id, from, to }) => {
     ])
     .toArray()
 
-  const period = moment(to).diff(moment(from), 'days')
-  const total = result.length ? result[0].value : 0
+  const period = moment(to).diff(moment(from), 'days') + daysToPeriod
+  let total = result.length ? result[0].value : 0
 
   return {
     period,
     total,
-    value: parseFloat((total / period).toFixed(3)),
+    value: parseInt(total / period),
   }
 }
 
@@ -117,13 +117,15 @@ const getSummaryForUser = async ({ from, id }) => {
   const [before, after] = await Promise.all([
     getAverageStepsForUser({
       id,
-      from: from,
+      from,
       to: user.compareDate,
+      daysToPeriod: 1,
     }),
     getAverageStepsForUser({
       id,
       from: user.compareDate,
       to: moment(user.endDate ? user.endDate : undefined).format(),
+      daysToPeriod: -1,
     }),
   ])
 
