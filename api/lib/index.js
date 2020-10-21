@@ -51,18 +51,33 @@ app.get('/user/:id', async (req, res) => {
 app.patch('/user/:id', async (req, res) => {
   const { id } = req.params
   console.log('PATCH /user/', id, req.body)
-  const user = await db.updateUser({ id, update: req.body })
+  if (!req.body.compareDate) {
+    const user = await db.updateUser({ id, update: req.body })
+    res.send(user)
+    return
+  }
+  const user = await db.updateUser({
+    id,
+    update: { compareDate: req.body.compareDate },
+  })
+  await Promise.all([
+    db.saveAggregatedSteps({
+      id,
+      timezone: req.body.timezone ? req.body.timezone : undefined,
+    }),
+    db.saveAggregatedSummary(id),
+  ])
   res.send(user)
 })
 app.post('/health-data', async (req, res) => {
-  const { id, dataPoints, createAggregation } = req.body
+  const { id, dataPoints, createAggregation, timezone } = req.body
 
   await db.saveSteps({ id, dataPoints })
 
   if (createAggregation) {
     await wait(1000)
     await Promise.all([
-      db.saveAggregatedSteps(id),
+      db.saveAggregatedSteps({ id, timezone }),
       db.saveAggregatedSummary(id),
     ])
   }
@@ -73,8 +88,12 @@ app.post('/health-data', async (req, res) => {
 })
 app.get('/:id/update', async (req, res) => {
   const { id } = req.params
+  const { timezone } = req.query
   let time = new Date()
-  await Promise.all([db.saveAggregatedSteps(id), db.saveAggregatedSummary(id)])
+  await Promise.all([
+    db.saveAggregatedSteps({ id, timezone }),
+    db.saveAggregatedSummary(id),
+  ])
   res.send({ ok: true, time: new Date() - time })
 })
 

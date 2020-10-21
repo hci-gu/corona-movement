@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:health/health.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api.dart' as api;
 import 'package:wfhmovement/models/user_model.dart';
@@ -220,7 +219,7 @@ Action getStepsComparisonAction = (get) async {
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
 
-  if (steps.comparison == null && user.id != 'all') {
+  if (user.id != 'all') {
     api.HealthComparison data = await api.getComparison(user.id);
     steps.setComparison(data);
   }

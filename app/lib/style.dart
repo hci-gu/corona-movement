@@ -28,6 +28,7 @@ class AppColors {
 class AppWidgets {
   static AppBar appBar(BuildContext context, [String title, bool settings]) {
     return AppBar(
+      backgroundColor: AppColors.main,
       centerTitle: true,
       title: Text(
         title != null ? title : 'WFH Movement',

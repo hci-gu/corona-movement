@@ -14,6 +14,22 @@ const API_URL = 'http://192.168.0.32:4000';
 const API_KEY = 'some-key';
 // const API_URL = 'https://api.mycoronamovement.com';
 
+class GlobalApiHandler {
+  String timezone;
+
+  init(String deviceLocalTimeZone) {
+    timezone = deviceLocalTimeZone;
+  }
+
+  static final GlobalApiHandler _analytics = GlobalApiHandler._internal();
+  factory GlobalApiHandler() {
+    return _analytics;
+  }
+  GlobalApiHandler._internal();
+}
+
+GlobalApiHandler globalApiHandler = GlobalApiHandler();
+
 Future postJsonData(String userId, List<Map<String, dynamic>> data,
     bool createAggregation) async {
   var url = '$API_URL/health-data';
@@ -27,6 +43,7 @@ Future postJsonData(String userId, List<Map<String, dynamic>> data,
       'id': userId,
       'dataPoints': data,
       'createAggregation': createAggregation,
+      'timezone': globalApiHandler.timezone,
     }),
   );
   print('Response status: ${response.statusCode}');
@@ -99,10 +116,10 @@ class HealthData {
   double value;
 
   HealthData(Map<String, dynamic> json) {
-    var sthlm = tz.getLocation('Europe/Stockholm');
-    var _date = tz.TZDateTime.parse(sthlm, '${json['key']}:00');
-    date = DateFormat('yyyy-MM-dd')
-        .format(_date); // _date.toIso8601String().substring(0, 10);
+    String timezone = globalApiHandler.timezone ?? 'Europe/Stockholm';
+    var _date =
+        tz.TZDateTime.parse(tz.getLocation(timezone), '${json['key']}:00');
+    date = DateFormat('yyyy-MM-dd').format(_date);
     hours = _date.hour;
     weekday = _date.weekday;
     value = json['value'].toDouble();
@@ -176,7 +193,7 @@ Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
       'initialDataDate': initialDataDate.toIso8601String().substring(0, 10),
       'code': code,
       'os': Platform.operatingSystem,
-      'dataSource': dataSource
+      'dataSource': dataSource,
     }),
   );
 
@@ -221,6 +238,7 @@ Future updateUserCompareDate(String userId, DateTime compareDate) async {
     },
     body: jsonEncode({
       'compareDate': compareDate.toIso8601String().substring(0, 10),
+      'timezone': globalApiHandler.timezone,
     }),
   );
 }

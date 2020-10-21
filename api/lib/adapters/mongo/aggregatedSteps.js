@@ -93,7 +93,7 @@ const sortSteps = (a, b) => {
   return 0
 }
 
-const saveSteps = async (id) => {
+const saveSteps = async ({ id, timezone }) => {
   const { from, to } = await getFromToForUser(id)
 
   let data
@@ -104,6 +104,7 @@ const saveSteps = async (id) => {
       id,
       from,
       to,
+      timezone,
     })
     const days = moment(to).diff(moment(from), 'days')
     const dates = Array.from({ length: days })

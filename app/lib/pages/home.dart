@@ -17,6 +17,7 @@ import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/page-widget.dart';
 import 'package:wfhmovement/widgets/steps-chart.dart';
 import 'package:wfhmovement/widgets/steps-difference.dart';
+import 'package:wfhmovement/widgets/sync-steps.dart';
 
 import 'detailed-steps.dart';
 
@@ -29,9 +30,11 @@ class Home extends HookWidget {
     User user = useModel(userAtom);
     StepsModel steps = useModel(stepsAtom);
     var getStepsChart = useAction(getStepsAction);
+    var getStepsComparison = useAction(getStepsComparisonAction);
     var deleteUser = useAction(deleteUserAction);
     useEffect(() {
       getStepsChart();
+      getStepsComparison();
       return;
     }, [user.compareDate, user.lastSync]);
     useEffect(() {
@@ -50,6 +53,7 @@ class Home extends HookWidget {
         header: WaterDropHeader(),
         onRefresh: () {
           getStepsChart();
+          getStepsComparison();
         },
         controller: _refreshController,
         child: ListView(
@@ -104,6 +108,7 @@ class Home extends HookWidget {
             onPressed: () => deleteUser(),
           ),
         ),
+      if (user.id != 'all') SyncSteps(),
       DaysBarChart(),
       AppWidgets.chartDescription(description),
       if (user.id != 'all')
@@ -112,7 +117,7 @@ class Home extends HookWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
-            color: AppColors.secondary,
+            color: AppColors.primaryText,
           ),
           textAlign: TextAlign.center,
         ),
@@ -209,7 +214,7 @@ class Home extends HookWidget {
                     title,
                     style: TextStyle(
                       fontSize: 18,
-                      color: AppColors.secondary,
+                      color: AppColors.primaryText,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

@@ -21,18 +21,11 @@ class CompareAverageChart extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = useModel(userAtom);
     HealthComparison comparison = useModel(stepsComparisonSelector);
-    var getStepsComparison = useAction(getStepsComparisonAction);
     double maxY = 100;
     if (comparison != null) {
       maxY = maxValue(comparison);
     }
-
-    useEffect(() {
-      getStepsComparison();
-      return;
-    }, [user.compareDate, user.lastSync]);
 
     return RotatedBox(
       quarterTurns: 1,

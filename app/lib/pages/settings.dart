@@ -1,32 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wfhmovement/global-analytics.dart';
-import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
-import 'package:wfhmovement/widgets/garmin-login.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class Settings extends HookWidget {
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
-    var getUserLatestUpload = useAction(getUserLatestUploadAction);
-    var garminSyncSteps = useAction(garminSyncStepsAction);
     var deleteUser = useAction(deleteUserAction);
-
-    useEffect(() {
-      if (user.id != 'all') {
-        getUserLatestUpload();
-      }
-      return;
-    }, []);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
-    var syncSteps = useAction(syncStepsAction);
 
     if (user.loading) {
       return MainScaffold(
@@ -48,8 +35,7 @@ class Settings extends HookWidget {
                 if (user.id != 'all')
                   ..._userWidgets(context, user, updateUserCompareDate),
                 if (user.id != 'all')
-                  ..._loggedInUserWidgets(
-                      context, user, syncSteps, garminSyncSteps, deleteUser),
+                  ..._loggedInUserWidgets(context, user, deleteUser),
                 _appInformation(context),
                 if (user.id != 'all' && user.id != null)
                   Center(
@@ -87,31 +73,13 @@ class Settings extends HookWidget {
           ),
         ),
       ),
-      SizedBox(height: 40),
+      SizedBox(height: 20),
     ];
   }
 
   List<Widget> _loggedInUserWidgets(
-      BuildContext context, User user, syncSteps, garminSyncSteps, deleteUser) {
+      BuildContext context, User user, deleteUser) {
     return [
-      _syncStepsWidget(user, syncSteps, garminSyncSteps),
-      // SizedBox(height: 15),
-      // Center(
-      //   child: StyledButton(
-      //     icon: Icon(Icons.add),
-      //     title: 'Add data source',
-      //     onPressed: () {
-      //       globalAnalytics.observer.analytics.logEvent(name: 'addDataSource');
-      //       Navigator.of(context).push(
-      //         MaterialPageRoute(
-      //           builder: (context) => SelectDataSource(),
-      //           settings: RouteSettings(name: 'Select data source'),
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // ),
-      SizedBox(height: 15),
       Center(
         child: StyledButton(
           icon: Icons.delete,
@@ -121,45 +89,6 @@ class Settings extends HookWidget {
         ),
       ),
     ];
-  }
-
-  Widget _syncStepsWidget(User user, syncSteps, garminSyncSteps) {
-    if (user.awaitingDataSource) {
-      return Column(
-        children: [
-          Text('Login with your Garmin to credentials'),
-          GarminLogin(),
-          StyledButton(
-            icon: Icons.sync,
-            title: 'Sync Garmin',
-            onPressed: () {
-              garminSyncSteps();
-            },
-          )
-        ],
-      );
-    }
-    return Center(
-      child: Column(
-        children: [
-          StyledButton(
-            icon: Icons.sync,
-            title: 'Sync steps',
-            onPressed: () {
-              globalAnalytics.sendEvent('syncSteps');
-              syncSteps();
-            },
-          ),
-          if (user.latestUploadDate != null)
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Last sync: ${DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate)}',
-              ),
-            ),
-        ],
-      ),
-    );
   }
 
   void _onChangeDatePressed(

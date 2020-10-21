@@ -48,7 +48,7 @@ const getQuery = ({ id, from, to, weekDays }) => {
   return query
 }
 
-const getHours = async ({ id, from, to }) => {
+const getHours = async ({ id, from, to, timezone = 'Europe/Stockholm' }) => {
   const result = (
     await collection
       .aggregate([
@@ -61,7 +61,7 @@ const getHours = async ({ id, from, to }) => {
               $dateToString: {
                 format: '%Y-%m-%d %H',
                 date: '$date',
-                timezone: 'Europe/Stockholm',
+                timezone,
               },
             },
             value: { $sum: '$value' },

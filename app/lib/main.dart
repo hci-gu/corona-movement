@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:feedback/feedback.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
@@ -20,6 +22,10 @@ import 'package:wfhmovement/widgets/main_scaffold.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
+  try {
+    String timezone = await FlutterNativeTimezone.getLocalTimezone();
+    api.globalApiHandler.init(timezone);
+  } catch (e) {}
 
   runApp(App());
 }
