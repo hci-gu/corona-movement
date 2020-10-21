@@ -130,7 +130,12 @@ app.get('/:id/last-upload', async (req, res) => {
   res.send(data)
 })
 
-app.get('/should-unlock', async (_, res) => res.send(false))
+app.get('/should-unlock', async (_, res) => {
+  db.saveAnalyticsEvent({
+    event: 'openApp',
+  })
+  res.send(false)
+})
 
 app.post('/unlock', async (req, res) => {
   const { code } = req.body
