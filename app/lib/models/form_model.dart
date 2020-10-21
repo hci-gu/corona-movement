@@ -8,8 +8,7 @@ class FormModel extends ValueNotifier {
   String gender;
   String ageRange;
   String education;
-  String profession;
-  String organisation;
+  String occupancy;
   bool loading = false;
   bool uploaded = false;
 
@@ -31,11 +30,8 @@ class FormModel extends ValueNotifier {
       case 'education':
         education = value;
         break;
-      case 'profession':
-        profession = value;
-        break;
-      case 'organisation':
-        organisation = value;
+      case 'occupancy':
+        occupancy = value;
         break;
       default:
     }

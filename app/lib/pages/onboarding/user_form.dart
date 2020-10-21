@@ -71,12 +71,8 @@ class UserForm extends HookWidget {
               FormModel.educations, 'education', form.education, form.setField),
         ),
         UserFormField(
-          name: 'Profession',
-          child: _freeForm('profession', form.profession, form.setField),
-        ),
-        UserFormField(
-          name: 'Company / Organisation',
-          child: _freeForm('organisation', form.organisation, form.setField),
+          name: 'Occupancy',
+          child: _freeForm('occupancy', form.occupancy, form.setField),
         ),
       ],
     );

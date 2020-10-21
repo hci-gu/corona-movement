@@ -157,7 +157,7 @@ class DataSource extends HookWidget {
         SizedBox(height: 25),
         if (onboarding.dataSource == 'Garmin') GarminLogin(),
         StyledButton(
-          icon: Icon(Icons.check),
+          icon: Icons.check,
           title: 'Give access',
           onPressed: () async {
             if (onboarding.dataSource == 'Apple health') {
@@ -224,7 +224,7 @@ class DataSource extends HookWidget {
         Opacity(
           opacity: consent.value ? 1 : 0.5,
           child: StyledButton(
-            icon: Icon(Icons.directions_run),
+            icon: Icons.directions_run,
             title: 'Get started!',
             onPressed: () async {
               if (!consent.value) return;
@@ -256,7 +256,7 @@ class DataSource extends HookWidget {
         ),
         SizedBox(height: 25),
         StyledButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icons.arrow_back,
           title: 'Go back',
           onPressed: () {
             Navigator.of(context).pop();
@@ -283,7 +283,7 @@ class DataSource extends HookWidget {
         ),
         SizedBox(height: 25),
         StyledButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icons.arrow_back,
           title: 'Go back',
           onPressed: () {
             Navigator.of(context).pop();
@@ -292,7 +292,7 @@ class DataSource extends HookWidget {
         SizedBox(height: 25),
         if (onboarding.availableData.length == 0)
           StyledButton(
-            icon: Icon(Icons.refresh),
+            icon: Icons.refresh,
             title: 'Try again',
             onPressed: () => getHealthAuthorization(),
           ),

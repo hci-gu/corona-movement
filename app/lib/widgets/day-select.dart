@@ -14,7 +14,7 @@ class DaySelect extends HookWidget {
     return Center(
       child: StyledButton(
         title: 'Change days',
-        icon: Icon(Icons.arrow_drop_down),
+        icon: Icons.arrow_drop_down,
         onPressed: () => _onPressed(context, steps),
       ),
     );

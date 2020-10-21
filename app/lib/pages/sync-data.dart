@@ -49,29 +49,36 @@ class SyncData extends HookWidget {
           if (step.value == 0) UserForm(),
           if (step.value == 1) StepsEstimate(),
           SizedBox(height: 40),
-          _formButtons(context, step, form, user),
+          _formButtons(context, onboarding, step, form, user),
         ],
       ),
     );
   }
 
-  Widget _formButtons(BuildContext context, step, form, user) {
+  Widget _formButtons(BuildContext context, onboarding, step, form, user) {
     bool formDone = useModel(formDoneSelector);
+    bool done = formDone && user.gaveEstimate && !onboarding.uploading;
     var setUserFormData = useAction(setUserFormDataAction);
 
     Widget proceedButton = Opacity(
-      opacity: step.value == 0 && formDone || user.gaveEstimate ? 1.0 : 0.5,
+      opacity: step.value == 0 && formDone || done ? 1.0 : 0.5,
       child: form.loading
           ? Center(child: CircularProgressIndicator())
           : StyledButton(
-              icon: Icon(
-                step.value == 0 ? Icons.arrow_forward : Icons.done,
-              ),
+              icon: step.value == 0 ? Icons.arrow_forward : Icons.done,
               title: step.value == 0 ? 'Next' : 'Done',
               onPressed: () {
                 if (formDone) {
                   if (step.value == 0) {
                     step.value++;
+                    return;
+                  }
+                  if (!done) {
+                    AppWidgets.showAlert(
+                      context,
+                      'Upload not finished',
+                      'Please wait until the upload has finished to proceed.',
+                    );
                     return;
                   }
                   if (step.value == 1) {
@@ -92,15 +99,16 @@ class SyncData extends HookWidget {
     return Row(
       children: [
         StyledButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icons.arrow_back,
           title: 'Back',
           onPressed: () {
             step.value = 0;
           },
           small: true,
+          secondary: true,
         ),
         SizedBox(width: 10),
-        Flexible(child: proceedButton),
+        if (user.gaveEstimate) Flexible(child: proceedButton),
       ],
     );
   }

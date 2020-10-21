@@ -78,7 +78,7 @@ class Settings extends HookWidget {
       SizedBox(height: 20),
       Center(
         child: StyledButton(
-          icon: Icon(Icons.date_range),
+          icon: Icons.date_range,
           title: 'Change date',
           onPressed: () => _onChangeDatePressed(
             context,
@@ -114,9 +114,10 @@ class Settings extends HookWidget {
       SizedBox(height: 15),
       Center(
         child: StyledButton(
-          icon: Icon(Icons.delete),
+          icon: Icons.delete,
           title: 'Delete data',
           onPressed: () => _onDeleteUserPressed(context, deleteUser),
+          danger: true,
         ),
       ),
     ];
@@ -129,7 +130,7 @@ class Settings extends HookWidget {
           Text('Login with your Garmin to credentials'),
           GarminLogin(),
           StyledButton(
-            icon: Icon(Icons.sync),
+            icon: Icons.sync,
             title: 'Sync Garmin',
             onPressed: () {
               garminSyncSteps();
@@ -142,7 +143,7 @@ class Settings extends HookWidget {
       child: Column(
         children: [
           StyledButton(
-            icon: Icon(Icons.sync),
+            icon: Icons.sync,
             title: 'Sync steps',
             onPressed: () {
               globalAnalytics.sendEvent('syncSteps');

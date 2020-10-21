@@ -32,7 +32,7 @@ class ShareButton extends StatelessWidget {
       padding: EdgeInsets.all(20),
       child: Center(
         child: StyledButton(
-          icon: Icon(Icons.share),
+          icon: Icons.share,
           title: 'Share',
           onPressed: () => _presentShareView(context),
         ),

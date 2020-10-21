@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:wfhmovement/style.dart';
 
 class StyledButton extends StatefulWidget {
   final GestureTapCallback onPressed;
   final String title;
-  final Widget icon;
+  final IconData icon;
   final bool small;
+  final bool secondary;
+  final bool danger;
+  final Widget iconWidget;
 
   final List<BoxShadow> boxShadow;
 
@@ -15,6 +19,9 @@ class StyledButton extends StatefulWidget {
     this.icon,
     this.boxShadow = const [],
     this.small = false,
+    this.secondary = false,
+    this.danger = false,
+    this.iconWidget,
   }) : super(key: key);
 
   @override
@@ -28,10 +35,20 @@ class _OutlinedButtonState extends State<StyledButton>
   AnimationController _controller;
   Animation _colorTween;
 
+  Color _backgroundColor(bool highlight) {
+    if (widget.danger) {
+      return highlight ? AppColors.dangerPressed : AppColors.danger;
+    }
+    if (widget.secondary) {
+      return highlight ? AppColors.secondaryPressed : AppColors.secondary;
+    }
+    return highlight ? AppColors.mainPressed : AppColors.main;
+  }
+
   @override
   void initState() {
-    _color = Colors.yellow[600];
-    _highlightColor = Colors.yellow[700];
+    _color = _backgroundColor(false);
+    _highlightColor = _backgroundColor(true);
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 100),
@@ -71,15 +88,29 @@ class _OutlinedButtonState extends State<StyledButton>
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> buttonWidgets =
-        widget.icon != null ? [widget.icon, SizedBox(width: 10)] : [];
+    List<Widget> buttonWidgets = widget.icon != null
+        ? [
+            widget.iconWidget != null
+                ? widget.iconWidget
+                : Icon(
+                    widget.icon,
+                    color: widget.secondary || widget.danger
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+            SizedBox(width: 10)
+          ]
+        : [];
     buttonWidgets.add(
       Text(
         widget.title.toUpperCase(),
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w800,
+          color:
+              widget.secondary || widget.danger ? Colors.white : Colors.black,
+          fontWeight: widget.secondary || widget.danger
+              ? FontWeight.w400
+              : FontWeight.w800,
           fontSize: 16.0,
           letterSpacing: 1.125,
         ),

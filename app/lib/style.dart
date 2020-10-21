@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:wfhmovement/pages/settings.dart';
 
 class AppColors {
-  static Color main = Colors.yellow[700];
-  static Color secondary = Colors.blueGrey[600];
+  static Color main = Colors.yellow[600];
+  static Color mainPressed = Colors.yellow[700];
+  static Color secondary = Colors.blueGrey[700];
+  static Color secondaryPressed = Colors.blueGrey[800];
+  static Color danger = Colors.red[700];
+  static Color dangerPressed = Colors.red[800];
 
   static Color primaryText = Colors.blueGrey[900];
   static Color secondaryText = Colors.grey[600];

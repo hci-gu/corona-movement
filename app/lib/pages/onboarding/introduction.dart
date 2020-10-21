@@ -82,7 +82,7 @@ class Introduction extends HookWidget {
         ),
         SizedBox(height: 20),
         StyledButton(
-          icon: user.loading
+          iconWidget: user.loading
               ? Container(
                   padding: EdgeInsets.all(10),
                   child: AspectRatio(
@@ -91,8 +91,8 @@ class Introduction extends HookWidget {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                     ),
                   ))
-              : Icon(
-                  user.code.length > 0 ? Icons.lock_open : Icons.lock_outline),
+              : null,
+          icon: user.code.length > 0 ? Icons.lock_open : Icons.lock_outline,
           title: 'Unlock',
           onPressed: () {
             unlock();
@@ -122,7 +122,7 @@ class Introduction extends HookWidget {
         ),
         SizedBox(height: 20),
         StyledButton(
-          icon: Icon(Icons.date_range),
+          icon: Icons.date_range,
           title: 'Select date',
           onPressed: () => _onSelectDatePressed(context, onboarding),
         ),

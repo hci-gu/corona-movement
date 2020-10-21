@@ -55,7 +55,7 @@ class StepsEstimate extends HookWidget {
       ),
       SizedBox(height: 20),
       StyledButton(
-        icon: Icon(Icons.check),
+        icon: Icons.check,
         title: 'Set estimate',
         onPressed: () {
           user.setGaveEstimate(true);
@@ -74,9 +74,11 @@ class StepsEstimate extends HookWidget {
       ),
       SizedBox(height: 20),
       StyledButton(
-        icon: Icon(Icons.undo),
+        key: Key('redo estimate'),
+        icon: Icons.undo,
         title: 'Redo estimate',
         onPressed: () => user.setGaveEstimate(false),
+        secondary: true,
       ),
     ];
   }

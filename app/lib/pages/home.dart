@@ -99,7 +99,7 @@ class Home extends HookWidget {
       if (user.id == 'all')
         Center(
           child: StyledButton(
-            icon: Icon(Icons.add),
+            icon: Icons.add,
             title: 'Add data source',
             onPressed: () => deleteUser(),
           ),
