@@ -239,16 +239,19 @@ Action syncStepsAction = (get) async {
         to,
         [HealthDataType.STEPS],
       );
-      steps = HealthFactory.removeDuplicates(steps);
       List dataChunks = [];
-      while (steps.length > 0) {
-        dataChunks.add(steps.take(chunkSize).toList());
-        steps.removeRange(
-          0,
-          steps.length > chunkSize ? chunkSize : steps.length,
-        );
+      if (steps.length == 0) {
+        await Future.delayed(Duration(seconds: 1));
+      } else {
+        while (steps.length > 0) {
+          dataChunks.add(steps.take(chunkSize).toList());
+          steps.removeRange(
+            0,
+            steps.length > chunkSize ? chunkSize : steps.length,
+          );
+        }
+        await uploadChunks(user.id, dataChunks);
       }
-      await uploadChunks(user.id, dataChunks);
     }
     getUserLatestUploadAction(get);
     user.setLastSync();

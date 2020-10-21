@@ -35,7 +35,9 @@ class SyncSteps extends HookWidget {
     int diff = DateTime.now()
         .difference(DateTime.parse(user.latestUploadDate.toIso8601String()))
         .inHours;
-    if (diff <= 1) {
+    bool syncedRecently = user.lastSync != null &&
+        DateTime.now().difference(user.lastSync).inMinutes < 5;
+    if (diff <= 1 || syncedRecently) {
       return Container();
     }
 
