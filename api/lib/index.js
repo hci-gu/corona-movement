@@ -7,6 +7,7 @@ const db = require('./adapters/db')
 const { uploadFeedback } = require('./adapters/mongo/feedback')
 const cors = require('cors')
 const moment = require('moment')
+const analyticsRoutes = require('./analytics')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
@@ -22,6 +23,8 @@ app.use(async (_, __, next) => {
   await db.inited()
   next()
 })
+
+app.use('/analytics', analyticsRoutes)
 
 app.get('/fitbit/callback', (_, res) => res.redirect('wfhmovement:/'))
 app.get('/', (_, res) => res.send('hello'))
