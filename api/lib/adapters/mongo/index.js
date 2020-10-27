@@ -62,10 +62,13 @@ module.exports = {
   removeUser: userCollection.remove,
   insertUser: userCollection.insert,
   getAllUsers: () => userCollection.getAllExcept(),
+  userCount: userCollection.count,
   // codes
   codeExists: codesCollection.codeExists,
   // analytics
   saveAnalyticsEvent: analyticsCollection.saveEvent,
+  removeAnalyticsForUser: analyticsCollection.removeAnalyticsForUser,
+  analyticsCount: analyticsCollection.count,
   inited: async () => {
     if (!inited) await init()
     return true

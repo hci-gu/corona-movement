@@ -155,7 +155,7 @@ const getTotalSteps = async () => {
     ])
     .toArray()
 
-  return result
+  return result[0].value
 }
 
 const insertSteps = (steps) => collection.insertMany(steps)

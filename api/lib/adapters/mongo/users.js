@@ -77,4 +77,6 @@ module.exports = {
   update,
   remove,
   getAllExcept,
+  count: ({ from = new Date('2020-01-01') }) =>
+    collection.count({ created: { $gt: from } }),
 }
