@@ -59,6 +59,14 @@ class DataSource extends HookWidget {
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(height: 20),
+            if (onboarding.error != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Failed with Error: ${onboarding.error}',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
             _widgetForUserData(context, onboarding, getHealthAuthorization,
                 register, consent, uploadSteps),
           ],

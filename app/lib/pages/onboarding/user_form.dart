@@ -71,8 +71,8 @@ class UserForm extends HookWidget {
               FormModel.educations, 'education', form.education, form.setField),
         ),
         UserFormField(
-          name: 'Occupancy',
-          child: _freeForm('occupancy', form.occupancy, form.setField),
+          name: 'Occupation',
+          child: _freeForm('occupation', form.occupation, form.setField),
         ),
       ],
     );
@@ -98,7 +98,7 @@ class UserForm extends HookWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Name of $type (optional)',
+        hintText: 'Your $type (optional)',
       ),
       onChanged: (val) => onChange(type, val),
     );
