@@ -1,68 +1,58 @@
 require('dotenv').config()
 
 const fs = require('fs')
-const { MongoClient } = require('mongodb')
+const { MongoClient, ObjectId } = require('mongodb')
 let caBundle = fs.readFileSync(
   `${__dirname}/lib/adapters/mongo/rds-combined-ca-bundle.pem`
 )
 const DB_NAME = 'coronamovement'
-const COLLECTION_NAME = 'users'
-
-const mongo = require('./lib/adapters/mongo/index')
-const elastic = require('./lib/adapters/elastic/index')
-
+const LIMIT = 2500
 let total = 0
+let prodDB, localDB
 
-const syncDocs = async (collection, offset) => {
-  const limit = 2500
-  total += limit
-  const res = await collection
+const syncDocs = async (collection, offset = 0) => {
+  total += LIMIT
+  const res = await prodDB
+    .collection(collection)
     .find({})
-    .limit(limit)
-    .skip(offset * limit)
+    .limit(LIMIT)
+    .skip(offset * LIMIT)
     .toArray()
-  console.log('sync, ', res.length, 'totalt, ', total)
+  console.log('sync, ', res.length, 'total, ', total)
   if (res.length > 0) {
-    try {
-      await mongo.saveSteps(res)
-      // await elastic.save(
-      //   res.map((d) => {
-      //     return {
-      //       value: d.value,
-      //       date: new Date(d.date),
-      //       date_from: new Date(d.date_from),
-      //       date_to: new Date(d.date_to),
-      //       duration: d.duration,
-      //       day: d.day,
-      //       time: d.time,
-      //       id: d.id,
-      //     }
-      //   })
-      // )
-    } catch (e) {
-      console.log(e)
-    }
+    await localDB.collection(collection).insertMany(res)
 
     return syncDocs(collection, offset + 1)
   }
 }
 
 const run = async () => {
-  const client = await MongoClient.connect(process.env.MIGRATION_CONNECT_TO, {
-    ssl: true,
-    sslValidate: false,
-    sslCA: caBundle,
-  })
-  await mongo.inited()
-  const collection = client.db(DB_NAME).collection(COLLECTION_NAME)
-  const users = await collection.find({}).toArray()
-  console.log('users', users)
+  const prodClient = await MongoClient.connect(
+    process.env.MIGRATION_CONNECT_TO,
+    {
+      ssl: true,
+      sslValidate: false,
+      sslCA: caBundle,
+    }
+  )
+  prodDB = prodClient.db(DB_NAME)
+  const localClient = await MongoClient.connect(process.env.CONNECT_TO, {})
+  localDB = localClient.db(DB_NAME)
 
-  users.forEach((u) => mongo.insertUser(u))
-
-  // await syncDocs(collection, 0)
+  await syncDocs('users')
+  await syncDocs('analytics')
 
   console.log('all done!')
+}
+
+const migrateUser = async (db, mongo, userId) => {
+  const user = await db.collection('users').findOne({ _id: ObjectId(userId) })
+  await mongo.insertUser(user)
+
+  const steps = await db.collection('steps').find({ id: userId }).toArray()
+  console.log('steps', steps.length)
+
+  await mongo.insertSteps(steps)
 }
 
 run()

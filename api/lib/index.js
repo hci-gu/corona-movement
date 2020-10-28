@@ -41,6 +41,7 @@ app.delete('/user/:id', async (req, res) => {
   const result = await db.removeUser(id)
   if (result) {
     await db.removeStepsForUser(id)
+    await db.removeAnalyticsForUser(id)
     return res.sendStatus(200)
   }
   res.sendStatus(404)
@@ -158,6 +159,25 @@ app.post('/analytics', async (req, res) => {
   await db.saveAnalyticsEvent(req.body)
 
   res.sendStatus(200)
+})
+app.get('/dashboard', async (req, res) => {
+  const today = moment().startOf('day').toDate()
+  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate()
+
+  res.send({
+    users: await db.userCount({}),
+    usersToday: await db.userCount({ from: today }),
+    usersLastSevenDays: await db.userCount({ from: oneWeekAgo }),
+    sessions: await db.analyticsCount({ event: 'openApp' }),
+    sessionsToday: await db.analyticsCount({
+      event: 'openApp',
+      from: today,
+    }),
+    sessionsLastSevenDays: await db.analyticsCount({
+      event: 'openApp',
+      from: oneWeekAgo,
+    }),
+  })
 })
 
 app.post('/ping', async (_, res) => res.send({ ok: true }))

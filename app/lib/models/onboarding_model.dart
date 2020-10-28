@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:wfhmovement/models/garmin.dart';
@@ -12,6 +14,7 @@ class OnboardingModel extends ValueNotifier {
   List<dynamic> availableData = [];
   List<dynamic> dataChunks = [];
   DateTime initialDataDate;
+  String error;
   bool fetching = false;
   bool authorized = false;
   bool gaveConsent = false;
@@ -77,7 +80,14 @@ class OnboardingModel extends ValueNotifier {
     if (!fetching) {
       loadingMessage = '';
       displayDateWhileLoading = null;
+    } else {
+      error = null;
     }
+    notifyListeners();
+  }
+
+  setError(String errorMessage) {
+    error = errorMessage;
     notifyListeners();
   }
 
@@ -114,6 +124,7 @@ class OnboardingModel extends ValueNotifier {
     gaveConsent = false;
     uploading = false;
     done = false;
+    error = null;
 
     notifyListeners();
   }
@@ -141,8 +152,12 @@ Action getHealthAuthorizationAction = (get) async {
   }
 };
 
-Future<List<HealthDataPoint>> getSteps(OnboardingModel onboarding,
-    DateTime from, DateTime to, List<HealthDataPoint> totalSteps) async {
+Future<List<HealthDataPoint>> getSteps(
+    OnboardingModel onboarding,
+    DateTime from,
+    DateTime to,
+    List<HealthDataPoint> totalSteps,
+    int extraAttempts) async {
   List<HealthDataPoint> steps = await onboarding.health.getHealthDataFromTypes(
     from,
     to,
@@ -151,10 +166,11 @@ Future<List<HealthDataPoint>> getSteps(OnboardingModel onboarding,
 
   if (steps.length > 0) {
     totalSteps.addAll(steps);
-    DateTime threeYearsAgo = DateTime.now().subtract(Duration(days: 365 * 3));
+    DateTime oldestFetch = DateTime.now().subtract(Duration(
+      days: 365 * (Platform.operatingSystem == 'android' ? 2 : 3),
+    ));
     DateTime initialDataDate = steps.first.dateFrom;
-    if (from.isBefore(threeYearsAgo) ||
-        initialDataDate.difference(from).inDays > 10) {
+    if (from.isBefore(oldestFetch)) {
       totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
       return totalSteps;
     }
@@ -165,6 +181,15 @@ Future<List<HealthDataPoint>> getSteps(OnboardingModel onboarding,
       from.subtract(Duration(days: 30)),
       from,
       totalSteps,
+      extraAttempts,
+    );
+  } else if (extraAttempts > 0) {
+    return getSteps(
+      onboarding,
+      from.subtract(Duration(days: 30)),
+      to,
+      totalSteps,
+      extraAttempts - 1,
     );
   }
   totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
@@ -182,18 +207,14 @@ Action getAvailableStepsAction = (get) async {
     await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
     await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
     List<HealthDataPoint> steps = await getSteps(
-      onboarding,
-      now.subtract(Duration(days: 30)),
-      now,
-      [],
-    );
+        onboarding, now.subtract(Duration(days: 30)), now, [], 3);
     DateTime initialDataDate;
     if (steps.length > 0) {
       initialDataDate = steps[0].dateFrom;
     }
     onboarding.setAvailableData(steps, initialDataDate);
   } catch (exception) {
-    print(exception.toString());
+    onboarding.setError(exception.toString());
     onboarding.setFetching(false);
   }
 };

@@ -270,7 +270,7 @@ Future setUserFormData(String userId, FormModel form) async {
       'gender': form.gender,
       'ageRange': form.ageRange,
       'education': form.education,
-      'occupancy': form.occupancy,
+      'occupation': form.occupation,
     }),
   );
 }

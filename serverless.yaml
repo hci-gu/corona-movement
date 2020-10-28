@@ -16,62 +16,14 @@ api:
       DB: mongo
       NODE_ENV: production
     region: eu-central-1
-    memory: 512
+    memory: 1536
     timeout: 15
+    runtime: nodejs12.x
 apiGateway:
   component: '@serverless/aws-api-gateway'
   inputs:
     region: eu-central-1
     endpoints:
-      - path: /unlock
-        method: POST
+      - path: /{proxy+}
+        method: ANY
         function: ${api.arn}
-      - path: /register
-        method: POST
-        function: ${api.arn}
-      - path: /user/{id}
-        method: GET
-        function: ${api.arn}
-      - path: /user/{id}
-        method: PATCH
-        function: ${api.arn}
-      - path: /user/{id}
-        method: DELETE
-        function: ${api.arn}
-      - path: /health-data
-        method: POST
-        function: ${api.arn}
-      - path: /{id}/update
-        method: GET
-        function: ${api.arn}
-      - path: /update-everyone
-        method: GET
-        function: ${api.arn}
-      - path: /{id}/hours
-        method: GET
-        function: ${api.arn}
-      - path: /{id}/summary
-        method: GET
-        function: ${api.arn}
-      - path: /{id}/last-upload
-        method: GET
-        function: ${api.arn}
-      - path: should-unlock
-        method: GET
-        function: ${api.arn}
-      - path: feedback
-        method: POST
-        function: ${api.arn}
-      - path: analytics
-        method: POST
-        function: ${api.arn}
-web:
-  component: '@serverless/website'
-  inputs:
-    code:
-      root: ./web
-      src: ./build
-      hook: npm run build
-    region: eu-central-1
-    bucketName: mycoronamovement
-    domain: web.mycoronamovement.com
