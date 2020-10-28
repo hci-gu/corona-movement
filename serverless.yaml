@@ -13,6 +13,8 @@ api:
       AWS_S3_ACCESS_KEY_SECRET: ${env.AWS_S3_ACCESS_KEY_SECRET}
       AWS_S3_BUCKET_NAME: appfeedback
       AWS_S3_BUCKET_REGION: eu-north-1
+      DASHBOARD_AUTH_TOKEN: ${env.DASHBOARD_AUTH_TOKEN}
+      APP_AUTH_TOKEN: ${env.APP_AUTH_TOKEN}
       DB: mongo
       NODE_ENV: production
     region: eu-central-1

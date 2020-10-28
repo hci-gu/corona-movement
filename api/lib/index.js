@@ -7,6 +7,7 @@ const db = require('./adapters/db')
 const { uploadFeedback } = require('./adapters/mongo/feedback')
 const cors = require('cors')
 const moment = require('moment')
+const analyticsRoutes = require('./analytics')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
@@ -22,6 +23,8 @@ app.use(async (_, __, next) => {
   await db.inited()
   next()
 })
+
+app.use('/analytics', analyticsRoutes)
 
 app.get('/fitbit/callback', (_, res) => res.redirect('wfhmovement:/'))
 app.get('/', (_, res) => res.send('hello'))
@@ -156,25 +159,6 @@ app.post('/analytics', async (req, res) => {
   await db.saveAnalyticsEvent(req.body)
 
   res.sendStatus(200)
-})
-app.get('/dashboard', async (req, res) => {
-  const today = moment().startOf('day').toDate()
-  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate()
-
-  res.send({
-    users: await db.userCount({}),
-    usersToday: await db.userCount({ from: today }),
-    usersLastSevenDays: await db.userCount({ from: oneWeekAgo }),
-    sessions: await db.analyticsCount({ event: 'openApp' }),
-    sessionsToday: await db.analyticsCount({
-      event: 'openApp',
-      from: today,
-    }),
-    sessionsLastSevenDays: await db.analyticsCount({
-      event: 'openApp',
-      from: oneWeekAgo,
-    }),
-  })
 })
 
 app.post('/ping', async (_, res) => res.send({ ok: true }))
