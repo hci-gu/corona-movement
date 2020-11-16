@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb')
+const request = require('supertest')
 const moment = require('moment')
 
 let db
@@ -25,10 +26,54 @@ const init = async () => {
   await db.createCollection(AGGREGATED_STEPS_COLLECTION)
 }
 
-const generateStepsForHour = (date, value) => {
-  return Array.from({ length: 6 }).map((_, i) => {
+const register = async ({ app, compareDate, endDate, initialDataDate }) => {
+  const res = await request(app)
+    .post('/register')
+    .send({
+      compareDate,
+      endDate,
+      initialDataDate,
+    })
+    .expect(200)
+  return res.body
+}
+
+const userWithSteps = async (
+  app,
+  { compareDate, endDate, daysWithStepsBefore, daysWithStepsAfter, amount = 10 }
+) => {
+  const from = moment(compareDate).subtract(daysWithStepsBefore, 'days')
+  const to = moment(compareDate).add(daysWithStepsAfter, 'days')
+  const steps = generateHealthData({
+    from,
+    to,
+    steps: amount,
+  })
+  const initialDataDate = moment(steps[0].date_from).format('YYYY-MM-DD')
+  const lastDate = moment(steps[steps.length - 1].date_from).format(
+    'YYYY-MM-DD'
+  )
+  const user = await register({
+    app,
+    compareDate,
+    endDate: lastDate,
+    initialDataDate,
+  })
+
+  await request(app)
+    .post('/health-data')
+    .send({
+      id: user._id,
+      dataPoints: steps,
+      createAggregation: true,
+    })
+    .expect(200)
+  return user
+}
+
+const generateStepsForHour = (date, value) =>
+  Array.from({ length: 6 }).map((_, i) => {
     const _date = moment(date).add(10 * i, 'minutes')
-    console.log('date', _date.format())
     return {
       value,
       unit: 'COUNT',
@@ -38,7 +83,6 @@ const generateStepsForHour = (date, value) => {
       platform: 'test',
     }
   })
-}
 
 const generateHealthData = ({ from, to, steps = 10 }) => {
   const days = moment(to).diff(moment(from), 'days') + 1
@@ -58,4 +102,6 @@ module.exports = {
   init,
   cleanup,
   generateHealthData,
+  register,
+  userWithSteps,
 }

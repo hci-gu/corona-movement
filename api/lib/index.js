@@ -11,11 +11,6 @@ const analyticsRoutes = require('./analytics')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
-const wait = (time) =>
-  new Promise((resolve) => {
-    setTimeout(() => resolve(), time)
-  })
-
 const app = express()
 app.use(cors())
 app.use(bodyParser.json({ limit: '25mb' }))
@@ -79,7 +74,6 @@ app.post('/health-data', async (req, res) => {
   await db.saveSteps({ id, dataPoints })
 
   if (createAggregation) {
-    await wait(1000)
     await Promise.all([
       db.saveAggregatedSteps({ id, timezone }),
       db.saveAggregatedSummary(id),
