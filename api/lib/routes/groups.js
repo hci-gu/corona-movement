@@ -11,6 +11,21 @@ router.get('/:code', async (req, res) => {
   res.send(group)
 })
 
+router.post('/:id/join', async (req, res) => {
+  const { id } = req.params
+  const { userId } = req.body
+
+  try {
+    await db.joinGroup({
+      id: userId,
+      groupId: id,
+    })
+    res.sendStatus(200)
+  } catch (err) {
+    res.sendStatus(404)
+  }
+})
+
 router.post('/', async (req, res) => {
   const { name } = req.body
 

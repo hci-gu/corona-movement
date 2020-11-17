@@ -2,6 +2,8 @@ const { ObjectId } = require('mongodb')
 const COLLECTION = 'users'
 let collection
 
+const groupsCollection = require('./groups')
+
 const create = async ({
   initialDataDate,
   compareDate,
@@ -22,17 +24,7 @@ const create = async ({
   return result.ops[0]
 }
 
-const get = async (id) => {
-  try {
-    const user = await collection.findOne({ _id: ObjectId(id) })
-    if (user && user.stepsEstimate) {
-      user.stepsEstimate = user.stepsEstimate + 0.000000001
-    }
-    return user
-  } catch (e) {
-    return null
-  }
-}
+const get = async (id) => collection.findOne({ _id: ObjectId(id) })
 
 const update = async ({ id, update }) => {
   const _update = Object.keys(update).reduce((obj, key) => {
@@ -64,6 +56,20 @@ const getAllExcept = async (id, code) => {
 
 const insert = (d) => collection.insert(d)
 
+const usersInGroup = async (groupId) =>
+  collection.find({ group: groupId }).toArray()
+
+const joinGroup = async ({ id, groupId }) => {
+  console.log('joinGroup', id, groupId)
+  const group = await groupsCollection.get(groupId)
+
+  if (!group) {
+    throw new Error('Group not found')
+  }
+
+  return update({ id, update: { group: groupId } })
+}
+
 module.exports = {
   init: async (db) => {
     if (process.env.NODE_ENV != 'production')
@@ -77,6 +83,8 @@ module.exports = {
   update,
   remove,
   getAllExcept,
+  joinGroup,
+  usersInGroup,
   count: ({ from = new Date('2020-01-01') }) =>
     collection.count({ created: { $gt: from } }),
 }

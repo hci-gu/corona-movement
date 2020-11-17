@@ -65,6 +65,7 @@ module.exports = {
   insertUser: userCollection.insert,
   getAllUsers: () => userCollection.getAllExcept(),
   userCount: userCollection.count,
+  joinGroup: userCollection.joinGroup,
   // codes
   codeExists: codesCollection.codeExists,
   // analytics

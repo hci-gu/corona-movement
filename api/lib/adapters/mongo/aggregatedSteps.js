@@ -2,6 +2,7 @@ const moment = require('moment')
 const COLLECTION = 'aggregated-steps'
 const stepsCollection = require('./steps')
 const usersCollection = require('./users')
+const groupsCollection = require('./groups')
 let collection
 
 const getHoursForEveryone = async ({ from, to }) => {
@@ -188,44 +189,73 @@ const getSteps = async ({ id }) => {
   return doc.data
 }
 
-const getSummary = async ({ id }) => {
-  let user = { before: null, after: null }
-  if (id !== 'all') {
-    const doc = await collection.findOne({
-      id,
-      type: 'summary',
-    })
-    if (doc && doc.data) user = doc.data
-  }
-
-  let others = { before: null, after: null }
+const summaryForQuery = async (query) => {
+  let before = null,
+    after = null
   try {
-    const othersSummaries = (
-      await collection
-        .find({
-          id: { $ne: id },
-          type: 'summary',
-        })
-        .toArray()
-    ).map((d) => d.data)
-    others = {
-      before:
-        othersSummaries
-          .map(({ before }) => before)
-          .reduce((sum, x) => sum + x, 0) / othersSummaries.length,
-      after:
-        othersSummaries
-          .map(({ after }) => after)
-          .reduce((sum, x) => sum + x, 0) / othersSummaries.length,
-    }
+    const summaries = (await collection.find(query).toArray()).map(
+      (d) => d.data
+    )
+    before =
+      summaries.map(({ before }) => before).reduce((sum, x) => sum + x, 0) /
+      summaries.length
+    after =
+      summaries.map(({ after }) => after).reduce((sum, x) => sum + x, 0) /
+      summaries.length
   } catch (e) {
     console.log(e)
   }
 
   return {
-    user,
+    before,
+    after,
+  }
+}
+
+const summaryForGroup = async (groupId) => {
+  const group = await groupsCollection.get(groupId)
+  const usersInGroup = await usersCollection.usersInGroup(groupId)
+
+  const summary = await summaryForQuery({
+    id: { $in: usersInGroup.map((u) => u._id.toString()) },
+    type: 'summary',
+  })
+
+  return {
+    name: group.name,
+    data: summary,
+  }
+}
+
+const getSummary = async ({ id }) => {
+  let user
+  let userSummary = { before: null, after: null }
+  if (id !== 'all') {
+    const doc = await collection.findOne({
+      id,
+      type: 'summary',
+    })
+    if (doc && doc.data) userSummary = doc.data
+    user = await usersCollection.get(id)
+  }
+  const others = await summaryForQuery({
+    id: { $ne: id },
+    type: 'summary',
+  })
+
+  const summary = {
+    user: userSummary,
     others,
   }
+
+  if (user && user.group) {
+    const groupSummary = await summaryForGroup(user.group)
+    if (groupSummary) {
+      summary[groupSummary.name] = groupSummary.data
+    }
+  }
+
+  return summary
 }
 
 module.exports = {
