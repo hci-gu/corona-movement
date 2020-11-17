@@ -10,6 +10,7 @@ const cors = require('cors')
 const analyticsRoutes = require('./routes/analytics')
 const stepsRoutes = require('./routes/steps')
 const usersRoutes = require('./routes/users')
+const groupsRoutes = require('./routes/groups')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
@@ -22,6 +23,7 @@ app.use(async (_, __, next) => {
 })
 
 app.use('/analytics', analyticsRoutes)
+app.use('/groups', groupsRoutes)
 app.use(stepsRoutes)
 app.use(usersRoutes)
 
