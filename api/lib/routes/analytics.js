@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const moment = require('moment')
-const db = require('./adapters/db')
+const db = require('../adapters/db')
 
 const reqToken = (req, _, next) => {
   const token = req.headers.authorization
@@ -20,7 +20,7 @@ router.get('/userRegistrations', reqToken, async (_, res) => {
   res.json(users.filter((u) => u.created).map(({ created }) => created))
 })
 
-router.get('/dashboard', async (_, res) => {
+router.get('/dashboard', reqToken, async (_, res) => {
   const today = moment().startOf('day').toDate()
   const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate()
 
@@ -38,6 +38,12 @@ router.get('/dashboard', async (_, res) => {
       from: oneWeekAgo,
     }),
   })
+})
+
+router.post('/analytics', async (req, res) => {
+  await db.saveAnalyticsEvent(req.body)
+
+  res.sendStatus(200)
 })
 
 module.exports = router
