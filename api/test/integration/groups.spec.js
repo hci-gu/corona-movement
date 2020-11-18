@@ -56,7 +56,7 @@ describe('#Group', () => {
         .expect(404)
     })
 
-    it('should include group in summary request after X users have joined', async () => {
+    it('should include joined group in summary request after user has joined', async () => {
       const response = await request(app)
         .get(`/${user._id}/summary`)
         .expect(200)

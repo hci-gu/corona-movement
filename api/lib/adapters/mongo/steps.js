@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb')
 const moment = require('moment')
 const userCollection = require('./users')
 const COLLECTION = 'steps'
@@ -119,7 +118,7 @@ const getSummaryForUser = async ({ from, id }) => {
       id,
       from,
       to: user.compareDate,
-      daysToPeriod: 1,
+      daysToPeriod: 0,
     }),
     getAverageStepsForUser({
       id,

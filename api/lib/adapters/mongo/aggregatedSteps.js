@@ -190,25 +190,33 @@ const getSteps = async ({ id }) => {
 }
 
 const summaryForQuery = async (query) => {
-  let before = null,
-    after = null
   try {
-    const summaries = (await collection.find(query).toArray()).map(
-      (d) => d.data
-    )
-    before =
-      summaries.map(({ before }) => before).reduce((sum, x) => sum + x, 0) /
-      summaries.length
-    after =
-      summaries.map(({ after }) => after).reduce((sum, x) => sum + x, 0) /
-      summaries.length
+    const result = await collection
+      .aggregate([
+        { $match: query },
+        {
+          $group: {
+            _id: 'id',
+            before: { $avg: '$data.before' },
+            after: { $avg: '$data.after' },
+          },
+        },
+      ])
+      .toArray()
+
+    if (result.length) {
+      return {
+        before: result[0].before,
+        after: result[0].after,
+      }
+    }
   } catch (e) {
     console.log(e)
   }
 
   return {
-    before,
-    after,
+    before: null,
+    after: null,
   }
 }
 
