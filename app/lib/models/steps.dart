@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/api/api.dart' as api;
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 
 class StepsModel extends ValueNotifier {
   DateTime from = DateTime.parse(StepsModel.fromDate);
   DateTime to;
-  List<api.HealthData> data = [];
-  api.HealthComparison comparison;
+  List<HealthData> data = [];
+  HealthComparison comparison;
   bool fetching = true;
   bool refresh = true;
   List<int> days = [1, 2, 3, 4, 5, 6, 7];
@@ -20,13 +21,13 @@ class StepsModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setData(List<api.HealthData> steps) {
+  setData(List<HealthData> steps) {
     data = steps;
     fetching = false;
     notifyListeners();
   }
 
-  setComparison(api.HealthComparison newComparison) {
+  setComparison(HealthComparison newComparison) {
     comparison = newComparison;
     notifyListeners();
   }
@@ -54,7 +55,7 @@ class StepsModel extends ValueNotifier {
 
 var stepsAtom = Atom('steps', StepsModel());
 
-List groupByHour(List<api.HealthData> list) {
+List groupByHour(List<HealthData> list) {
   Map<String, dynamic> obj = list.fold({}, (obj, x) {
     var key = x.hours.toString();
     if (obj[key] == null) {
@@ -220,7 +221,7 @@ Action getStepsComparisonAction = (get) async {
   User user = get(userAtom);
 
   if (user.id != 'all') {
-    api.HealthComparison data = await api.getComparison(user.id);
+    HealthComparison data = await api.getComparison(user.id);
     steps.setComparison(data);
   }
 };
@@ -229,7 +230,7 @@ Action getStepsAction = (get) async {
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
   steps.setFetching();
-  List<api.HealthData> data = await api.getSteps(
+  List<HealthData> data = await api.getSteps(
     user.id,
     steps.from,
     DateTime.now(),

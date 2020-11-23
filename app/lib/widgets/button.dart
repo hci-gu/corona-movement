@@ -6,6 +6,7 @@ class StyledButton extends StatefulWidget {
   final String title;
   final IconData icon;
   final bool small;
+  final bool tiny;
   final bool secondary;
   final bool danger;
   final Widget iconWidget;
@@ -19,6 +20,7 @@ class StyledButton extends StatefulWidget {
     this.icon,
     this.boxShadow = const [],
     this.small = false,
+    this.tiny = false,
     this.secondary = false,
     this.danger = false,
     this.iconWidget,
@@ -97,8 +99,9 @@ class _OutlinedButtonState extends State<StyledButton>
                     color: widget.secondary || widget.danger
                         ? Colors.white
                         : Colors.black,
+                    size: widget.tiny ? 16 : 24,
                   ),
-            SizedBox(width: 10)
+            SizedBox(width: widget.tiny ? 2 : 10)
           ]
         : [];
     buttonWidgets.add(
@@ -111,16 +114,13 @@ class _OutlinedButtonState extends State<StyledButton>
           fontWeight: widget.secondary || widget.danger
               ? FontWeight.w400
               : FontWeight.w800,
-          fontSize: 16.0,
+          fontSize: widget.tiny ? 10 : 16,
           letterSpacing: 1.125,
         ),
       ),
     );
 
-    double width = widget.title.length > 12 ? 250 : 200;
-    if (widget.small) {
-      width = 130;
-    }
+    double width = _widthForSize();
 
     return GestureDetector(
       onTapDown: _onTapDown,
@@ -129,7 +129,7 @@ class _OutlinedButtonState extends State<StyledButton>
       onTap: widget.onPressed,
       child: Container(
         width: width,
-        height: 44,
+        height: widget.tiny ? 30 : 44,
         decoration: BoxDecoration(
           color: _colorTween.value,
           borderRadius: BorderRadius.circular(50),
@@ -143,5 +143,16 @@ class _OutlinedButtonState extends State<StyledButton>
         ),
       ),
     );
+  }
+
+  double _widthForSize() {
+    double _width = widget.title.length > 12 ? 250 : 200;
+    if (widget.small) {
+      _width = 130;
+    }
+    if (widget.tiny) {
+      _width = 75;
+    }
+    return _width;
   }
 }

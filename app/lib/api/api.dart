@@ -4,31 +4,15 @@ import 'dart:typed_data';
 import 'package:health/health.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:timezone/standalone.dart' as tz;
-import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:wfhmovement/api/responses.dart';
+import 'package:wfhmovement/api/utils.dart';
 import 'package:wfhmovement/models/form_model.dart';
 
 // const API_URL = 'http://10.0.2.2:4000';
 const API_URL = 'http://192.168.0.32:4000';
 const API_KEY = 'some-key';
 // const API_URL = 'https://api.mycoronamovement.com';
-
-class GlobalApiHandler {
-  String timezone;
-
-  init(String deviceLocalTimeZone) {
-    timezone = deviceLocalTimeZone;
-  }
-
-  static final GlobalApiHandler _analytics = GlobalApiHandler._internal();
-  factory GlobalApiHandler() {
-    return _analytics;
-  }
-  GlobalApiHandler._internal();
-}
-
-GlobalApiHandler globalApiHandler = GlobalApiHandler();
 
 Future postJsonData(String userId, List<Map<String, dynamic>> data,
     bool createAggregation) async {
@@ -67,116 +51,6 @@ Future postData(
     }).toList(),
     createAggregation,
   );
-}
-
-class UserResponse {
-  String id;
-  DateTime compareDate;
-  DateTime initialDataDate;
-  double stepsEstimate;
-
-  UserResponse(Map<String, dynamic> json) {
-    id = json['_id'];
-    compareDate = DateTime.parse(json['compareDate']);
-    if (json['initialDataDate'] != null) {
-      initialDataDate = DateTime.parse(json['initialDataDate']);
-    }
-    if (json['stepsEstimate'] != null) {
-      stepsEstimate = json['stepsEstimate'];
-    }
-  }
-
-  factory UserResponse.fromJson(Map<String, dynamic> json) {
-    return UserResponse(json);
-  }
-}
-
-class ChartResult {
-  String from;
-  String to;
-
-  List<dynamic> result;
-
-  ChartResult(Map<String, dynamic> json) {
-    from = json['from'];
-    to = json['to'];
-
-    result = json['result'];
-  }
-
-  factory ChartResult.fromJson(Map<String, dynamic> json) {
-    return ChartResult(json);
-  }
-}
-
-class HealthData {
-  String date;
-  int hours;
-  int weekday;
-  double value;
-
-  HealthData(Map<String, dynamic> json) {
-    String timezone = globalApiHandler.timezone ?? 'Europe/Stockholm';
-    var _date =
-        tz.TZDateTime.parse(tz.getLocation(timezone), '${json['key']}:00');
-    date = DateFormat('yyyy-MM-dd').format(_date);
-    hours = _date.hour;
-    weekday = _date.weekday;
-    value = json['value'].toDouble();
-  }
-
-  factory HealthData.fromJson(Map<String, dynamic> json) {
-    return HealthData(json);
-  }
-}
-
-class HealthComparison {
-  HealthSummary user;
-  HealthSummary others;
-
-  HealthComparison(Map<String, dynamic> json) {
-    user = HealthSummary.fromJson(json['user']);
-    others = HealthSummary.fromJson(json['others']);
-  }
-
-  factory HealthComparison.fromJson(Map<String, dynamic> json) {
-    return HealthComparison(json);
-  }
-}
-
-class LatestUpload {
-  DateTime date;
-  String dataSource;
-
-  LatestUpload(Map<String, dynamic> json) {
-    var sthlm = tz.getLocation('Europe/Stockholm');
-    date = tz.TZDateTime.parse(sthlm, '${json['date']}');
-    dataSource = json['platform_type'];
-  }
-
-  factory LatestUpload.fromJson(Map<String, dynamic> json) {
-    return LatestUpload(json);
-  }
-}
-
-class HealthSummary {
-  double before;
-  double after;
-
-  HealthSummary(Map<String, dynamic> json) {
-    if (json['before'] != null)
-      before = json['before'].toDouble();
-    else
-      before = 0.0;
-    if (json['after'] != null)
-      after = json['after'].toDouble();
-    else
-      after = 0.0;
-  }
-
-  factory HealthSummary.fromJson(Map<String, dynamic> json) {
-    return HealthSummary(json);
-  }
 }
 
 Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
@@ -353,6 +227,53 @@ Future<bool> unlock(String code) async {
     }),
   );
 
+  return response.statusCode == 200;
+}
+
+Future<Group> getAndjoinGroup(String groupCode, String userId) async {
+  var url = '$API_URL/groups/$groupCode';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
+    },
+  );
+  if (response.statusCode == 200) {
+    Group group = Group(json.decode(response.body));
+    await joinGroup(group.id, userId);
+
+    return group;
+  }
+
+  return null;
+}
+
+Future<bool> joinGroup(String groupId, String userId) async {
+  var url = '$API_URL/groups/$groupId/join';
+  var response = await http.post(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
+    },
+    body: json.encode({
+      userId: userId,
+    }),
+  );
+
+  return response.statusCode == 200;
+}
+
+Future<bool> leaveGroup(String groupId, String userId) async {
+  var url = '$API_URL/groups/$groupId/$userId';
+  var response = await http.delete(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
+    },
+  );
   return response.statusCode == 200;
 }
 

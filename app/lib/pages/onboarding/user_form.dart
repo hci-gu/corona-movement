@@ -3,15 +3,18 @@ import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:wfhmovement/widgets/company_code.dart';
 
 class UserFormField extends StatelessWidget {
   Widget child;
+  Widget headerInfo;
   String name;
 
   UserFormField({
     Key key,
     @required this.child,
     @required this.name,
+    this.headerInfo,
   }) : super(key: key);
 
   @override
@@ -21,11 +24,16 @@ class UserFormField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            name,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-            ),
+          Row(
+            children: [
+              Text(
+                name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (headerInfo != null) headerInfo,
+            ],
           ),
           child,
         ],
@@ -74,6 +82,7 @@ class UserForm extends HookWidget {
           name: 'Occupation',
           child: _freeForm('occupation', form.occupation, form.setField),
         ),
+        GroupCode(),
       ],
     );
   }

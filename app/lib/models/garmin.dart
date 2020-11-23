@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/garmin_client.dart';

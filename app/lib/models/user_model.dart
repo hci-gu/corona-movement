@@ -5,7 +5,8 @@ import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/api/api.dart' as api;
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/models/steps.dart';
 
 class User extends ValueNotifier {
@@ -16,7 +17,8 @@ class User extends ValueNotifier {
   DateTime latestUploadDate;
   DateTime initialDataDate = DateTime.parse('2020-01-01');
   String dataSource;
-  String division;
+  String groupCode = '';
+  Group group;
   String code = '';
   bool loading = false;
   bool awaitingDataSource = false;
@@ -36,7 +38,7 @@ class User extends ValueNotifier {
     notifyListeners();
   }
 
-  setUser(api.UserResponse response) {
+  setUser(UserResponse response) {
     id = response.id;
     compareDate = response.compareDate;
     if (response.initialDataDate != null &&
@@ -52,7 +54,7 @@ class User extends ValueNotifier {
     notifyListeners();
   }
 
-  setLatestUpload(api.LatestUpload latestUpload) {
+  setLatestUpload(LatestUpload latestUpload) {
     latestUploadDate = latestUpload.date;
     dataSource = latestUpload.dataSource;
     notifyListeners();
@@ -88,6 +90,15 @@ class User extends ValueNotifier {
     notifyListeners();
   }
 
+  setGroupCode(value) {
+    groupCode = value;
+    notifyListeners();
+  }
+
+  setGroup(Group _group) {
+    group = _group;
+  }
+
   reset() {
     inited = true;
     unlocked = true;
@@ -95,7 +106,8 @@ class User extends ValueNotifier {
     compareDate = null;
     latestUploadDate = null;
     dataSource = null;
-    division = null;
+    group = null;
+    groupCode = '';
     code = '';
     loading = false;
     awaitingDataSource = false;
@@ -128,7 +140,7 @@ Action initAction = (get) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userId = prefs.getString('id');
   if (userId != null) {
-    api.UserResponse response;
+    UserResponse response;
     if (userId == 'all') {
       response = fakeUser(onboarding);
     } else {
@@ -155,7 +167,7 @@ Action registerAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   onboarding.setGaveConsent();
 
-  api.UserResponse response = await api.register(
+  UserResponse response = await api.register(
     onboarding.date,
     onboarding.initialDataDate,
     onboarding.dataSource,
@@ -181,8 +193,8 @@ Action proceedWithoutStepsAction = (get) async {
   await prefs.setString('id', user.id);
 };
 
-api.UserResponse fakeUser(OnboardingModel onboarding) {
-  return api.UserResponse.fromJson({
+UserResponse fakeUser(OnboardingModel onboarding) {
+  return UserResponse.fromJson({
     '_id': 'all',
     'compareDate': onboarding.date != null
         ? onboarding.date.toIso8601String()
@@ -213,7 +225,7 @@ Action getUserLatestUploadAction = (get) async {
   User user = get(userAtom);
   user.setLoading(true);
 
-  api.LatestUpload latestUpload = await api.getLatestUpload(user.id);
+  LatestUpload latestUpload = await api.getLatestUpload(user.id);
 
   user.setLatestUpload(latestUpload);
 
@@ -268,6 +280,33 @@ Action unlockAction = (get) async {
 
   if (unlock) {
     user.setUnlocked();
+  }
+
+  user.setLoading(false);
+};
+
+Action joinGroupAction = (get) async {
+  User user = get(userAtom);
+  user.setLoading(true);
+
+  Group group = await api.getAndjoinGroup(user.groupCode, user.id);
+
+  if (group != null) {
+    user.setGroup(group);
+  }
+
+  user.setLoading(false);
+};
+
+Action leaveGroupAction = (get) async {
+  User user = get(userAtom);
+  user.setLoading(true);
+
+  bool success = await api.leaveGroup(user.group.id, user.id);
+
+  if (success) {
+    user.setGroup(null);
+    user.setGroupCode('');
   }
 
   user.setLoading(false);

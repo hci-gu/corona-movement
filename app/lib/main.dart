@@ -16,15 +16,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/widgets/main_scaffold.dart';
+
+import 'api/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   try {
     String timezone = await FlutterNativeTimezone.getLocalTimezone();
-    api.globalApiHandler.init(timezone);
+    globalApiHandler.init(timezone);
   } catch (e) {}
 
   runApp(App());

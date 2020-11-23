@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/models/user_model.dart';
 
 class OnboardingModel extends ValueNotifier {

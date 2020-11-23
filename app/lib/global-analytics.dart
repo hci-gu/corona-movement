@@ -1,4 +1,4 @@
-import 'package:wfhmovement/api.dart' as api;
+import 'package:wfhmovement/api/api.dart' as api;
 
 class GlobalAnalytics {
   String userId;
