@@ -3,12 +3,31 @@ const router = express.Router()
 const moment = require('moment')
 const db = require('../adapters/db')
 
-router.get('/:code', async (req, res) => {
+router.get('/:id', async (req, res) => {
+  const { id } = req.params
+
+  const group = await db.getGroup(id)
+
+  res.send(group)
+})
+
+router.get('/code/:code', async (req, res) => {
   const { code } = req.params
 
   const group = await db.getGroupFromCode({ code })
 
   res.send(group)
+})
+
+router.delete('/:id/:userId', async (req, res) => {
+  const { id, userId } = req.params
+
+  try {
+    await db.leaveGroup({ id: userId, groupId: id })
+    return res.sendStatus(200)
+  } catch (e) {
+    return res.sendStatus(400)
+  }
 })
 
 router.post('/:id/join', async (req, res) => {

@@ -70,6 +70,9 @@ const joinGroup = async ({ id, groupId }) => {
   return update({ id, update: { group: groupId } })
 }
 
+const leaveGroup = async ({ id, groupId }) =>
+  collection.update({ _id: ObjectId(id) }, { $unset: { group: 1 } })
+
 module.exports = {
   init: async (db) => {
     if (process.env.NODE_ENV != 'production')
@@ -84,6 +87,7 @@ module.exports = {
   remove,
   getAllExcept,
   joinGroup,
+  leaveGroup,
   usersInGroup,
   count: ({ from = new Date('2020-01-01') }) =>
     collection.count({ created: { $gt: from } }),

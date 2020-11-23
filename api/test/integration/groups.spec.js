@@ -16,12 +16,16 @@ describe('#Group', () => {
 
   describe('GET /groups/:code', () => {
     it('can get a group for its code', async () => {
-      const res = await request(app).get(`/groups/${group.code}`).expect(200)
+      const res = await request(app)
+        .get(`/groups/code/${group.code}`)
+        .expect(200)
       expect(res.body._id).to.exist
     })
 
     it("gets null if code doesn't match group", async () => {
-      const res = await request(app).get('/groups/does-not-exist').expect(200)
+      const res = await request(app)
+        .get('/groups/code/does-not-exist')
+        .expect(200)
       expect(res.body).to.be.empty
     })
   })

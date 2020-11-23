@@ -66,6 +66,7 @@ module.exports = {
   getAllUsers: () => userCollection.getAllExcept(),
   userCount: userCollection.count,
   joinGroup: userCollection.joinGroup,
+  leaveGroup: userCollection.leaveGroup,
   // codes
   codeExists: codesCollection.codeExists,
   // analytics
@@ -77,6 +78,7 @@ module.exports = {
     return true
   },
   // groups
+  getGroup: groupsCollection.get,
   createGroup: groupsCollection.create,
   getGroupFromCode: groupsCollection.getGroupFromCode,
 }
