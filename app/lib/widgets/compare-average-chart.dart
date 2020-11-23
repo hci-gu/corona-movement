@@ -84,13 +84,9 @@ class CompareAverageChart extends HookWidget {
                   margin: 50,
                   rotateAngle: -90,
                   getTitles: (double value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return share ? 'Me' : 'You';
-                      case 1:
-                        return 'Others';
-                    }
-                    return null;
+                    String name = comparison.comparisons[value.toInt()].name;
+                    if (name == 'user') return 'You';
+                    return '${name[0].toUpperCase()}${name.substring(1, name.length)}';
                   },
                 ),
               ),
@@ -107,37 +103,23 @@ class CompareAverageChart extends HookWidget {
 
   List<BarChartGroupData> _barGroupData(HealthComparison comparison) {
     if (comparison == null) return [];
-    double userDiff = _diffForSummary(comparison.user);
-    double othersDiff = _diffForSummary(comparison.others);
-
-    return [
-      BarChartGroupData(
+    return comparison.comparisons.map((HealthSummary summary) {
+      int index = comparison.comparisons.indexOf(summary);
+      double diff = _diffForSummary(summary);
+      return BarChartGroupData(
         x: 0,
         barRods: [
           BarChartRodData(
-            color: AppColors.main,
-            y: double.parse(userDiff.toStringAsFixed(1)),
+            color: index == 0 ? AppColors.main : AppColors.secondary,
+            y: double.parse(diff.toStringAsFixed(1)),
             width: barWidth,
-            borderRadius: _radiusForValue(userDiff),
+            borderRadius: _radiusForValue(diff),
             rodStackItem: [],
           ),
         ],
         showingTooltipIndicators: [0],
-      ),
-      BarChartGroupData(
-        x: 1,
-        barRods: [
-          BarChartRodData(
-            color: AppColors.primaryText,
-            y: double.parse(othersDiff.toStringAsFixed(1)),
-            width: barWidth,
-            borderRadius: _radiusForValue(othersDiff),
-            rodStackItem: [],
-          ),
-        ],
-        showingTooltipIndicators: [0],
-      ),
-    ];
+      );
+    }).toList();
   }
 
   double maxValue(HealthComparison comparison) {
@@ -145,7 +127,7 @@ class CompareAverageChart extends HookWidget {
               _diffForSummary(comparison.user).abs(),
               _diffForSummary(comparison.others).abs(),
             ) *
-            1.4)
+            1.4,)
         .roundToDouble();
   }
 

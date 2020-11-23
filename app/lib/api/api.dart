@@ -230,8 +230,21 @@ Future<bool> unlock(String code) async {
   return response.statusCode == 200;
 }
 
+Future<Group> getGroup(String groupId) async {
+  var url = '$API_URL/groups/$groupId';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
+    },
+  );
+  Group group = Group(json.decode(response.body));
+  return group;
+}
+
 Future<Group> getAndjoinGroup(String groupCode, String userId) async {
-  var url = '$API_URL/groups/$groupCode';
+  var url = '$API_URL/groups/code/$groupCode';
   var response = await http.get(
     url,
     headers: <String, String>{
@@ -258,7 +271,7 @@ Future<bool> joinGroup(String groupId, String userId) async {
       'api-key': API_KEY,
     },
     body: json.encode({
-      userId: userId,
+      'userId': userId,
     }),
   );
 

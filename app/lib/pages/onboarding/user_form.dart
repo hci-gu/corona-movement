@@ -6,9 +6,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/widgets/company_code.dart';
 
 class UserFormField extends StatelessWidget {
-  Widget child;
-  Widget headerInfo;
-  String name;
+  final Widget child;
+  final Widget headerInfo;
+  final String name;
 
   UserFormField({
     Key key,
@@ -82,7 +82,7 @@ class UserForm extends HookWidget {
           name: 'Occupation',
           child: _freeForm('occupation', form.occupation, form.setField),
         ),
-        GroupCode(),
+        GroupCode(key: Key('userForm')),
       ],
     );
   }

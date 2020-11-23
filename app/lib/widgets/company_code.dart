@@ -10,52 +10,63 @@ import 'package:wfhmovement/widgets/button.dart';
 import '../style.dart';
 
 class GroupCode extends HookWidget {
+  final bool showInfo;
+
+  GroupCode({
+    Key key,
+    this.showInfo = true,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
+    final controller = useTextEditingController(text: user.groupCode);
     var joinGroup = useAction(joinGroupAction);
     var leaveGroup = useAction(leaveGroupAction);
-
-    if (user.group != null) {
-      return Row(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: UserFormField(
-              name: 'Company code',
-              headerInfo: _info(context),
-              child: Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  user.group.name,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ),
-          ),
-          _disconnectCompanyButton(user, leaveGroup),
-        ],
-      );
-    }
 
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Flexible(
-          child: UserFormField(
-            name: 'Company code',
-            headerInfo: _info(context),
-            child: _freeForm(
-              user.groupCode,
-              user.setGroupCode,
+      children: user.group != null
+          ? _groupWidget(context, user, leaveGroup)
+          : _codeInput(context, user, controller, joinGroup),
+    );
+  }
+
+  List<Widget> _codeInput(
+      BuildContext context, User user, controller, joinGroup) {
+    return [
+      Flexible(
+        child: UserFormField(
+          name: 'Company code',
+          headerInfo: showInfo ? _info(context) : null,
+          child: _freeForm(
+            controller,
+            user.setGroupCode,
+          ),
+        ),
+      ),
+      _verifyCodeButton(user, joinGroup),
+    ];
+  }
+
+  List<Widget> _groupWidget(BuildContext context, User user, leaveGroup) {
+    return [
+      Flexible(
+        child: UserFormField(
+          name: 'Company code',
+          headerInfo: _info(context),
+          child: Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(
+              user.group.name,
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ),
-        _verifyCodeButton(user, joinGroup),
-      ],
-    );
+      ),
+      _disconnectCompanyButton(user, leaveGroup),
+    ];
   }
 
   Widget _info(BuildContext context) {
@@ -79,8 +90,9 @@ class GroupCode extends HookWidget {
     return Padding(
       padding: EdgeInsets.only(top: 40),
       child: StyledButton(
+        key: Key('group-code-join'),
         icon: Icons.done,
-        title: 'Verify',
+        title: 'Join',
         onPressed: () {
           if (!user.loading) joinGroup();
         },
@@ -93,9 +105,10 @@ class GroupCode extends HookWidget {
     return Padding(
       padding: EdgeInsets.only(top: 40),
       child: StyledButton(
+        key: Key('group-code-leave'),
         icon: Icons.close,
         secondary: true,
-        title: 'Remove',
+        title: 'Leave',
         onPressed: () {
           if (!user.loading) leaveGroup();
         },
@@ -104,9 +117,7 @@ class GroupCode extends HookWidget {
     );
   }
 
-  Widget _freeForm(String value, onChange) {
-    final controller = useTextEditingController(text: value);
-
+  Widget _freeForm(controller, onChange) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(

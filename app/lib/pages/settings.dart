@@ -4,8 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/pages/company.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
+import 'package:wfhmovement/widgets/company_code.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class Settings extends HookWidget {
@@ -80,6 +82,15 @@ class Settings extends HookWidget {
   List<Widget> _loggedInUserWidgets(
       BuildContext context, User user, deleteUser) {
     return [
+      if (user.group == null)
+        Center(
+          child: StyledButton(
+            icon: Icons.perm_identity,
+            title: 'Join company',
+            onPressed: () => _onJoinCompanyPressed(context),
+          ),
+        ),
+      if (user.group == null) SizedBox(height: 20),
       Center(
         child: StyledButton(
           icon: Icons.delete,
@@ -88,6 +99,8 @@ class Settings extends HookWidget {
           danger: true,
         ),
       ),
+      if (user.group != null) SizedBox(height: 20),
+      if (user.group != null) GroupCode(),
     ];
   }
 
@@ -178,5 +191,12 @@ class Settings extends HookWidget {
         );
       },
     );
+  }
+
+  void _onJoinCompanyPressed(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CompanyPage(),
+      settings: RouteSettings(name: 'Join company'),
+    ));
   }
 }

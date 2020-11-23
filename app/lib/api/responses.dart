@@ -7,6 +7,7 @@ class UserResponse {
   DateTime compareDate;
   DateTime initialDataDate;
   double stepsEstimate;
+  String groupId;
 
   UserResponse(Map<String, dynamic> json) {
     id = json['_id'];
@@ -16,6 +17,9 @@ class UserResponse {
     }
     if (json['stepsEstimate'] != null) {
       stepsEstimate = json['stepsEstimate'];
+    }
+    if (json['group'] != null) {
+      groupId = json['group'];
     }
   }
 
@@ -66,10 +70,15 @@ class HealthData {
 class HealthComparison {
   HealthSummary user;
   HealthSummary others;
+  List<HealthSummary> comparisons = [];
 
   HealthComparison(Map<String, dynamic> json) {
-    user = HealthSummary.fromJson(json['user']);
-    others = HealthSummary.fromJson(json['others']);
+    user = HealthSummary.fromJson('user', json['user']);
+    others = HealthSummary.fromJson('others', json['others']);
+
+    json.keys.toList().forEach((key) {
+      comparisons.add(HealthSummary.fromJson(key, json[key]));
+    });
   }
 
   factory HealthComparison.fromJson(Map<String, dynamic> json) {
@@ -93,10 +102,12 @@ class LatestUpload {
 }
 
 class HealthSummary {
+  String name;
   double before;
   double after;
 
-  HealthSummary(Map<String, dynamic> json) {
+  HealthSummary(String _name, Map<String, dynamic> json) {
+    name = _name;
     if (json['before'] != null)
       before = json['before'].toDouble();
     else
@@ -107,8 +118,8 @@ class HealthSummary {
       after = 0.0;
   }
 
-  factory HealthSummary.fromJson(Map<String, dynamic> json) {
-    return HealthSummary(json);
+  factory HealthSummary.fromJson(String name, Map<String, dynamic> json) {
+    return HealthSummary(name, json);
   }
 }
 

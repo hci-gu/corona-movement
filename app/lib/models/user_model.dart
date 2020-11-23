@@ -154,6 +154,10 @@ Action initAction = (get) async {
         user.setGaveEstimate(true);
         form.setUploaded();
       }
+      if (response.groupId != null) {
+        Group group = await api.getGroup(response.groupId);
+        user.setGroup(group);
+      }
       onboarding.setDone();
     }
   }
