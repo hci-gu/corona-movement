@@ -31,7 +31,7 @@ class CompareAverageChart extends HookWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 30),
         child: AspectRatio(
-          aspectRatio: share ? 0.6 : 0.35,
+          aspectRatio: share ? 0.6 : 0.44,
           child: BarChart(
             BarChartData(
               gridData: FlGridData(
@@ -79,9 +79,9 @@ class CompareAverageChart extends HookWidget {
                   textStyle: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 18,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                   ),
-                  margin: 50,
+                  margin: 40,
                   rotateAngle: -90,
                   getTitles: (double value) {
                     String name = comparison.comparisons[value.toInt()].name;
@@ -127,7 +127,7 @@ class CompareAverageChart extends HookWidget {
               _diffForSummary(comparison.user).abs(),
               _diffForSummary(comparison.others).abs(),
             ) *
-            1.4,)
+            1.4)
         .roundToDouble();
   }
 

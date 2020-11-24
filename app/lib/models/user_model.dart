@@ -7,7 +7,6 @@ import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/api/responses.dart';
-import 'package:wfhmovement/models/steps.dart';
 
 class User extends ValueNotifier {
   bool unlocked = false;
@@ -23,6 +22,7 @@ class User extends ValueNotifier {
   bool loading = false;
   bool awaitingDataSource = false;
   bool gaveEstimate = false;
+  bool deeplinkOpen = false;
   DateTime lastSync;
   double stepsEstimate = 0.0;
 
@@ -97,6 +97,12 @@ class User extends ValueNotifier {
 
   setGroup(Group _group) {
     group = _group;
+    notifyListeners();
+  }
+
+  setDeeplinkOpen(bool value) {
+    deeplinkOpen = value;
+    notifyListeners();
   }
 
   reset() {
@@ -112,6 +118,7 @@ class User extends ValueNotifier {
     loading = false;
     awaitingDataSource = false;
     gaveEstimate = false;
+    deeplinkOpen = false;
     lastSync = null;
     stepsEstimate = 0.0;
 

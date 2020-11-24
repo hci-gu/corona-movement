@@ -66,6 +66,7 @@ class Settings extends HookWidget {
       SizedBox(height: 20),
       Center(
         child: StyledButton(
+          key: Key('settings-change-date'),
           icon: Icons.date_range,
           title: 'Change date',
           onPressed: () => _onChangeDatePressed(
@@ -85,6 +86,7 @@ class Settings extends HookWidget {
       if (user.group == null)
         Center(
           child: StyledButton(
+            key: Key('settings-join-company'),
             icon: Icons.perm_identity,
             title: 'Join company',
             onPressed: () => _onJoinCompanyPressed(context),
@@ -93,6 +95,7 @@ class Settings extends HookWidget {
       if (user.group == null) SizedBox(height: 20),
       Center(
         child: StyledButton(
+          key: Key('settings-delete-data'),
           icon: Icons.delete,
           title: 'Delete data',
           onPressed: () => _onDeleteUserPressed(context, deleteUser),
@@ -127,12 +130,12 @@ class Settings extends HookWidget {
       children: [
         SizedBox(height: 25),
         Text(
-          'The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.',
+          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fitness or Garmin.',
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 10),
         Text(
-          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fitness or Garmin.',
+          'The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.',
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 10),

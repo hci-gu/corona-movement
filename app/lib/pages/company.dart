@@ -30,7 +30,7 @@ class CompanyPage extends HookWidget {
           ),
         ),
         AppWidgets.chartDescription(
-          'If you have a code you can enter it here to join a company.\n\nIf you\'re interested in trying out this feature within your company feel free to contact us at sebastian.andreasson@ait.gu.se',
+          'If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se',
         ),
         GroupCode(
           showInfo: false,

@@ -13,6 +13,7 @@ import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
 import 'package:wfhmovement/widgets/days-bar-chart.dart';
+import 'package:wfhmovement/widgets/join_group_success.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/page-widget.dart';
 import 'package:wfhmovement/widgets/steps-chart.dart';
@@ -36,7 +37,7 @@ class Home extends HookWidget {
       getStepsChart();
       getStepsComparison();
       return;
-    }, [user.compareDate, user.lastSync]);
+    }, [user.compareDate, user.group, user.lastSync]);
     useEffect(() {
       if (!steps.fetching) {
         _refreshController.refreshCompleted();
@@ -56,12 +57,15 @@ class Home extends HookWidget {
           getStepsComparison();
         },
         controller: _refreshController,
-        child: ListView(
-          padding: EdgeInsets.only(top: 25),
-          children: steps.data == null
-              ? _empty(context)
-              : _body(context, user, deleteUser),
-        ),
+        child: Stack(children: [
+          ListView(
+            padding: EdgeInsets.only(top: 25),
+            children: steps.data == null
+                ? _empty(context)
+                : _body(context, user, deleteUser),
+          ),
+          JoinGroupMessage(),
+        ]),
       ),
     );
   }

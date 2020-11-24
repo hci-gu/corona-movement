@@ -5,6 +5,7 @@ import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -106,14 +107,46 @@ class ScreenSelector extends HookWidget {
     FormModel form = useModel(formAtom);
     User user = useModel(userAtom);
     var init = useAction(initAction);
+    var joinGroup = useAction(joinGroupAction);
     useEffect(() {
       try {
         init();
-      } catch (e) {
-        // deal with this better.
-      }
+      } catch (e) {}
       return;
     }, []);
+
+    useEffect(() {
+      var handleUri = (Uri uri) {
+        if (uri != null) {
+          String code = uri.queryParameters['code'];
+          user.setGroupCode(code);
+          if (user.id != null && user.group == null) {
+            joinGroup();
+            user.setDeeplinkOpen(true);
+          } else if (user.id == null) {
+            user.setDeeplinkOpen(true);
+          }
+        }
+      };
+
+      var asyncFunc = () async {
+        try {
+          Uri initialUri = await getInitialUri();
+          handleUri(initialUri);
+        } catch (e) {
+          print('Failed to get initial uri.');
+          print(e);
+        }
+        getUriLinksStream().listen((Uri uri) {
+          handleUri(uri);
+        }, onError: (err) {
+          print('uri stream err ${err}');
+        });
+      };
+
+      if (user.inited) asyncFunc();
+      return;
+    }, [user.inited]);
 
     if (!user.inited) {
       return MainScaffold(

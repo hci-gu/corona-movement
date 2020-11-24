@@ -38,7 +38,7 @@ class GroupCode extends HookWidget {
     return [
       Flexible(
         child: UserFormField(
-          name: 'Company code',
+          name: 'Group code',
           headerInfo: showInfo ? _info(context) : null,
           child: _freeForm(
             controller,
@@ -54,7 +54,7 @@ class GroupCode extends HookWidget {
     return [
       Flexible(
         child: UserFormField(
-          name: 'Company code',
+          name: 'Group code',
           headerInfo: _info(context),
           child: Padding(
             padding: EdgeInsets.only(top: 10),
@@ -73,8 +73,8 @@ class GroupCode extends HookWidget {
     return GestureDetector(
       onTap: () => AppWidgets.showAlert(
         context,
-        'Joining a company',
-        'If you have a code you can enter it here to join a company.\n\nIf you\'re interested in trying out this feature within your company feel free to contact us at sebastian.andreasson@ait.gu.se',
+        'Joining a group',
+        'If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se',
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 5),
@@ -121,7 +121,7 @@ class GroupCode extends HookWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Code to join a company (optional)',
+        hintText: 'Code to join a group (optional)',
       ),
       onChanged: (val) => onChange(val),
     );

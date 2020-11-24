@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
+const querystring = require('querystring')
 const db = require('./adapters/db')
 const { uploadFeedback } = require('./adapters/mongo/feedback')
 const cors = require('cors')
@@ -48,6 +49,9 @@ app.post('/feedback', async (req, res) => {
     uploadImageUrl,
   })
 })
+app.get('/deeplink', async (req, res) =>
+  res.redirect(`wfhmovement://localhost?${querystring.encode(req.query)}`)
+)
 
 if (process.env.NODE_ENV !== 'production')
   app.listen(PORT, () => console.log(`listening on ${PORT}`))
