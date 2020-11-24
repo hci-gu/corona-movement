@@ -1,5 +1,3 @@
-import 'package:country_list_pick/country_list_pick.dart';
-import 'package:wfhmovement/api/api.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +52,8 @@ class GroupCode extends HookWidget {
     return [
       Flexible(
         child: UserFormField(
-          name: 'Group code',
-          headerInfo: _info(context),
+          name: 'Group',
+          headerInfo: showInfo ? _info(context) : null,
           child: Padding(
             padding: EdgeInsets.only(top: 10),
             child: Text(

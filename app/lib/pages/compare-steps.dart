@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
+import 'package:wfhmovement/widgets/pending-comparisons.dart';
 import 'package:wfhmovement/widgets/share.dart';
 
-class CompareSteps extends HookWidget {
+class CompareSteps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
@@ -25,10 +25,12 @@ class CompareSteps extends HookWidget {
             AppWidgets.chartDescription(
               'Your\'s and other\'s difference in movement before and after working from home.',
             ),
+            PendingComparisons(),
             ShareButton(
               widgets: [
                 AppWidgets.chartDescription(
                   'My change in movement compared to others before and after working from home.',
+                  14,
                 ),
                 CompareAverageChart(share: true),
               ],

@@ -71,13 +71,19 @@ class HealthComparison {
   HealthSummary user;
   HealthSummary others;
   List<HealthSummary> comparisons = [];
+  List<HealthSummary> pendingComparisons = [];
 
   HealthComparison(Map<String, dynamic> json) {
     user = HealthSummary.fromJson('user', json['user']);
     others = HealthSummary.fromJson('others', json['others']);
 
     json.keys.toList().forEach((key) {
-      comparisons.add(HealthSummary.fromJson(key, json[key]));
+      HealthSummary summary = HealthSummary.fromJson(key, json[key]);
+      if (summary.before != null) {
+        comparisons.add(summary);
+      } else {
+        pendingComparisons.add(summary);
+      }
     });
   }
 
@@ -108,14 +114,8 @@ class HealthSummary {
 
   HealthSummary(String _name, Map<String, dynamic> json) {
     name = _name;
-    if (json['before'] != null)
-      before = json['before'].toDouble();
-    else
-      before = 0.0;
-    if (json['after'] != null)
-      after = json['after'].toDouble();
-    else
-      after = 0.0;
+    if (json['before'] != null) before = json['before'].toDouble();
+    if (json['after'] != null) after = json['after'].toDouble();
   }
 
   factory HealthSummary.fromJson(String name, Map<String, dynamic> json) {

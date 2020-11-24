@@ -103,7 +103,8 @@ class Settings extends HookWidget {
         ),
       ),
       if (user.group != null) SizedBox(height: 20),
-      if (user.group != null) GroupCode(),
+      if (user.group != null)
+        GroupCode(key: Key('settings-group-code'), showInfo: false),
     ];
   }
 

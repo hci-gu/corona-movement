@@ -29,9 +29,9 @@ class CompareAverageChart extends HookWidget {
     return RotatedBox(
       quarterTurns: 1,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 30),
+        padding: EdgeInsets.symmetric(vertical: 10),
         child: AspectRatio(
-          aspectRatio: share ? 0.6 : 0.44,
+          aspectRatio: share ? 0.6 : 0.45,
           child: BarChart(
             BarChartData(
               gridData: FlGridData(
@@ -47,7 +47,6 @@ class CompareAverageChart extends HookWidget {
               alignment: BarChartAlignment.spaceEvenly,
               maxY: maxY,
               minY: -maxY,
-              groupsSpace: 12,
               barTouchData: BarTouchData(
                 enabled: false,
                 touchTooltipData: BarTouchTooltipData(
@@ -65,6 +64,7 @@ class CompareAverageChart extends HookWidget {
                       TextStyle(
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10,
                       ),
                     );
                   },
@@ -78,15 +78,20 @@ class CompareAverageChart extends HookWidget {
                   showTitles: true,
                   textStyle: TextStyle(
                     color: AppColors.primaryText,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
-                  margin: 40,
                   rotateAngle: -90,
+                  margin: 100,
                   getTitles: (double value) {
                     String name = comparison.comparisons[value.toInt()].name;
                     if (name == 'user') return 'You';
-                    return '${name[0].toUpperCase()}${name.substring(1, name.length)}';
+                    String capitalized =
+                        '${name[0].toUpperCase()}${name.substring(1, name.length)}';
+                    if (capitalized.length > 16) {
+                      return '${capitalized.substring(0, 16)}..';
+                    }
+                    return capitalized;
                   },
                 ),
               ),
@@ -123,10 +128,9 @@ class CompareAverageChart extends HookWidget {
   }
 
   double maxValue(HealthComparison comparison) {
-    return (max(
-              _diffForSummary(comparison.user).abs(),
-              _diffForSummary(comparison.others).abs(),
-            ) *
+    return (comparison.comparisons.fold(0.0, (double prev, element) {
+              return max(prev, _diffForSummary(element).abs());
+            }) *
             1.4)
         .roundToDouble();
   }

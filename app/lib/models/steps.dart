@@ -142,7 +142,15 @@ int getDaysBetween(String from, String to, List<int> daysToInclude) {
 var totalStepsBeforeAndAfterSelector =
     Selector('total-steps-before-and-after-selector', (GetStateValue get) {
   StepsModel steps = get(stepsAtom);
+  HealthComparison comparison = get(stepsComparisonSelector);
   List<String> dates = get(userDatesSelector);
+
+  if (steps.days.length == 7) {
+    if (comparison == null) {
+      return [0, 0];
+    }
+    return [comparison.user.before.toInt(), comparison.user.after.toInt()];
+  }
 
   var start = dates[0];
   var compareDate = dates[1];

@@ -84,12 +84,14 @@ class AppWidgets {
     );
   }
 
-  static Widget chartDescription(text) {
+  static Widget chartDescription(text, [double fontSize]) {
     return Container(
       padding: EdgeInsets.only(left: 25, right: 25, bottom: 25, top: 5),
       child: Text(
         text,
-        style: TextStyle(),
+        style: TextStyle(
+          fontSize: fontSize != null ? fontSize : 16,
+        ),
         textAlign: TextAlign.center,
       ),
     );

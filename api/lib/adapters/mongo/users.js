@@ -60,7 +60,6 @@ const usersInGroup = async (groupId) =>
   collection.find({ group: groupId }).toArray()
 
 const joinGroup = async ({ id, groupId }) => {
-  console.log('joinGroup', id, groupId)
   const group = await groupsCollection.get(groupId)
 
   if (!group) {

@@ -224,10 +224,18 @@ const summaryForGroup = async (groupId) => {
   const group = await groupsCollection.get(groupId)
   const usersInGroup = await usersCollection.usersInGroup(groupId)
 
-  const summary = await summaryForQuery({
-    id: { $in: usersInGroup.map((u) => u._id.toString()) },
-    type: 'summary',
-  })
+  let summary
+  if (usersInGroup.length > 4) {
+    summary = await summaryForQuery({
+      id: { $in: usersInGroup.map((u) => u._id.toString()) },
+      type: 'summary',
+    })
+  } else {
+    summary = {
+      before: null,
+      after: null,
+    }
+  }
 
   return {
     name: group.name,
