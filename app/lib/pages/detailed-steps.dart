@@ -44,9 +44,9 @@ class DetailedSteps extends HookWidget {
               StepsChart(share: true),
             ],
             text:
-                'This is how people\'s movement has changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
+                'This is how ${user.id == 'all' ? 'people\'s' : 'my'} movement has changed after working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
             subject:
-                'This is how how people\'s movement has changed after working from home.',
+                'This is how how ${user.id == 'all' ? 'people\'s' : 'my'} movement has changed after working from home.',
             screen: 'Before & after',
           ),
         ],

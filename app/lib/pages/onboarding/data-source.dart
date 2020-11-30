@@ -198,18 +198,39 @@ class DataSource extends HookWidget {
   //   );
   // }
 
+  String _dateToString(DateTime date) {
+    return date.toString().substring(0, 10);
+  }
+
   Widget _hasData(BuildContext context, OnboardingModel onboarding,
+      Function register, ValueNotifier consent, Function uploadSteps) {
+    return Column(
+      children: [
+        if (onboarding.dataSource != 'Apple health' ||
+            onboarding.sources.length <= 1)
+          Container(
+            child: Text(
+              'Found data from ${_dateToString(onboarding.initialDataDate)}',
+            ),
+          ),
+        if (onboarding.dataSource == 'Apple health' &&
+            onboarding.sources.length > 1)
+          _appleHealthSourceSelect(onboarding),
+        _consentAndProceed(context, onboarding, register, consent, uploadSteps),
+      ],
+    );
+  }
+
+  Widget _consentAndProceed(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent, Function uploadSteps) {
     if (onboarding.date.isBefore(onboarding.initialDataDate)) {
       return _onlyDataAfterCompareDate(context, onboarding);
     }
+    if (onboarding.date.isAfter(onboarding.lastDataDate)) {
+      return _noDataBeforeCompareDate(context, onboarding);
+    }
     return Column(
       children: [
-        Container(
-          child: Text(
-            'Found data from ${onboarding.initialDataDate.toString().substring(0, 10)}',
-          ),
-        ),
         SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -248,15 +269,56 @@ class DataSource extends HookWidget {
     );
   }
 
+  Widget _appleHealthSourceSelect(OnboardingModel onboarding) {
+    return Column(
+      children: [
+        Text(
+          'Found multiple sources that has put data in Apple Health, please select the one you want to use.',
+        ),
+        DropdownButton(
+          isExpanded: true,
+          hint: Text('Please choose one'),
+          items: onboarding.sources
+              .map((e) => DropdownMenuItem(child: Text(e), value: e))
+              .toList(),
+          value: onboarding.selectedIOSSource,
+          onChanged: (val) => onboarding.setSelectedIOSSource(val),
+        ),
+        Container(
+          child: Text(
+            'Has data from ${_dateToString(onboarding.initialDataDate)} to ${_dateToString(onboarding.lastDataDate)}',
+            style: TextStyle(fontSize: 12),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _noDataBeforeCompareDate(
+      BuildContext context, OnboardingModel onboarding) {
+    return Column(
+      children: [
+        SizedBox(height: 20),
+        Text(
+          'You don\'t have any steps after the date you selected, so we can\'t create a comparison for you. If you want to explore the app anyway, you can go back and pick the option "I don\'t have any steps saved."',
+          style: TextStyle(fontSize: 14),
+        ),
+        SizedBox(height: 25),
+        StyledButton(
+          icon: Icons.arrow_back,
+          title: 'Go back',
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _onlyDataAfterCompareDate(
       BuildContext context, OnboardingModel onboarding) {
     return Column(
       children: [
-        Container(
-          child: Text(
-            'Found steps until ${onboarding.initialDataDate.toString().substring(0, 10)}',
-          ),
-        ),
         SizedBox(height: 20),
         Text(
           'You don\'t have any steps from before the date you selected, so we can\'t create a comparison for you. If you want to explore the app anyway, you can go back and pick the option "I don\'t have any steps saved."',

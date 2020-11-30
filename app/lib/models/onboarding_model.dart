@@ -7,13 +7,19 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/models/user_model.dart';
 
+final String iOSSourceAppleHealth = 'Default Apple Health from device';
+
 class OnboardingModel extends ValueNotifier {
   DateTime date;
   String division;
   String dataSource;
+  List<String> sources = [iOSSourceAppleHealth];
+  String selectedIOSSource = iOSSourceAppleHealth;
+  List<dynamic> allData = [];
   List<dynamic> availableData = [];
   List<dynamic> dataChunks = [];
   DateTime initialDataDate;
+  DateTime lastDataDate;
   String error;
   bool fetching = false;
   bool authorized = false;
@@ -54,10 +60,20 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setAvailableData(List steps, [DateTime date]) {
+  setAvailableData(List steps) {
     availableData = steps;
-    if (date != null) {
-      initialDataDate = date;
+    if (steps.length > 0) {
+      if (dataSource == 'Garmin') {
+        initialDataDate = DateTime.fromMillisecondsSinceEpoch(
+          steps.first['date_from'],
+        );
+        initialDataDate = DateTime.fromMillisecondsSinceEpoch(
+          steps.last['date_from'],
+        );
+      } else {
+        initialDataDate = steps.first.dateFrom;
+        lastDataDate = steps.last.dateFrom;
+      }
     }
     fetching = false;
     loadingMessage = '';
@@ -112,6 +128,23 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
+  setSources(List<String> _sources) {
+    sources = _sources;
+    notifyListeners();
+  }
+
+  setSelectedIOSSource(String value) {
+    selectedIOSSource = value;
+    setAvailableData(allData.where((d) {
+      if (selectedIOSSource == iOSSourceAppleHealth) {
+        return dataPointIsAppleHealth(d);
+      }
+      return d.sourceName == selectedIOSSource;
+    }).toList());
+
+    notifyListeners();
+  }
+
   reset() {
     date = null;
     division = null;
@@ -130,6 +163,10 @@ class OnboardingModel extends ValueNotifier {
   }
 
   static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
+}
+
+bool dataPointIsAppleHealth(HealthDataPoint dataPoint) {
+  return dataPoint.sourceId.toLowerCase().indexOf('com.apple.health') != -1;
 }
 
 int chunkSize = 750;
@@ -208,11 +245,21 @@ Action getAvailableStepsAction = (get) async {
     await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
     List<HealthDataPoint> steps = await getSteps(
         onboarding, now.subtract(Duration(days: 30)), now, [], 3);
-    DateTime initialDataDate;
-    if (steps.length > 0) {
-      initialDataDate = steps[0].dateFrom;
+    List<String> sources = [
+      iOSSourceAppleHealth,
+    ];
+    steps.forEach((dataPoint) {
+      if (!dataPointIsAppleHealth(dataPoint) &&
+          sources.indexOf(dataPoint.sourceName) == -1) {
+        sources.add(dataPoint.sourceName);
+      }
+    });
+    onboarding.allData = steps;
+    onboarding.setAvailableData(steps);
+    if (Platform.isIOS) {
+      onboarding.setSources(sources);
+      onboarding.setSelectedIOSSource(sources.first);
     }
-    onboarding.setAvailableData(steps, initialDataDate);
   } catch (exception) {
     onboarding.setError(exception.toString());
     onboarding.setFetching(false);

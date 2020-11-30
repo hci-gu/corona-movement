@@ -24,6 +24,7 @@ class SyncData extends HookWidget {
         onboarding.dataChunks != null && onboarding.dataChunks.length > 0;
 
     return MainScaffold(
+      displaySnackbars: true,
       child: ListView(
         padding: EdgeInsets.only(bottom: 125, top: 40, left: 25, right: 25),
         children: <Widget>[

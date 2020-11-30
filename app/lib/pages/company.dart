@@ -14,6 +14,7 @@ class CompanyPage extends HookWidget {
   Widget build(BuildContext context) {
     return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Join company', false),
+      displaySnackbars: true,
       child: _body(context),
     );
   }

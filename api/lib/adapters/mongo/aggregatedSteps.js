@@ -12,14 +12,28 @@ const getHoursForEveryone = async ({ from, to }) => {
 
   const usersSteps = (
     await collection
-      .find({
-        id: { $ne: 'all' },
-        type: 'steps',
-      })
+      .aggregate([
+        {
+          $match: {
+            id: { $ne: 'all' },
+            type: 'steps',
+          },
+        },
+      ])
       .toArray()
   ).filter((d) => d.data && d.data.result.length > 2000)
 
-  const usersHours = usersSteps.map((doc) => doc.data.result).flat()
+  const usersHours = usersSteps.reduce((acc, doc) => {
+    doc.data.result.forEach((res) => {
+      const key = res.key
+      if (!acc[key]) {
+        acc[key] = [res.value]
+      } else {
+        acc[key] = [...acc[key], res.value]
+      }
+    })
+    return acc
+  }, {})
 
   const result = dates
     .map((date) =>
@@ -28,11 +42,11 @@ const getHoursForEveryone = async ({ from, to }) => {
       }).map((_, hour) => {
         const pad = (hour) => (hour < 10 ? `0${hour}` : `${hour}`)
         const key = `${date} ${pad(hour)}`
-        const data = usersHours.filter((date) => date.key === key)
+        const data = usersHours[key] ? usersHours[key] : []
         return {
           key,
           value: parseInt(
-            data.reduce((sum, d) => sum + d.value, 0) / (data.length || 1)
+            data.reduce((sum, val) => sum + val, 0) / (data.length || 1)
           ),
         }
       })
@@ -193,7 +207,12 @@ const summaryForQuery = async (query) => {
   try {
     const result = await collection
       .aggregate([
-        { $match: query },
+        {
+          $match: {
+            ...query,
+            'data.before': { $ne: NaN },
+          },
+        },
         {
           $group: {
             _id: 'id',

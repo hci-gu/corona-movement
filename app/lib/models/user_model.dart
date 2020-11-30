@@ -8,6 +8,8 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/api/responses.dart';
 
+import 'app_model.dart';
+
 class User extends ValueNotifier {
   bool unlocked = false;
   bool inited = false;
@@ -298,12 +300,16 @@ Action unlockAction = (get) async {
 
 Action joinGroupAction = (get) async {
   User user = get(userAtom);
+  AppModel appModel = get(appModelAtom);
   user.setLoading(true);
 
-  Group group = await api.getAndjoinGroup(user.groupCode, user.id);
-
-  if (group != null) {
-    user.setGroup(group);
+  try {
+    Group group = await api.getAndjoinGroup(user.groupCode, user.id);
+    if (group != null) {
+      user.setGroup(group);
+    }
+  } catch (e) {
+    appModel.setSnackMessage('Could not find a group for this code.');
   }
 
   user.setLoading(false);

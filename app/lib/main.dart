@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:feedback/feedback.dart';
@@ -21,6 +22,7 @@ import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 import 'api/utils.dart';
+import 'models/app_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

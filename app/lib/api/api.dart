@@ -47,6 +47,8 @@ Future postData(
       data['date_to'] = point.dateTo.millisecondsSinceEpoch;
       data['data_type'] = point.type.toString();
       data['platform_type'] = point.platform.toString();
+      data['ios_source_name'] = point.sourceName;
+      data['ios_source_bundle_id'] = point.sourceId;
       return data;
     }).toList(),
     createAggregation,

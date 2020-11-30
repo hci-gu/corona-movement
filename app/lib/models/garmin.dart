@@ -54,13 +54,7 @@ Action garminGetAvailableData = (get) async {
   GarminModel model = get(garminAtom);
   List<Map<String, dynamic>> steps =
       await model.client.fetchSteps(StepsModel.fromDate);
-  DateTime initialDataDate;
-  if (steps.length > 0) {
-    initialDataDate = DateTime.fromMillisecondsSinceEpoch(
-      steps[0]['date_from'],
-    );
-  }
-  onboarding.setAvailableData(steps, initialDataDate);
+  onboarding.setAvailableData(steps);
 };
 
 Future syncHealthData(GarminClient garminClient, OnboardingModel onboarding,
