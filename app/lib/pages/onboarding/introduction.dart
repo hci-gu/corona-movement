@@ -1,10 +1,8 @@
-import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/widgets/button.dart';

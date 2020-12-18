@@ -2,7 +2,6 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:dio_retry/dio_retry.dart';
-import 'package:health/health.dart';
 
 class GarminException implements Exception {
   String message;
