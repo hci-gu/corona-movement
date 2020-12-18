@@ -95,7 +95,7 @@ class DataSource extends HookWidget {
     if (!onboarding.authorized) {
       return _getAccess(context, onboarding, getHealthAuthorization);
     }
-    if (onboarding.availableData.length > 500 ||
+    if ((onboarding.availableData.length > 500) ||
         (onboarding.dataSource == 'Garmin' &&
             onboarding.initialDataDate != null)) {
       return _hasData(context, onboarding, register, consent, uploadSteps);
@@ -206,16 +206,11 @@ class DataSource extends HookWidget {
       Function register, ValueNotifier consent, Function uploadSteps) {
     return Column(
       children: [
-        if (onboarding.dataSource != 'Apple health' ||
-            onboarding.sources.length <= 1)
-          Container(
-            child: Text(
-              'Found data from ${_dateToString(onboarding.initialDataDate)}',
-            ),
+        Container(
+          child: Text(
+            'Found data from ${_dateToString(onboarding.initialDataDate)}',
           ),
-        if (onboarding.dataSource == 'Apple health' &&
-            onboarding.sources.length > 1)
-          _appleHealthSourceSelect(onboarding),
+        ),
         _consentAndProceed(context, onboarding, register, consent, uploadSteps),
       ],
     );
@@ -263,31 +258,6 @@ class DataSource extends HookWidget {
                 Navigator.of(context).pop();
               }
             },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _appleHealthSourceSelect(OnboardingModel onboarding) {
-    return Column(
-      children: [
-        Text(
-          'Found multiple sources that has put data in Apple Health, please select the one you want to use.',
-        ),
-        DropdownButton(
-          isExpanded: true,
-          hint: Text('Please choose one'),
-          items: onboarding.sources
-              .map((e) => DropdownMenuItem(child: Text(e), value: e))
-              .toList(),
-          value: onboarding.selectedIOSSource,
-          onChanged: (val) => onboarding.setSelectedIOSSource(val),
-        ),
-        Container(
-          child: Text(
-            'Has data from ${_dateToString(onboarding.initialDataDate)} to ${_dateToString(onboarding.lastDataDate)}',
-            style: TextStyle(fontSize: 12),
           ),
         ),
       ],

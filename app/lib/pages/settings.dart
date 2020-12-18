@@ -88,7 +88,7 @@ class Settings extends HookWidget {
           child: StyledButton(
             key: Key('settings-join-company'),
             icon: Icons.perm_identity,
-            title: 'Join company',
+            title: 'Join group',
             onPressed: () => _onJoinCompanyPressed(context),
           ),
         ),
@@ -200,7 +200,7 @@ class Settings extends HookWidget {
   void _onJoinCompanyPressed(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => CompanyPage(),
-      settings: RouteSettings(name: 'Join company'),
+      settings: RouteSettings(name: 'Join group'),
     ));
   }
 }

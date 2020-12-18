@@ -74,7 +74,10 @@ class DaysBarChart extends HookWidget {
   }
 
   double _scrollOffsetForDays(days, compareDate) {
-    var day = days.firstWhere((day) => compareDate.compareTo(day['date']) == 0);
+    var day = days.firstWhere(
+      (day) => compareDate.compareTo(day['date']) == 0,
+      orElse: () => null,
+    );
     int index = day != null ? days.indexOf(day) : 0;
     return index * barWidth - 50;
   }

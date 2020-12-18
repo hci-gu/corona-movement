@@ -7,15 +7,10 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/models/user_model.dart';
 
-final String iOSSourceAppleHealth = 'Default Apple Health from device';
-
 class OnboardingModel extends ValueNotifier {
   DateTime date;
   String division;
   String dataSource;
-  List<String> sources = [iOSSourceAppleHealth];
-  String selectedIOSSource = iOSSourceAppleHealth;
-  List<dynamic> allData = [];
   List<dynamic> availableData = [];
   List<dynamic> dataChunks = [];
   DateTime initialDataDate;
@@ -128,23 +123,6 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setSources(List<String> _sources) {
-    sources = _sources;
-    notifyListeners();
-  }
-
-  setSelectedIOSSource(String value) {
-    selectedIOSSource = value;
-    setAvailableData(allData.where((d) {
-      if (selectedIOSSource == iOSSourceAppleHealth) {
-        return dataPointIsAppleHealth(d);
-      }
-      return d.sourceName == selectedIOSSource;
-    }).toList());
-
-    notifyListeners();
-  }
-
   reset() {
     date = null;
     division = null;
@@ -163,10 +141,6 @@ class OnboardingModel extends ValueNotifier {
   }
 
   static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
-}
-
-bool dataPointIsAppleHealth(HealthDataPoint dataPoint) {
-  return dataPoint.sourceId.toLowerCase().indexOf('com.apple.health') != -1;
 }
 
 int chunkSize = 750;
@@ -200,12 +174,13 @@ Future<List<HealthDataPoint>> getSteps(
     to,
     [HealthDataType.STEPS],
   );
-
+  if (Platform.isIOS) {
+    steps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
+    return steps;
+  }
   if (steps.length > 0) {
     totalSteps.addAll(steps);
-    DateTime oldestFetch = DateTime.now().subtract(Duration(
-      days: 365 * (Platform.operatingSystem == 'android' ? 2 : 3),
-    ));
+    DateTime oldestFetch = DateTime.now().subtract(Duration(days: 365 * 2));
     DateTime initialDataDate = steps.first.dateFrom;
     if (from.isBefore(oldestFetch)) {
       totalSteps.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
@@ -244,22 +219,15 @@ Action getAvailableStepsAction = (get) async {
     await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
     await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
     List<HealthDataPoint> steps = await getSteps(
-        onboarding, now.subtract(Duration(days: 30)), now, [], 3);
-    List<String> sources = [
-      iOSSourceAppleHealth,
-    ];
-    steps.forEach((dataPoint) {
-      if (!dataPointIsAppleHealth(dataPoint) &&
-          sources.indexOf(dataPoint.sourceName) == -1) {
-        sources.add(dataPoint.sourceName);
-      }
-    });
-    onboarding.allData = steps;
+      onboarding,
+      now.subtract(Duration(
+        days: Platform.operatingSystem == 'android' ? 30 : 365 * 2,
+      )),
+      now,
+      [],
+      3,
+    );
     onboarding.setAvailableData(steps);
-    if (Platform.isIOS) {
-      onboarding.setSources(sources);
-      onboarding.setSelectedIOSSource(sources.first);
-    }
   } catch (exception) {
     onboarding.setError(exception.toString());
     onboarding.setFetching(false);

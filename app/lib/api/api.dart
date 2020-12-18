@@ -11,7 +11,7 @@ import 'package:wfhmovement/models/form_model.dart';
 
 // const API_URL = 'http://10.0.2.2:4000';
 const API_URL = 'http://192.168.0.32:4000';
-const API_KEY = 'some-key';
+const API_KEY = 'ce7ac28d-1823-4e2a-b2d5-c3b1346589b9';
 // const API_URL = 'https://api.mycoronamovement.com';
 
 Future postJsonData(String userId, List<Map<String, dynamic>> data,
@@ -47,8 +47,6 @@ Future postData(
       data['date_to'] = point.dateTo.millisecondsSinceEpoch;
       data['data_type'] = point.type.toString();
       data['platform_type'] = point.platform.toString();
-      data['ios_source_name'] = point.sourceName;
-      data['ios_source_bundle_id'] = point.sourceId;
       return data;
     }).toList(),
     createAggregation,

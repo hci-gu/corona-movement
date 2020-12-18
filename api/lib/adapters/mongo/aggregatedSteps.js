@@ -133,7 +133,7 @@ const saveSteps = async ({ id, timezone }) => {
           key,
         }
       })
-    if (dates.length > 1) {
+    if (dates.length > 0) {
       data.result = [...data.result, ...dates].sort(sortSteps)
     }
   }
@@ -211,6 +211,7 @@ const summaryForQuery = async (query) => {
           $match: {
             ...query,
             'data.before': { $ne: NaN },
+            'data.after': { $ne: NaN },
           },
         },
         {
@@ -257,7 +258,7 @@ const summaryForGroup = async (groupId) => {
   }
 
   return {
-    name: group.name,
+    name: group ? group.name : 'group error',
     data: summary,
   }
 }

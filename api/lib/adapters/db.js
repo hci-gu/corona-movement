@@ -12,7 +12,7 @@ const transformHealthData = (healthDataPoint) => {
 
   return {
     value: healthDataPoint.value,
-    platform: healthDataPoint.platform,
+    platform: healthDataPoint.platform_type,
     date: moment(date).valueOf(),
     dateFrom: healthDataPoint.date_from,
     duration,

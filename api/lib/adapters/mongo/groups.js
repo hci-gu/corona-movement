@@ -10,7 +10,7 @@ const create = async ({ name }) => {
   return group.ops[0]
 }
 
-const getGroupFromCode = async ({ code }) => collection.findOne({ code })
+const getGroupFromCode = async ({ code = '' }) => collection.findOne({ code })
 
 const get = (id) => collection.findOne({ _id: ObjectId(id) })
 

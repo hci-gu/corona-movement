@@ -13,7 +13,7 @@ class CompanyPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Join company', false),
+      appBar: AppWidgets.appBar(context, 'Join group', false),
       displaySnackbars: true,
       child: _body(context),
     );
