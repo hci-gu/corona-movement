@@ -36,6 +36,16 @@ router.get('/:id/hours', async (req, res) => {
 
   res.send(data)
 })
+router.get('/period', async (req, res) => {
+  const {
+    from = moment().subtract('6', 'months').format(),
+    to = moment().format(),
+  } = req.query
+
+  const data = await db.getAverageStepsForPeriod({ from, to })
+
+  res.send(data)
+})
 router.get('/:id/summary', async (req, res) => {
   const { id } = req.params
   console.log('GET summary', id)

@@ -34,6 +34,15 @@ const getBusinessDaysBetween = (fromDateString, toDateString) => {
   return to.diff(from, 'days') + getDaysDiffFromWeeks(from, to)
 }
 
+const countCertainDays = (days, d0, d1) => {
+  var ndays = 1 + Math.round((d1 - d0) / (24 * 3600 * 1000))
+  var sum = function (a, b) {
+    return a + Math.floor((ndays + ((d0.getDay() + 6 - b) % 7)) / 7)
+  }
+  return days.reduce(sum, 0)
+}
+
 module.exports = {
   getBusinessDaysBetween,
+  countCertainDays,
 }

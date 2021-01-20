@@ -1,5 +1,6 @@
 const moment = require('moment')
 const userCollection = require('./users')
+const { countCertainDays } = require('../../utils/date')
 const COLLECTION = 'steps'
 let collection
 
@@ -45,6 +46,91 @@ const getQuery = ({ id, from, to, weekDays }) => {
   }
 
   return query
+}
+
+const getHoursForDay = async ({
+  id,
+  day,
+  from,
+  to,
+  timezone = 'Europe/Stockholm',
+}) => {
+  const result = await collection
+    .aggregate([
+      {
+        $match: {
+          date: {
+            $gte: new Date(from),
+            $lt: new Date(to),
+          },
+          day,
+          id,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%H',
+              date: '$date',
+              timezone,
+            },
+          },
+          value: { $sum: '$value' },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ])
+    .toArray()
+
+  const numDays = countCertainDays([day], new Date(from), new Date(to))
+  const map = result.reduce((acc, curr) => {
+    acc[parseInt(curr._id)] = {
+      hour: parseInt(curr._id),
+      value: Math.round(curr.value / numDays),
+    }
+    return acc
+  }, {})
+
+  return Array.from({ length: 24 }).map((_, i) => ({
+    hour: i,
+    value: 0,
+    ...map[i],
+  }))
+}
+
+const getDaysForUser = async ({ id, timezone = 'Europe/Stockholm' }) => {
+  const result = await collection
+    .aggregate([
+      {
+        $match: {
+          id,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$date',
+              timezone,
+            },
+          },
+          value: { $sum: '$value' },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ])
+    .toArray()
+
+  return result.map((d) => ({
+    date: d._id,
+    value: d.value,
+  }))
 }
 
 const getHours = async ({ id, from, to, timezone = 'Europe/Stockholm' }) => {
@@ -107,6 +193,32 @@ const getAverageStepsForUser = async ({ id, from, to, daysToPeriod = 0 }) => {
     period,
     total,
     value: parseInt(total / period),
+  }
+}
+
+const getAverageStepsForPeriod = async ({ from, to, daysToPeriod = 0 }) => {
+  const result = await collection
+    .aggregate([
+      {
+        $match: getQuery({ from, to, id: 'all' }),
+      },
+      {
+        $group: {
+          _id: 'total',
+          value: { $sum: '$value' },
+        },
+      },
+    ])
+    .toArray()
+  const numUsers = await userCollection.count({})
+
+  const period = moment(to).diff(moment(from), 'days') + daysToPeriod
+  let total = result.length ? result[0].value : 0
+
+  return {
+    period,
+    total,
+    value: parseInt(total / period / numUsers),
   }
 }
 
@@ -181,4 +293,7 @@ module.exports = {
   removeStepsForUser,
   getTotalSteps,
   insertSteps,
+  getAverageStepsForPeriod,
+  getHoursForDay,
+  getDaysForUser,
 }

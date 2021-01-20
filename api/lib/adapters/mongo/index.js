@@ -42,6 +42,9 @@ module.exports = {
   removeStepsForUser: stepsCollection.removeStepsForUser,
   getTotalSteps: stepsCollection.getTotalSteps,
   insertSteps: stepsCollection.insertSteps,
+  getAverageStepsForPeriod: stepsCollection.getAverageStepsForPeriod,
+  getAverageDayForPeriod: stepsCollection.getHoursForDay,
+  getDaysForUser: stepsCollection.getDaysForUser,
   // aggregatedSteps
   saveAggregatedSteps: aggregatedStepsCollection.saveSteps,
   saveAggregatedSummary: aggregatedStepsCollection.saveSummary,
