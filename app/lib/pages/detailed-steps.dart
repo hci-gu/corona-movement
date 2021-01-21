@@ -21,9 +21,8 @@ class DetailedSteps extends HookWidget {
     return MainScaffold(
       appBar: AppWidgets.appBar(context, 'Before & after', true),
       child: ListView(
-        padding: EdgeInsets.only(top: 25),
+        padding: EdgeInsets.only(top: 15),
         children: [
-          DaySelect(),
           StepsDifference(),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -38,6 +37,7 @@ class DetailedSteps extends HookWidget {
                 ? 'Above you can see how working from home has affected how people move throughout the day.'
                 : 'Above you can see how your activity has changed over a typical day before and after working from home.',
           ),
+          DaySelect(),
           ShareButton(
             widgets: [
               StepsDifference(share: true),

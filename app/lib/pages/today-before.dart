@@ -23,9 +23,11 @@ class TodayBefore extends HookWidget {
 
 class TodayBeforeText extends HookWidget {
   final EdgeInsets padding;
+  final bool preview;
 
   TodayBeforeText({
     this.padding = const EdgeInsets.all(25),
+    this.preview = false,
   });
 
   @override
@@ -47,16 +49,17 @@ class TodayBeforeText extends HookWidget {
           SizedBox(
             height: 50,
           ),
-          ShareButton(
-            widgets: [
-              _description(stepsToday, typicalSteps, true),
-            ],
-            text:
-                'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
-            subject:
-                'This is how my movement have changed after working from home.',
-            screen: 'Today & before',
-          ),
+          if (!preview)
+            ShareButton(
+              widgets: [
+                _description(stepsToday, typicalSteps, true),
+              ],
+              text:
+                  'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
+              subject:
+                  'This is how my movement have changed after working from home.',
+              screen: 'Today & before',
+            ),
         ],
       ),
     );

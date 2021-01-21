@@ -137,7 +137,9 @@ var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
   return [
     user.initialDataDate.toIso8601String().substring(0, 10),
     user.compareDate.toIso8601String().substring(0, 10),
-    DateTime.now().toIso8601String().substring(0, 10),
+    user.latestUploadDate != null
+        ? user.latestUploadDate.toIso8601String().substring(0, 10)
+        : DateTime.now().toIso8601String().substring(0, 10),
   ];
 });
 
@@ -147,8 +149,8 @@ Action initAction = (get) async {
   FormModel form = get(formAtom);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  // String userId = prefs.getString('id');
-  String userId = '5fd34dfe5274a60009658963';
+  String userId = prefs.getString('id');
+
   if (userId != null) {
     UserResponse response;
     if (userId == 'all') {

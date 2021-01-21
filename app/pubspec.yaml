@@ -1,7 +1,7 @@
 name: wfhmovement
 description: A new Flutter project.
 
-version: 1.9.8+48
+version: 1.9.10+50
 
 environment:
   sdk: '>=2.5.2 <3.0.0'
@@ -35,6 +35,7 @@ dependencies:
   pull_to_refresh: ^1.6.2
   flutter_native_timezone: ^1.0.4
   uni_links: ^0.4.0
+  clipboard: ^0.1.2+8
 
 dev_dependencies:
   flutter_test:

@@ -178,6 +178,7 @@ class Home extends HookWidget {
               child: Hero(
                 tag: 'today-before',
                 child: TodayBeforeText(
+                  preview: true,
                   padding: EdgeInsets.symmetric(
                     horizontal: 50,
                     vertical: 75,
