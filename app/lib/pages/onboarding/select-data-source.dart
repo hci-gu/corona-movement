@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/select-data-source.i18n.dart';
+
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class SelectDataSource extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Select data source', false),
+      appBar: AppWidgets.appBar(context, 'Select data source'.i18n, false),
       child: _body(context),
     );
   }
@@ -34,7 +36,7 @@ class SelectDataSource extends HookWidget {
         _textInfo(context),
         SizedBox(height: 20),
         Text(
-          'Please select where you keep your step data.',
+          'Please select where you keep your step data.'.i18n,
           style: TextStyle(fontSize: 14),
           textAlign: TextAlign.center,
         ),
@@ -45,7 +47,7 @@ class SelectDataSource extends HookWidget {
         Card(
           child: ListTile(
             title: Text(
-              'I don\'t have any steps saved.',
+              'I don\'t have any steps saved.'.i18n,
             ),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () {
@@ -73,7 +75,8 @@ class SelectDataSource extends HookWidget {
           ),
           Expanded(
             child: Text(
-              'For us to tell you how your moment patterns have changed we need access to your step data.',
+              'For us to tell you how your moment patterns have changed we need access to your step data.'
+                  .i18n,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -83,8 +86,9 @@ class SelectDataSource extends HookWidget {
       ),
       onTap: () => AppWidgets.showAlert(
         context,
-        'Selecting a data source',
-        'The app will fetch data from a source where you may have step data. Some people with android use google fitness (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.',
+        'Selecting a data source'.i18n,
+        'The app will fetch data from a source where you may have step data. Some people with android use google fitness (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.'
+            .i18n,
       ),
     );
   }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/style.dart';
-import 'package:wfhmovement/widgets/company_code.dart';
+import 'package:wfhmovement/widgets/group_code.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
-class CompanyPage extends HookWidget {
+class GroupPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(

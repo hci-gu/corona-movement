@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:wfhmovement/i18n/data-source.i18n.dart';
 
-import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -50,12 +50,14 @@ class DataSource extends HookWidget {
               ),
             ),
             Text(
-              'This app is part of an exploratory research project at the University of Gothenburg investigating the impact of the pandemic on our physical movement. For this purpose, we will collect and store the following data:',
+              'This app is part of an exploratory research project at the University of Gothenburg investigating the impact of the pandemic on our physical movement. For this purpose, we will collect and store the following data:'
+                  .i18n,
               style: TextStyle(fontSize: 12),
             ),
             _dataInformation(context, onboarding.dataSource),
             Text(
-              'Any data stored will be removed upon opting out of the study by deleting your account.',
+              'Any data stored will be removed upon opting out of the study by deleting your account.'
+                  .i18n,
               style: TextStyle(fontSize: 12),
             ),
             SizedBox(height: 20),
@@ -108,14 +110,18 @@ class DataSource extends HookWidget {
 
   Widget _dataInformation(BuildContext context, String dataSource) {
     final List<String> entries = [
-      'Step data',
-      'Demographic data',
-      'App interactions'
+      'Step data'.i18n,
+      'Demographic data'.i18n,
+      'App interactions'.i18n
     ];
     final List<String> descriptions = [
-      'Collected from $dataSource.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for working from home. ( for comparisons before/after )',
-      'The following points are collected by filling out the form in the next step:\n\n- Gender\n- Age range\n- Education\n- Profession\n- Company/organisation',
+      'Collected from %s.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for working from home. ( for comparisons before/after )'
+          .i18n
+          .fill([dataSource]),
+      'The following points are collected by filling out the form in the next step:\n\n- Gender\n- Age range\n- Education\n- Profession'
+          .i18n,
       'Automatically sent via app usage.\n\n- App open/close\n- Navigating through views\n- Sync steps button pressed\n- Change work from home date\n- Day selection in Before & after\n- Using share feature'
+          .i18n
     ];
 
     return Container(
@@ -159,26 +165,30 @@ class DataSource extends HookWidget {
     return Column(
       children: [
         Text(
-          'To proceeed you must grant access for us to retrieve data from ${onboarding.dataSource}.',
+          'To proceeed you must grant access for us to retrieve data from %s.'
+              .i18n
+              .fill([onboarding.dataSource]),
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 25),
         if (onboarding.dataSource == 'Garmin') GarminLogin(),
         StyledButton(
           icon: Icons.check,
-          title: 'Give access',
+          title: 'Give access'.i18n,
           onPressed: () async {
             if (onboarding.dataSource == 'Apple health') {
               if (Platform.operatingSystem == 'android') {
                 return AppWidgets.showAlert(
                   context,
                   'Apple health',
-                  'Apple health is not available on an Android device.',
+                  'Apple health is not available on an Android device.'.i18n,
                 );
               }
-              AppWidgets.showConfirmDialog(context, 'Apple health',
-                  'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow.',
-                  () {
+              AppWidgets.showConfirmDialog(
+                  context,
+                  'Apple health',
+                  'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow.'
+                      .i18n, () {
                 getHealthAuthorization();
               });
             } else {
@@ -189,14 +199,6 @@ class DataSource extends HookWidget {
       ],
     );
   }
-
-  // void _authorizeFitbit() async {
-  //   final result = await FlutterWebAuth.authenticate(
-  //     url:
-  //         'https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=22BSFZ&redirect_uri=https%3A%2F%2Fapi.mycoronamovement.com%2Ffitbit%2Fcallback&scope=activity&expires_in=604800',
-  //     callbackUrlScheme: 'wfhmovement',
-  //   );
-  // }
 
   String _dateToString(DateTime date) {
     return date.toString().substring(0, 10);

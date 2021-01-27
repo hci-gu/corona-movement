@@ -18,8 +18,8 @@ class OnboardingModel extends ValueNotifier {
   String error;
   bool fetching = false;
   bool authorized = false;
-  bool gaveConsent = false;
-  bool uploading = false;
+  bool gaveConsent = true;
+  bool uploading = true;
   bool done = false;
   HealthFactory health;
   String loadingMessage;

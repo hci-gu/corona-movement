@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:feedback/feedback.dart';
+import 'package:i18n_extension/i18n_widget.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -54,13 +56,25 @@ class App extends StatelessWidget {
           enableLoadingWhenFailed: true,
           enableBallisticLoad: true,
           child: MaterialApp(
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('en', 'US'),
+              Locale('sv', 'SE'),
+            ],
             title: 'Work from home movement',
             theme: ThemeData(
               fontFamily: 'Poppins',
               primarySwatch: Colors.amber,
             ),
             debugShowCheckedModeBanner: false,
-            home: ScreenSelector(),
+            home: I18n(
+              child: ScreenSelector(),
+              initialLocale: Locale('sv', 'SE'),
+            ),
           ),
         ),
         onFeedback: (

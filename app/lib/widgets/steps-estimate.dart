@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/widgets/steps-estimate.i18n.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -31,13 +33,14 @@ class StepsEstimate extends HookWidget {
   List<Widget> giveEstimate(BuildContext context, User user, updateEstimate) {
     return [
       Text(
-        'How much do you think your movement have changed?',
+        'How much do you think your movement have changed?'.i18n,
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
       SizedBox(height: 25),
       Text(
-        'Use the slider below to give an estimate of how much you think your average daily steps have changed.',
+        'Use the slider below to give an estimate of how much you think your average daily steps have changed.'
+            .i18n,
       ),
       SizedBox(height: 15),
       Text(
@@ -56,7 +59,7 @@ class StepsEstimate extends HookWidget {
       SizedBox(height: 20),
       StyledButton(
         icon: Icons.check,
-        title: 'Set estimate',
+        title: 'Set estimate'.i18n,
         onPressed: () {
           user.setGaveEstimate(true);
           updateEstimate();
@@ -76,7 +79,7 @@ class StepsEstimate extends HookWidget {
       StyledButton(
         key: Key('redo estimate'),
         icon: Icons.undo,
-        title: 'Redo estimate',
+        title: 'Redo estimate'.i18n,
         onPressed: () => user.setGaveEstimate(false),
         secondary: true,
       ),
@@ -85,8 +88,13 @@ class StepsEstimate extends HookWidget {
 
   String textForEstimate(double estimate) {
     if (estimate == 0) {
-      return 'No change';
+      return 'No change'.i18n;
     }
-    return 'I\'m moving ${(estimate * 100).abs().toStringAsFixed(1)}% ${estimate > 0 ? 'more' : 'less'}.';
+    String estimateString = '${(estimate * 100).abs().toStringAsFixed(1)}%';
+
+    if (estimate > 0) {
+      return 'I\'m moving %s more.'.i18n.fill([estimateString]);
+    }
+    return 'I\'m moving %s less.'.i18n.fill([estimateString]);
   }
 }

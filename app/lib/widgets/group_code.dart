@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/widgets/group_code.i18n.dart';
+
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +38,7 @@ class GroupCode extends HookWidget {
     return [
       Flexible(
         child: UserFormField(
-          name: 'Group code',
+          name: 'Group code'.i18n,
           headerInfo: showInfo ? _info(context) : null,
           child: _freeForm(
             controller,
@@ -71,8 +73,9 @@ class GroupCode extends HookWidget {
     return GestureDetector(
       onTap: () => AppWidgets.showAlert(
         context,
-        'Joining a group',
-        'If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se',
+        'Joining a group'.i18n,
+        'If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se'
+            .i18n,
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 5),
@@ -90,7 +93,7 @@ class GroupCode extends HookWidget {
       child: StyledButton(
         key: Key('group-code-join'),
         icon: Icons.done,
-        title: 'Join',
+        title: 'Join'.i18n,
         onPressed: () {
           if (!user.loading) joinGroup();
         },
@@ -106,7 +109,7 @@ class GroupCode extends HookWidget {
         key: Key('group-code-leave'),
         icon: Icons.close,
         secondary: true,
-        title: 'Leave',
+        title: 'Leave'.i18n,
         onPressed: () {
           if (!user.loading) leaveGroup();
         },
@@ -119,7 +122,7 @@ class GroupCode extends HookWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Code to join a group (optional)',
+        hintText: 'Code to join a group (optional)'.i18n,
       ),
       onChanged: (val) => onChange(val),
     );

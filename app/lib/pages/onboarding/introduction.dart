@@ -1,9 +1,11 @@
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
+import 'package:wfhmovement/i18n/introduction.i18n.dart';
+
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
@@ -12,15 +14,6 @@ class Introduction extends HookWidget {
   @override
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
-    User user = useModel(userAtom);
-    var code = useTextEditingController(text: user.code);
-    var unlock = useAction(unlockAction);
-    var shouldUnlock = useAction(shouldUnlockAction);
-    useEffect(() {
-      shouldUnlock();
-      return;
-    }, []);
-
     return MainScaffold(
       child: Center(
         child: Container(
@@ -34,7 +27,7 @@ class Introduction extends HookWidget {
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Have your movement patterns changed?',
+                'Have your movement patterns changed?'.i18n,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
                 textAlign: TextAlign.center,
               ),
@@ -45,65 +38,11 @@ class Introduction extends HookWidget {
                   height: 150,
                 ),
               ),
-              user.unlocked
-                  ? pickDateWidget(context, onboarding)
-                  : unlockWidget(user, code, unlock)
+              pickDateWidget(context, onboarding)
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget unlockWidget(user, code, unlock) {
-    if (user.loading) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    return Column(
-      children: [
-        SizedBox(height: 50),
-        Text(
-          'This app is currently not available to everyone but can be unlocked with a code.',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
-        ),
-        TextField(
-          controller: code,
-          keyboardType: TextInputType.text,
-          onChanged: (value) {
-            user.setCode(value);
-          },
-          decoration: InputDecoration(
-            hintText: 'Your code',
-          ),
-        ),
-        SizedBox(height: 20),
-        StyledButton(
-          iconWidget: user.loading
-              ? Container(
-                  padding: EdgeInsets.all(10),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                    ),
-                  ))
-              : null,
-          icon: user.code.length > 0 ? Icons.lock_open : Icons.lock_outline,
-          title: 'Unlock',
-          onPressed: () {
-            unlock();
-          },
-        ),
-        SizedBox(height: 20),
-        Text('Interested in trying? Email:'),
-        SizedBox(height: 5),
-        SelectableText(
-          'wfhmovement@gmail.com',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      ],
     );
   }
 
@@ -114,14 +53,14 @@ class Introduction extends HookWidget {
           height: 50,
         ),
         Text(
-          'Begin by picking the day you started working from home.',
+          'Begin by picking the day you started working from home.'.i18n,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20),
         StyledButton(
           icon: Icons.date_range,
-          title: 'Select date',
+          title: 'Select date'.i18n,
           onPressed: () => _onSelectDatePressed(context, onboarding),
         ),
         SizedBox(height: 20),
@@ -135,6 +74,7 @@ class Introduction extends HookWidget {
 
   void _onSelectDatePressed(BuildContext context, onboarding) async {
     var date = await showDatePicker(
+      locale: I18n.of(context).locale,
       context: context,
       initialDate: DateTime.parse('2020-03-01'),
       firstDate: DateTime.parse('2010-01-01'),

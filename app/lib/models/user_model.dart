@@ -11,7 +11,6 @@ import 'package:wfhmovement/api/responses.dart';
 import 'app_model.dart';
 
 class User extends ValueNotifier {
-  bool unlocked = false;
   bool inited = false;
   String id;
   DateTime compareDate;
@@ -30,11 +29,6 @@ class User extends ValueNotifier {
 
   User() : super(null);
 
-  setUnlocked() {
-    unlocked = true;
-    notifyListeners();
-  }
-
   setCode(String value) {
     code = value;
     notifyListeners();
@@ -47,7 +41,6 @@ class User extends ValueNotifier {
         response.initialDataDate.isAfter(DateTime.parse('2020-01-01'))) {
       initialDataDate = response.initialDataDate.add(Duration(days: 1));
     }
-    unlocked = true;
     notifyListeners();
   }
 
@@ -109,7 +102,6 @@ class User extends ValueNotifier {
 
   reset() {
     inited = true;
-    unlocked = true;
     id = null;
     compareDate = null;
     latestUploadDate = null;
@@ -288,19 +280,6 @@ Action syncStepsAction = (get) async {
   }
 };
 
-Action unlockAction = (get) async {
-  User user = get(userAtom);
-  user.setLoading(true);
-
-  bool unlock = await api.unlock(user.code);
-
-  if (unlock) {
-    user.setUnlocked();
-  }
-
-  user.setLoading(false);
-};
-
 Action joinGroupAction = (get) async {
   User user = get(userAtom);
   AppModel appModel = get(appModelAtom);
@@ -338,18 +317,6 @@ Action updateEstimateAction = (get) async {
 
   await api.updateUserEstimate(user.id, user.stepsEstimate);
 
-  user.setLoading(false);
-};
-
-Action shouldUnlockAction = (get) async {
-  User user = get(userAtom);
-  user.setLoading(true);
-
-  bool locked = await api.shouldUnlock();
-
-  if (!locked) {
-    user.setUnlocked();
-  }
   user.setLoading(false);
 };
 

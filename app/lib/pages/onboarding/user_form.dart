@@ -1,9 +1,11 @@
+import 'package:wfhmovement/i18n/user_form.i18n.dart';
+
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:wfhmovement/widgets/company_code.dart';
+import 'package:wfhmovement/widgets/group_code.dart';
 
 class UserFormField extends StatelessWidget {
   final Widget child;
@@ -50,36 +52,36 @@ class UserForm extends HookWidget {
     return Column(
       children: <Widget>[
         UserFormField(
-          name: 'Country',
+          name: 'Country'.i18n,
           child: Row(children: [
             CountryListPick(
               isShowFlag: true,
               isShowTitle: true,
               isShowCode: false,
               isDownIcon: true,
-              showEnglishName: true,
+              showEnglishName: false,
               initialSelection: '+46',
               onChanged: (CountryCode code) => form.setCountry(code.name),
             ),
           ]),
         ),
         UserFormField(
-          name: 'Gender',
+          name: 'Gender'.i18n,
           child: _dropDown(
               FormModel.genderChoices, 'gender', form.gender, form.setField),
         ),
         UserFormField(
-          name: 'Age range',
+          name: 'Age range'.i18n,
           child: _dropDown(
               FormModel.ageRanges, 'ageRange', form.ageRange, form.setField),
         ),
         UserFormField(
-          name: 'Education',
+          name: 'Education'.i18n,
           child: _dropDown(
               FormModel.educations, 'education', form.education, form.setField),
         ),
         UserFormField(
-          name: 'Occupation',
+          name: 'Occupation'.i18n,
           child: _freeForm('occupation', form.occupation, form.setField),
         ),
         GroupCode(key: Key('userForm')),
@@ -90,7 +92,7 @@ class UserForm extends HookWidget {
   Widget _dropDown(List values, String type, String value, onChange) {
     return DropdownButton(
       isExpanded: true,
-      hint: Text('Please choose one'),
+      hint: Text('Please choose one'.i18n),
       items: [
         ...values
             .map((e) => DropdownMenuItem(child: Text(e), value: e))
@@ -107,7 +109,7 @@ class UserForm extends HookWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Your $type (optional)',
+        hintText: 'Your occupation (optional)'.i18n,
       ),
       onChanged: (val) => onChange(type, val),
     );

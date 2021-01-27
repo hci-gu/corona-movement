@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/sync-data.i18n.dart';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
@@ -40,8 +42,10 @@ class SyncData extends HookWidget {
               Expanded(
                 child: AutoSizeText(
                   isUploading
-                      ? 'Uploading your steps: ${onboarding.dataChunks.length} uploads left.'
-                      : 'Upload done.',
+                      ? 'Uploading your steps: %d uploads left.'
+                          .i18n
+                          .plural(onboarding.dataChunks.length)
+                      : 'Upload done.'.i18n,
                   maxLines: 1,
                 ),
               ),
@@ -67,7 +71,7 @@ class SyncData extends HookWidget {
           ? Center(child: CircularProgressIndicator())
           : StyledButton(
               icon: step.value == 0 ? Icons.arrow_forward : Icons.done,
-              title: step.value == 0 ? 'Next' : 'Done',
+              title: step.value == 0 ? 'Next'.i18n : 'Done'.i18n,
               onPressed: () {
                 if (formDone) {
                   if (step.value == 0) {
@@ -77,8 +81,9 @@ class SyncData extends HookWidget {
                   if (!done) {
                     AppWidgets.showAlert(
                       context,
-                      'Upload not finished',
-                      'Please wait until the upload has finished to proceed.',
+                      'Upload not finished'.i18n,
+                      'Please wait until the upload has finished to proceed.'
+                          .i18n,
                     );
                     return;
                   }
@@ -89,8 +94,8 @@ class SyncData extends HookWidget {
                 }
                 AppWidgets.showAlert(
                   context,
-                  'Form not completed',
-                  'Please fill out the fields above to proceed.',
+                  'Form not completed'.i18n,
+                  'Please fill out the fields above to proceed.'.i18n,
                 );
               },
             ),
@@ -101,7 +106,7 @@ class SyncData extends HookWidget {
       children: [
         StyledButton(
           icon: Icons.arrow_back,
-          title: 'Back',
+          title: 'Back'.i18n,
           onPressed: () {
             step.value = 0;
           },

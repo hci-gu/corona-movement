@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:wfhmovement/i18n/style.i18n.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wfhmovement/pages/settings.dart';
@@ -104,7 +105,7 @@ class AppWidgets {
         content: Text(text),
         actions: [
           FlatButton(
-            child: Text('Close'),
+            child: Text('Close'.i18n),
             onPressed: () {
               Navigator.of(alertContext).pop();
             },

@@ -5,10 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
-import 'package:wfhmovement/pages/company.dart';
+import 'package:wfhmovement/pages/group.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
-import 'package:wfhmovement/widgets/company_code.dart';
+import 'package:wfhmovement/widgets/group_code.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:clipboard/clipboard.dart';
 
@@ -196,7 +196,7 @@ class Settings extends HookWidget {
 
   void _onJoinCompanyPressed(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => CompanyPage(),
+      builder: (context) => GroupPage(),
       settings: RouteSettings(name: 'Join group'),
     ));
   }
