@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/no-steps.i18n.dart';
+import 'package:wfhmovement/i18n/onboarding/no-steps.i18n.dart';
 
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';

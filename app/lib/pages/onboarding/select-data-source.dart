@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/select-data-source.i18n.dart';
+import 'package:wfhmovement/i18n/onboarding/select-data-source.i18n.dart';
 
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';

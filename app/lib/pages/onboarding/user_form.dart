@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/user_form.i18n.dart';
+import 'package:wfhmovement/i18n/onboarding/user_form.i18n.dart';
 
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:wfhmovement/models/form_model.dart';

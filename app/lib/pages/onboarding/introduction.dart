@@ -1,6 +1,6 @@
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
-import 'package:wfhmovement/i18n/introduction.i18n.dart';
+import 'package:wfhmovement/i18n/onboarding/introduction.i18n.dart';
 
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:wfhmovement/i18n/data-source.i18n.dart';
+import 'package:wfhmovement/i18n/onboarding/data-source.i18n.dart';
 
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';

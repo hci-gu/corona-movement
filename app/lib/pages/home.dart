@@ -20,7 +20,7 @@ import 'package:wfhmovement/widgets/sync-steps.dart';
 import 'detailed-steps.dart';
 
 class Home extends HookWidget {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   @override
