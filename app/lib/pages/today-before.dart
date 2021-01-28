@@ -1,5 +1,5 @@
 import 'package:i18n_extension/i18n_widget.dart';
-import 'package:wfhmovement/i18n/today-before.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

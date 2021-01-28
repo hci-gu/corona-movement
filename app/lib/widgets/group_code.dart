@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/widgets/group_code.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';

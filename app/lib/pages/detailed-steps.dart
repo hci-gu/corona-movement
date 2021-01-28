@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/detailed-steps.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/models.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';

@@ -2,11 +2,11 @@ import 'package:i18n_extension/i18n_extension.dart';
 import 'package:i18n_extension/io/import.dart';
 
 class MyI18n {
-  static TranslationsByLocale translations = Translations.byLocale("en_GB");
+  static TranslationsByLocale translations = Translations.byLocale('en_GB');
 
   static Future<void> loadTranslations() async {
     translations +=
-        await GettextImporter().fromAssetDirectory("assets/locales");
+        await GettextImporter().fromAssetDirectory('assets/locales');
     print(translations);
   }
 }

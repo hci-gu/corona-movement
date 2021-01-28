@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/widgets/steps-estimate.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/models/user_model.dart';

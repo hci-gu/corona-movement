@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:wfhmovement/i18n/style.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wfhmovement/pages/settings.dart';

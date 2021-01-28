@@ -1,0 +1,495 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: sv_SE\n"
+
+msgid "Monday"
+msgstr "Måndag"
+
+msgid "Tuesday"
+msgstr "Tisdag"
+
+msgid "Wednesday"
+msgstr "Onsdag"
+
+msgid "Thursday"
+msgstr "Torsdag"
+
+msgid "Friday"
+msgstr "Fredag"
+
+msgid "Saturday"
+msgstr "Lördag"
+
+msgid "Sunday"
+msgstr "Söndag"
+
+msgid "Close"
+msgstr "Stäng"
+
+msgid "Your steps are still processing...\\n Pull to refresh."
+msgstr "Din stegdata bearbetas fortfarande…\\n Dra för att uppdatera."
+
+msgid ""
+"This is the number of steps others have taken each day (on average). Below "
+"you can see how working from home has affected how people move throughout "
+"the day."
+msgstr ""
+"Det här är antalet steg andra har tagit varje dag ( i snitt ). Nedan kan du "
+"se hur att arbeta hemifrån har påverkat deras rörelse över dagen."
+
+msgid ""
+"This is the number of steps you\\'ve taken every day. Below you can pick "
+"different views of this data."
+msgstr ""
+"Det här är antalet steg du har tagit varje dag. Nedan kan du välja olika "
+"vyer av den här datan."
+
+msgid ""
+"Since you don’t have any data before working from home, you can\\'t compare "
+"yourself to others. Below you can see other people’s data."
+msgstr ""
+"Eftersom du inte har någon data före du började jobba hemifrån kan du inte "
+"jämföra dig med andra. Nedan kan du se andras data."
+
+msgid "Add data source"
+msgstr "Lägg till datakälla"
+
+msgid "Explore your steps"
+msgstr "Utforska din stegdata"
+
+msgid "Before & after"
+msgstr "Före & efter"
+
+msgid "You vs others"
+msgstr "Du mot andra"
+
+msgid "Today & before"
+msgstr "Idag & tidigare"
+
+msgid ""
+"Your\\'s and other\\'s difference in movement before and after working from "
+"home."
+msgstr ""
+"Din och andras förändring i rörelse före och efter de började jobba hemifrån."
+
+msgid ""
+"My change in movement compared to others before and after working from home."
+msgstr ""
+"Min förändring i rörelse jämfört med andra efter jag började jobba hemifrån."
+
+msgid ""
+"Check out how my change in movement compares to others working from home."
+"\\nTry yourself by downloading the app https://hci-gu.github.io/wfh-movement"
+msgstr ""
+"Se hur min rörelse förändrats jämför med andra sedan jag började jobba "
+"hemifrån.\\nTesta själv genom att ladda ner appen https://hci-gu.github.io/"
+"wfh-movement"
+
+msgid "This is how my movement has changed after working from home."
+msgstr ""
+"Det här är hur min rörelse har förändrats sedan jag började jobba hemifrån."
+
+msgid "increase"
+msgstr "ökning"
+
+msgid "decrease"
+msgstr "minskning"
+
+msgid "This is a %s of %s."
+msgstr "Det är en %s med %s."
+
+msgid "This is how my movement have changed after working from home."
+msgstr "Såhär har min rörelse förändrats sen jag började jobba hemifrån."
+
+msgid "I"
+msgstr "jag"
+
+msgid "you"
+msgstr "du"
+
+msgid "Today %s have taken "
+msgstr "Idag har %s tagit "
+
+msgid ""
+" steps so far. On a typical %s, before working from home, %s had normally "
+"taken "
+msgstr ""
+" steg. På en typisk %s innan började jobba hemifrån hade %s normalt tagit "
+
+msgid " steps at this time of day."
+msgstr " steg vid den här tiden."
+
+msgid "people\\'s"
+msgstr "människors"
+
+msgid "my"
+msgstr "min"
+
+msgid "This is how how %s movement has changed after working from home."
+msgstr "Det här är hur %s rörelse har förändrats efter hemarbete."
+
+msgid ""
+"Above you can see how working from home has affected how people move "
+"throughout the day."
+msgstr ""
+"Ovan kan du se hur hemarbete har påverkar hur människor rör sig över dagen."
+
+msgid ""
+"Above you can see how your activity has changed over a typical day before "
+"and after working from home."
+msgstr ""
+"Ovan kan du se hur din rörelse har förändrats över en typisk dag före och "
+"efter du började jobba hemifrån."
+
+msgid ""
+"\\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-"
+"movement"
+msgstr ""
+"\\nTesta själv genom att ladda ner appen https://hci-gu.github.io/wfh-"
+"movement"
+
+msgid "Select data source"
+msgstr "Välj datakälla"
+
+msgid "Please select where you keep your step data."
+msgstr "Vänligen välj var du lagrar din stegdata."
+
+msgid "I don\\'t have any steps saved."
+msgstr "Jag har ingen stegdata sparad."
+
+msgid ""
+"For us to tell you how your moment patterns have changed we need access to "
+"your step data."
+msgstr ""
+"För att vi ska kunna visa hur dina rörelsemönster förändrats behöver vi "
+"tillgång till din stegdata."
+
+msgid "Selecting a data source"
+msgstr "Att välja en datakälla"
+
+msgid ""
+"The app will fetch data from a source where you may have step data. Some "
+"people with android use google fitness (you might not even know about it). "
+"People with iOS devices typically have apple health that automatically "
+"record movement data. Some people use Garmin. If you do not have any "
+"historical data, you may use the app anyway to compare yourself with others."
+msgstr ""
+"Appen kommer hämta data från en källa där du kan ha stegdata. Personer med "
+"Android använder google fitness, personer med iOS har ofta Apple Health som "
+"automatiskt sparar rörelsedata. Om du inte har någon historisk data kan du "
+"ändå använda appen för att jämföra dig med andra."
+
+msgid ""
+"This app is part of an exploratory research project at the University of "
+"Gothenburg investigating the impact of the pandemic on our physical "
+"movement. For this purpose, we will collect and store the following data:"
+msgstr ""
+"Den här appen är en del av ett forskningsprojekt vid Göteborgs Universitet "
+"som undersöker pandemins inverkan på vår fysiska rörelse. För detta ändamål "
+"samlar vi in och lagrar följande data:"
+
+msgid ""
+"Any data stored will be removed upon opting out of the study by deleting "
+"your account."
+msgstr ""
+"All lagrad data tas bort om du väljer att gå ur studien genom att radera "
+"ditt konto."
+
+msgid "Step data"
+msgstr "Stegdata"
+
+msgid "Demographic data"
+msgstr "Demografisk data"
+
+msgid "App interactions"
+msgstr "Appinteraktioner"
+
+msgid ""
+"Collected from %s.\\n\\n- Historical data of number of steps taken with "
+"timestamps\\n- Date selected for working from home. ( for comparisons before/"
+"after )"
+msgstr ""
+"Hämtad från %s. \\n\\n- Historiska uppgifter om antalet steg som tagits med "
+"tidsstämplar\\n- Valt datum då du började jobba hemifrån. ( för jämförelser "
+"före/efter )"
+
+msgid ""
+"The following points are collected by filling out the form in the next step:"
+"\\n\\n- Gender\\n- Age range\\n- Education\\n- Profession"
+msgstr ""
+"Följande punkter samlas in genom att fylla i formuläret i nästa steg:\\n\\n- "
+"Kön\\n- Åldersspann\\n- Utbildning\\n -Yrke"
+
+msgid ""
+"Automatically sent via app usage.\\n\\n- App open/close\\n- Navigating "
+"through views\\n- Sync steps button pressed\\n- Change work from home date"
+"\\n- Day selection in Before & after\\n- Using share feature"
+msgstr ""
+"Sänds automatiskt via appanvändning.\\n\\n- När appen öppnas/stängs\\n- "
+"Navigering genom vyer\\n- Synkning av stegdata\\n- Byte att jobba hemifrån-"
+"datum\\n- Val av dagar i ”Före & efter” vyn\\n- Användning av "
+"delningsfunktionen"
+
+msgid "To proceeed you must grant access for us to retrieve data from %s."
+msgstr "För att fortsätta måste du ge oss åtkomst att hämta data från %s."
+
+msgid "Give access"
+msgstr "Ge åtkomst"
+
+msgid "Apple health is not available on an Android device."
+msgstr "Apple health är inte tillgängligt på en Android-enhet."
+
+msgid ""
+"You will now see a dialog for allowing access to Apple health\\n\\nTo give "
+"us access to your steps make sure check the box for steps before pressing "
+"allow."
+msgstr ""
+"Du kommer nu att se en dialogruta för att tillåta åtkomst till Apple health."
+"\\n\\nFör att ge oss tillgång till dina steg, se till att kryssa i rutan för "
+"steg innan du trycker på tillåt."
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Gender"
+msgstr "Kön"
+
+msgid "Age range"
+msgstr "Åldersspann"
+
+msgid "Education"
+msgstr "Utbildning"
+
+msgid "Occupation"
+msgstr "Sysselsättning"
+
+msgid "Please choose one"
+msgstr "Vänligen välj ett val"
+
+msgid "Your occupation (optional)"
+msgstr "Din sysselsättning (valfritt)"
+
+msgid "No steps"
+msgstr "Ingen stegdata"
+
+msgid ""
+"If you don\\'t have any steps saved you can still proceed without uploading "
+"to just explore others results."
+msgstr ""
+"Om du inte har några steg sparade kan du fortfarande fortsätta utan att "
+"ladda upp för att bara utforska andras resultat."
+
+msgid "Proceed"
+msgstr "Fortsätt"
+
+msgid "Have your movement patterns changed?"
+msgstr "Har dina rörelsemönster förändrats?"
+
+msgid "Begin by picking the day you started working from home."
+msgstr "Börja med att välja dagen du började jobba hemifrån."
+
+msgid "Select date"
+msgstr "Välj datum"
+
+msgid "Uploading your steps: %d uploads left."
+msgstr "Laddar upp dina steg: %d uppladdningar kvar."
+
+msgid "Upload done."
+msgstr "Uppladdning klar."
+
+msgid "Next"
+msgstr "Fortsätt"
+
+msgid "Done"
+msgstr "Färdig"
+
+msgid "Upload not finished"
+msgstr "Uppladdningen är inte färdig"
+
+msgid "Please wait until the upload has finished to proceed."
+msgstr "Vänligen vänta tills uppladdningen är färdig för att fortsätta."
+
+msgid "Form not completed"
+msgstr "Formuläret har inte fyllts i"
+
+msgid "Please fill out the fields above to proceed."
+msgstr "Vänligen fyll i fälten ovan för att fortsätta."
+
+msgid "Back"
+msgstr "Tillbaka"
+
+msgid "Settings"
+msgstr "Inställningar"
+
+msgid "You started working from home on %s."
+msgstr "Du började jobba hemifrån %s."
+
+msgid "Change date"
+msgstr "Byt datum"
+
+msgid "Join group"
+msgstr "Gå med grupp"
+
+msgid "Delete data"
+msgstr "Ta bort data"
+
+msgid ""
+"By picking a date where you started working from home, you will be able to "
+"explore whether your movement patterns have changed since you started "
+"working from home. The app visualizes your movement in the form of steps "
+"data from your phone, through Apple Health, Google fitness or Garmin."
+msgstr ""
+"Genom att välja ett datum du började jobba hemifrån kan du utforska om dina "
+"rörelsemönster förändrats sedan hemarbete. Appen visualiserar din rörelse i "
+"form av stegdata från din telefon, genom Apple Health, Google fitness eller "
+"Garmin."
+
+msgid ""
+"The Work From Home app was developed for research purposes by the Division "
+"of Human Computer Interaction at the Department of Applied Information "
+"Technology, University of Gothenburg, Sweden."
+msgstr ""
+"Work From Home appen är utvecklad för forskningssyfte av avdelningen för "
+"människa-dator interaktion på instutitionen för tillämpad "
+"informationsteknologi, Göteborgs Universitet."
+
+msgid "Read more about the project here:"
+msgstr "Läs mer om projektet här:"
+
+msgid "Confirm"
+msgstr "Bekräfta"
+
+msgid ""
+"Are you sure you want to delete your data?\\n\\nThis will remove all data "
+"from the app, and from our servers. You will no longer praticipate in the "
+"research project.\\n\\nIf you want to use the app again, you are welcome to "
+"do so."
+msgstr ""
+"Är du säker på att du vill ta bort din data?\\n\\nDet här kommer ta bort all "
+"data från appen, och från våra servrar. Du kommer inte längre delta i "
+"forskningsprojektet.\\n\\nOm du vill använda appen igen är du välkommen att "
+"göra det."
+
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "User id copied to clipboard"
+msgstr "Användarid kopierat till urklipp"
+
+msgid "User id: %s"
+msgstr "Användarid: %s"
+
+msgid "Started working from home"
+msgstr "Började jobba hemifrån"
+
+msgid "steps"
+msgstr "Steg"
+
+msgid "May"
+msgstr "Maj"
+
+msgid "Oct"
+msgstr "Okt"
+
+msgid "more"
+msgstr "mer"
+
+msgid "less"
+msgstr "mindre"
+
+msgid "People\\'s movement hasn\\'t changed."
+msgstr "Människors rörelse har inte förändrats."
+
+msgid "People are moving %s %s."
+msgstr "Människor rör sig %s %s."
+
+msgid "My movement hasn\\'t changed."
+msgstr "Min rörelse har inte förändrats."
+
+msgid "I\\'m moving %s %s."
+msgstr "Jag rör mig %s %s."
+
+msgid "You\\'re moving %s %s."
+msgstr "Du rör dig %s %s."
+
+msgid "Before"
+msgstr "Före"
+
+msgid "After"
+msgstr "Efter"
+
+msgid "Change days"
+msgstr "Byt dagar"
+
+msgid "How much do you think your movement have changed?"
+msgstr "Hur mycket tror du att din rörelse har förändrats?"
+
+msgid ""
+"Use the slider below to give an estimate of how much you think your average "
+"daily steps have changed."
+msgstr ""
+"Använd skjutreglaget nedan för att ge ett estimat på hur du tror att dina "
+"dagligla steg har förändrat."
+
+msgid "Set estimate"
+msgstr "Sätt estimat"
+
+msgid "Redo estimate"
+msgstr "Gör om estimat"
+
+msgid "No change"
+msgstr "Ingen förändring"
+
+msgid "I\\'m moving %s more."
+msgstr "Jag rör mig %s mer."
+
+msgid "I\\'m moving %s less."
+msgstr "Jag rör mig %s mindre."
+
+msgid "Login with your Garmin credentials"
+msgstr "Logga in med dina Garmin uppgifter"
+
+msgid "You have steps up until %s,\\n press the button below to sync them."
+msgstr "Du har stegdata upp till %s,\\n tryck på knappen nedan för att synka."
+
+msgid "Sync steps"
+msgstr "Synka steg"
+
+msgid "Group code"
+msgstr "Gruppkod"
+
+msgid "Joining a group"
+msgstr "Att gå med i en grupp"
+
+msgid ""
+"If you have a code you can enter it here to join a group. This allows you to "
+"compare with others in the same group.\\n\\nIf you are interested in trying "
+"out this feature with your group, company or organization, feel free to "
+"contact us at sebastian.andreasson@ait.gu.se"
+msgstr ""
+"Om du har en gruppkod kan du skriva in den här för att gå med i en grupp. "
+"Det låter dig jämföra dig med andra i samma grupp.\\n\\nOm du är intresserad "
+"av att testa den här funktionaliteten med din grupp, bolag eller "
+"organisation kan du kontakta oss genom sebastian.andreasson@ait.gu.se"
+
+msgid "Join"
+msgstr "Gå med"
+
+msgid "Leave"
+msgstr "Lämna"
+
+msgid "Code to join a group (optional)"
+msgstr "Kod för att gå med i grupp (valfritt)"

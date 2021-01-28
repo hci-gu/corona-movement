@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/widgets/charts.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:wfhmovement/models/steps.dart';

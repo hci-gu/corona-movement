@@ -1,4 +1,4 @@
-import 'package:wfhmovement/i18n/onboarding/sync-data.i18n.dart';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:wfhmovement/models/form_model.dart';

@@ -7,7 +7,7 @@ import 'package:flutter/physics.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:wfhmovement/translations.dart';
+import 'package:wfhmovement/i18n.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -26,6 +26,7 @@ import 'api/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await MyI18n.loadTranslations();
   tz.initializeTimeZones();
   try {
     String timezone = await FlutterNativeTimezone.getLocalTimezone();
