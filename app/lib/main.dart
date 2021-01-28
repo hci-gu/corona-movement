@@ -58,7 +58,6 @@ class App extends StatelessWidget {
           enableLoadingWhenFailed: true,
           enableBallisticLoad: true,
           child: I18n(
-            initialLocale: Locale('sv', 'SE'),
             child: MaterialApp(
               localizationsDelegates: [
                 GlobalMaterialLocalizations.delegate,
@@ -66,7 +65,7 @@ class App extends StatelessWidget {
                 GlobalCupertinoLocalizations.delegate,
               ],
               supportedLocales: [
-                Locale('en', 'US'),
+                Locale('en', 'GB'),
                 Locale('sv', 'SE'),
               ],
               title: 'Work from home movement',

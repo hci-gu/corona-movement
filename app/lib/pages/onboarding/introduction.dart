@@ -8,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/widgets/button.dart';
+import 'package:wfhmovement/widgets/language-select.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class Introduction extends HookWidget {
@@ -15,32 +16,42 @@ class Introduction extends HookWidget {
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
     return MainScaffold(
-      child: Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25),
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              Text(
-                'WFH Movement',
-                style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
-                textAlign: TextAlign.center,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 25),
+        child: Stack(
+          children: [
+            ListView(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + 60,
               ),
-              Text(
-                'Have your movement patterns changed?'.i18n,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
-                textAlign: TextAlign.center,
-              ),
-              Container(
-                margin: EdgeInsets.all(25),
-                child: SvgPicture.asset(
-                  'assets/svg/remote_work.svg',
-                  height: 150,
+              shrinkWrap: true,
+              children: <Widget>[
+                Text(
+                  'WFH Movement',
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              pickDateWidget(context, onboarding)
-            ],
-          ),
+                Text(
+                  'Have your movement patterns changed?'.i18n,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w200),
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                  margin: EdgeInsets.all(25),
+                  child: SvgPicture.asset(
+                    'assets/svg/remote_work.svg',
+                    height: 150,
+                  ),
+                ),
+                pickDateWidget(context, onboarding)
+              ],
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 10,
+              right: 0,
+              child: LanguageSelect(),
+            )
+          ],
         ),
       ),
     );
