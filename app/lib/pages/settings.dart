@@ -1,4 +1,6 @@
-import 'package:flutter/gestures.dart';
+import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/i18n/settings.i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,7 +23,7 @@ class Settings extends HookWidget {
 
     if (user.loading) {
       return MainScaffold(
-        appBar: AppWidgets.appBar(context, 'Settings', false),
+        appBar: AppWidgets.appBar(context, 'Settings'.i18n, false),
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -29,7 +31,7 @@ class Settings extends HookWidget {
     }
 
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Settings', false),
+      appBar: AppWidgets.appBar(context, 'Settings'.i18n, false),
       child: Column(
         children: [
           Expanded(
@@ -52,10 +54,12 @@ class Settings extends HookWidget {
   }
 
   List<Widget> _userWidgets(BuildContext context, user, updateUserCompareDate) {
+    String dateString = user.compareDate.toIso8601String().substring(0, 10);
+
     return [
       if (user.compareDate != null)
         Text(
-          'You started working from home on ${user.compareDate.toIso8601String().substring(0, 10)}',
+          'You started working from home on %s.'.i18n.fill([dateString]),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -65,7 +69,7 @@ class Settings extends HookWidget {
         child: StyledButton(
           key: Key('settings-change-date'),
           icon: Icons.date_range,
-          title: 'Change date',
+          title: 'Change date'.i18n,
           onPressed: () => _onChangeDatePressed(
             context,
             user,
@@ -85,16 +89,24 @@ class Settings extends HookWidget {
           child: StyledButton(
             key: Key('settings-join-company'),
             icon: Icons.perm_identity,
-            title: 'Join group',
+            title: 'Join group'.i18n,
             onPressed: () => _onJoinCompanyPressed(context),
           ),
         ),
       if (user.group == null) SizedBox(height: 20),
       Center(
         child: StyledButton(
+          key: Key('settings-change-language'),
+          icon: Icons.flag,
+          title: I18n.of(context).locale.languageCode == 'sv' ? 'Eng' : '🇸🇪',
+          onPressed: () => {},
+        ),
+      ),
+      Center(
+        child: StyledButton(
           key: Key('settings-delete-data'),
           icon: Icons.delete,
-          title: 'Delete data',
+          title: 'Delete data'.i18n,
           onPressed: () => _onDeleteUserPressed(context, deleteUser),
           danger: true,
         ),
@@ -111,6 +123,7 @@ class Settings extends HookWidget {
     globalAnalytics.sendEvent('openChangeCompareDate');
 
     var date = await showDatePicker(
+      locale: I18n.of(context).locale,
       context: context,
       initialDate: compareDate,
       firstDate: DateTime.parse('2010-01-01'),
@@ -128,17 +141,19 @@ class Settings extends HookWidget {
       children: [
         SizedBox(height: 25),
         Text(
-          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fitness or Garmin.',
+          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fitness or Garmin.'
+              .i18n,
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 10),
         Text(
-          'The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.',
+          'The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.'
+              .i18n,
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 10),
         Text(
-          'Read more about the project here:',
+          'Read more about the project here:'.i18n,
           style: TextStyle(fontSize: 12),
         ),
         InkWell(
@@ -167,20 +182,21 @@ class Settings extends HookWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Confirm',
+            'Confirm'.i18n,
           ),
           content: Text(
-            'Are you sure you want to delete your data?\n\nThis will remove all data from the app, and from our servers. You will no longer praticipate in the research project.\n\nIf you want to use the app again, you are welcome to do so.',
+            'Are you sure you want to delete your data?\n\nThis will remove all data from the app, and from our servers. You will no longer praticipate in the research project.\n\nIf you want to use the app again, you are welcome to do so.'
+                .i18n,
           ),
           actions: [
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('Cancel'.i18n),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text('Yes'),
+              child: Text('Yes'.i18n),
               onPressed: () {
                 globalAnalytics.sendEvent('deleteAccount');
                 deleteUser();
@@ -210,7 +226,7 @@ class Settings extends HookWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'User id copied to clipboard',
+                    'User id copied to clipboard'.i18n,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -220,7 +236,7 @@ class Settings extends HookWidget {
         },
         child: Container(
           padding: EdgeInsets.all(25),
-          child: Text('User id: ${user.id}'),
+          child: Text('User id: %s'.i18n.fill([user.id])),
         ),
       ),
     );

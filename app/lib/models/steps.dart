@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/models.i18n.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/api.dart' as api;
@@ -43,13 +45,13 @@ class StepsModel extends ValueNotifier {
 
   static String fromDate = '2020-01-01';
   static List<Map<String, dynamic>> weekdays = [
-    {'display': 'Monday', 'value': 1},
-    {'display': 'Tuesday', 'value': 2},
-    {'display': 'Wednesday', 'value': 3},
-    {'display': 'Thursday', 'value': 4},
-    {'display': 'Friday', 'value': 5},
-    {'display': 'Saturday', 'value': 6},
-    {'display': 'Sunday', 'value': 7}
+    {'display': 'Monday'.i18n, 'value': 1},
+    {'display': 'Tuesday'.i18n, 'value': 2},
+    {'display': 'Wednesday'.i18n, 'value': 3},
+    {'display': 'Thursday'.i18n, 'value': 4},
+    {'display': 'Friday'.i18n, 'value': 5},
+    {'display': 'Saturday'.i18n, 'value': 6},
+    {'display': 'Sunday'.i18n, 'value': 7}
   ];
 }
 

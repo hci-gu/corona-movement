@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/compare-steps.i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/compare-average-chart.dart';
@@ -9,7 +11,7 @@ class CompareSteps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'You vs others', false),
+      appBar: AppWidgets.appBar(context, 'You vs others'.i18n, false),
       child: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),
@@ -23,21 +25,25 @@ class CompareSteps extends StatelessWidget {
               ),
             ),
             AppWidgets.chartDescription(
-              'Your\'s and other\'s difference in movement before and after working from home.',
+              'Your\'s and other\'s difference in movement before and after working from home.'
+                  .i18n,
             ),
             PendingComparisons(),
             ShareButton(
               widgets: [
                 AppWidgets.chartDescription(
-                  'My change in movement compared to others before and after working from home.',
+                  'My change in movement compared to others before and after working from home.'
+                      .i18n,
                   14,
                 ),
                 CompareAverageChart(share: true),
               ],
               text:
-                  'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement',
+                  'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/wfh-movement'
+                      .i18n,
               subject:
-                  'This is how my movement has changed after working from home.',
+                  'This is how my movement has changed after working from home.'
+                      .i18n,
               screen: 'You vs others',
             ),
           ],

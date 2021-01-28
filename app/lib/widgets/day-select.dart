@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/widgets/charts.i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/global-analytics.dart';
@@ -12,7 +14,7 @@ class DaySelect extends HookWidget {
 
     return Center(
       child: StyledButton(
-        title: 'Change days',
+        title: 'Change days'.i18n,
         icon: Icons.arrow_drop_down,
         onPressed: () => _onPressed(context, steps),
       ),

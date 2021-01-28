@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/widgets/sync-steps.i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -44,7 +46,7 @@ class SyncSteps extends HookWidget {
     if (user.awaitingDataSource) {
       return Column(
         children: [
-          Text('Login with your Garmin to credentials'),
+          Text('Login with your Garmin credentials'.i18n),
           GarminLogin(),
           StyledButton(
             icon: Icons.sync,
@@ -56,14 +58,20 @@ class SyncSteps extends HookWidget {
         ],
       );
     }
+    var dateString =
+        DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate);
+
     return Center(
       child: Column(
         children: [
           AppWidgets.chartDescription(
-              'You have steps up until ${DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate)},\n press the button below to sync them.'),
+            'You have steps up until %s,\n press the button below to sync them.'
+                .i18n
+                .fill([dateString]),
+          ),
           StyledButton(
             icon: Icons.sync,
-            title: 'Sync steps',
+            title: 'Sync steps'.i18n,
             onPressed: () {
               globalAnalytics.sendEvent('syncSteps');
               syncSteps();

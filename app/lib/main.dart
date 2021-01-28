@@ -7,13 +7,14 @@ import 'package:flutter/physics.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:wfhmovement/translations.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/home.dart';
 import 'package:wfhmovement/pages/onboarding/introduction.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/pages/sync-data.dart';
+import 'package:wfhmovement/pages/onboarding/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
@@ -55,25 +56,25 @@ class App extends StatelessWidget {
           enableScrollWhenRefreshCompleted: true,
           enableLoadingWhenFailed: true,
           enableBallisticLoad: true,
-          child: MaterialApp(
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: [
-              Locale('en', 'US'),
-              Locale('sv', 'SE'),
-            ],
-            title: 'Work from home movement',
-            theme: ThemeData(
-              fontFamily: 'Poppins',
-              primarySwatch: Colors.amber,
-            ),
-            debugShowCheckedModeBanner: false,
-            home: I18n(
-              child: ScreenSelector(),
-              initialLocale: Locale('sv', 'SE'),
+          child: I18n(
+            initialLocale: Locale('sv', 'SE'),
+            child: MaterialApp(
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: [
+                Locale('en', 'US'),
+                Locale('sv', 'SE'),
+              ],
+              title: 'Work from home movement',
+              theme: ThemeData(
+                fontFamily: 'Poppins',
+                primarySwatch: Colors.amber,
+              ),
+              debugShowCheckedModeBanner: false,
+              home: ScreenSelector(),
             ),
           ),
         ),

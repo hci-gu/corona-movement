@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/home.i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
@@ -82,7 +84,7 @@ class Home extends HookWidget {
       ),
       Center(
         child: Text(
-          'Your steps are still processing...\n Pull to refresh.',
+          'Your steps are still processing...\n Pull to refresh.'.i18n,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18,
@@ -95,17 +97,20 @@ class Home extends HookWidget {
   List<Widget> _body(BuildContext context, User user, deleteUser) {
     String description = user.id == 'all'
         ? 'This is the number of steps others have taken each day (on average). Below you can see how working from home has affected how people move throughout the day.'
-        : 'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.';
+            .i18n
+        : 'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.'
+            .i18n;
 
     return [
       if (user.id == 'all')
         AppWidgets.chartDescription(
-            'Since you don’t have any data before working from home, you can\'t compare yourself to others. Below you can see other people’s data.'),
+            'Since you don’t have any data before working from home, you can\'t compare yourself to others. Below you can see other people’s data.'
+                .i18n),
       if (user.id == 'all')
         Center(
           child: StyledButton(
             icon: Icons.add,
-            title: 'Add data source',
+            title: 'Add data source'.i18n,
             onPressed: () => deleteUser(),
           ),
         ),
@@ -114,7 +119,7 @@ class Home extends HookWidget {
       AppWidgets.chartDescription(description),
       if (user.id != 'all')
         Text(
-          'Explore your steps',
+          'Explore your steps'.i18n,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
@@ -152,7 +157,7 @@ class Home extends HookWidget {
               ));
             },
           ),
-          'Before & after',
+          'Before & after'.i18n,
         ),
         if (user.id != 'all')
           _pageItem(
@@ -170,7 +175,7 @@ class Home extends HookWidget {
                 ));
               },
             ),
-            'You vs others',
+            'You vs others'.i18n,
           ),
         if (user.id != 'all')
           _pageItem(
@@ -194,7 +199,7 @@ class Home extends HookWidget {
               },
               scale: 1.25,
             ),
-            'Today & Before',
+            'Today & before'.i18n,
           ),
       ],
     );

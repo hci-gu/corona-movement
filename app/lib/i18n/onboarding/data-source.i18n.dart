@@ -63,10 +63,6 @@ extension Localization on String {
             'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow.',
         'sv_se':
             'Du kommer nu att se en dialogruta för att tillåta åtkomst till Apple health.\n\nFör att ge oss tillgång till dina steg, se till att kryssa i rutan för steg innan du trycker på tillåt.',
-      } +
-      {
-        'en_us': '',
-        'sv_se': '',
       };
 
   String get i18n => localize(this, _t);

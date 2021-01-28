@@ -40,10 +40,6 @@ extension Localization on String {
       {
         'en_us': 'Back',
         'sv_se': 'Tillbaka',
-      } +
-      {
-        'en_us': '',
-        'sv_se': '',
       };
 
   String get i18n => localize(this, _t);

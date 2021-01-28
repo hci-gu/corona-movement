@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/widgets/charts.i18n.dart';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -107,7 +109,7 @@ class DaysBarChart extends HookWidget {
                 var day = days[groupIndex];
                 if (compareDate.compareTo(day['date']) == 0) {
                   return BarTooltipItem(
-                    'Started working from home',
+                    'Started working from home'.i18n,
                     TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -118,7 +120,7 @@ class DaysBarChart extends HookWidget {
                 var formattedNumber = NumberFormat.decimalPattern('sv-se')
                     .format(day['value'].toInt());
                 return BarTooltipItem(
-                  '${_labelforDate(date)} - ${formattedNumber} steps',
+                  '${_labelforDate(date)} - $formattedNumber ' + 'steps'.i18n,
                   TextStyle(
                     color: AppColors.secondary,
                     fontWeight: FontWeight.bold,
@@ -178,7 +180,7 @@ class DaysBarChart extends HookWidget {
       case 4:
         return 'Apr';
       case 5:
-        return 'May';
+        return 'May'.i18n;
       case 6:
         return 'Jun';
       case 7:
@@ -188,7 +190,7 @@ class DaysBarChart extends HookWidget {
       case 9:
         return 'Sep';
       case 10:
-        return 'Oct';
+        return 'Oct'.i18n;
       case 11:
         return 'Nov';
       case 12:

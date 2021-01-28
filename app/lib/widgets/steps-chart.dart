@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n/widgets/charts.i18n.dart';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:wfhmovement/models/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -59,7 +61,7 @@ class StepsChart extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Before', style: textStyle),
+                Text('Before'.i18n, style: textStyle),
                 FittedBox(
                   child: Text(
                     stepsBefore.toString(),
@@ -78,7 +80,7 @@ class StepsChart extends HookWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('After', style: textStyle),
+                Text('After'.i18n, style: textStyle),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
