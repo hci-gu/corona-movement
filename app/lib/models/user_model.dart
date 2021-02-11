@@ -13,6 +13,7 @@ import 'app_model.dart';
 class User extends ValueNotifier {
   bool inited = false;
   String id;
+  String languageOverride;
   DateTime compareDate;
   DateTime latestUploadDate;
   DateTime initialDataDate = DateTime.parse('2020-01-01');
@@ -141,7 +142,9 @@ Action initAction = (get) async {
   FormModel form = get(formAtom);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String userId = prefs.getString('id');
+  String languageOverride = prefs.getString('language');
+  // String userId = prefs.getString('id');
+  String userId = '6024dfe867d4990008962a47';
 
   if (userId != null) {
     UserResponse response;
@@ -165,6 +168,7 @@ Action initAction = (get) async {
       onboarding.setDone();
     }
   }
+  user.languageOverride = languageOverride;
   globalAnalytics.init(userId);
   user.setInited();
 };
@@ -318,6 +322,13 @@ Action updateEstimateAction = (get) async {
   await api.updateUserEstimate(user.id, user.stepsEstimate);
 
   user.setLoading(false);
+};
+
+Action setUserLanguageOverrideAction = (get) async {
+  User user = get(userAtom);
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('language', user.languageOverride);
 };
 
 Action deleteUserAction = (get) async {

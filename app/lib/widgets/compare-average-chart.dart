@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:wfhmovement/i18n.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,9 @@ class CompareAverageChart extends HookWidget {
                   margin: 100,
                   getTitles: (double value) {
                     String name = comparison.comparisons[value.toInt()].name;
-                    if (name == 'user') return 'You';
+                    if (name == 'user' && share) return 'My'.i18n;
+                    if (name == 'user') return 'You'.i18n;
+                    if (name == 'others') return 'Others'.i18n;
                     String capitalized =
                         '${name[0].toUpperCase()}${name.substring(1, name.length)}';
                     if (capitalized.length > 16) {

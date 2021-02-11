@@ -14,7 +14,7 @@ class TodayBefore extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Today & before'.i18n, false),
+      appBar: AppWidgets.appBar(context: context, title: 'Today & before'.i18n),
       child: Hero(
         tag: 'today-before',
         child: TodayBeforeText(),

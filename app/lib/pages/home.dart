@@ -47,7 +47,7 @@ class Home extends HookWidget {
     if (steps.data == null) {}
 
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, null, true),
+      appBar: AppWidgets.appBar(context: context, settings: true),
       child: SmartRefresher(
         enablePullDown: true,
         header: WaterDropHeader(),

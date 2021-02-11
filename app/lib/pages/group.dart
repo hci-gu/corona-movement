@@ -9,7 +9,7 @@ class GroupPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Join group', false),
+      appBar: AppWidgets.appBar(context: context, title: 'Join group'),
       displaySnackbars: true,
       child: _body(context),
     );

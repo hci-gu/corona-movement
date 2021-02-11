@@ -16,7 +16,7 @@ class NoSteps extends HookWidget {
     OnboardingModel onboarding = useModel(onboardingAtom);
 
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'No steps'.i18n, false),
+      appBar: AppWidgets.appBar(context: context, title: 'No steps'.i18n),
       child: _body(context, onboarding),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:wfhmovement/i18n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:wfhmovement/models/garmin.dart';
@@ -47,7 +48,7 @@ class OnboardingModel extends ValueNotifier {
       health = healthFactory;
       Future.delayed(Duration(seconds: 3)).then((_) {
         if (initialDataDate == null) {
-          loadingMessage = 'This process can take a while to finish...';
+          loadingMessage = 'This process can take a while to finish...'.i18n;
           notifyListeners();
         }
       });
@@ -110,7 +111,7 @@ class OnboardingModel extends ValueNotifier {
   setDisplayDateWhileLoading(DateTime date) {
     displayDateWhileLoading = date;
     if (loadingMessage == null)
-      loadingMessage = 'This process can take a while to finish...';
+      loadingMessage = 'This process can take a while to finish...'.i18n;
     notifyListeners();
   }
 
@@ -140,7 +141,7 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  static List dataSources = ['Google fitness', 'Apple health', 'Garmin'];
+  static List dataSources = ['Google fit', 'Apple health', 'Garmin'];
 }
 
 int chunkSize = 750;

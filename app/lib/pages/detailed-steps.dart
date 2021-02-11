@@ -26,7 +26,7 @@ class DetailedSteps extends HookWidget {
             .fill([shareSubject]);
 
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Before & after'.i18n, true),
+      appBar: AppWidgets.appBar(context: context, title: 'Before & after'.i18n),
       child: ListView(
         padding: EdgeInsets.only(top: 15),
         children: [

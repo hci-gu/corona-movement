@@ -14,7 +14,10 @@ class SelectDataSource extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Select data source'.i18n, false),
+      appBar: AppWidgets.appBar(
+        context: context,
+        title: 'Select data source'.i18n,
+      ),
       child: _body(context),
     );
   }
@@ -87,7 +90,7 @@ class SelectDataSource extends HookWidget {
       onTap: () => AppWidgets.showAlert(
         context,
         'Selecting a data source'.i18n,
-        'The app will fetch data from a source where you may have step data. Some people with android use google fitness (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.'
+        'The app will fetch data from a source where you may have step data. Some people with android use google fit (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.'
             .i18n,
       ),
     );
@@ -118,7 +121,7 @@ class SelectDataSource extends HookWidget {
 
   Widget _assetForDataSource(String dataSource) {
     switch (dataSource) {
-      case 'Google fitness':
+      case 'Google fit':
         return Container(
           width: 40,
           padding: EdgeInsets.symmetric(vertical: 15),

@@ -20,10 +20,15 @@ class Settings extends HookWidget {
     User user = useModel(userAtom);
     var deleteUser = useAction(deleteUserAction);
     var updateUserCompareDate = useAction(updateUserCompareDateAction);
+    Widget appBar = AppWidgets.appBar(
+      context: context,
+      title: 'Settings'.i18n,
+      language: true,
+    );
 
     if (user.loading) {
       return MainScaffold(
-        appBar: AppWidgets.appBar(context, 'Settings'.i18n, false),
+        appBar: appBar,
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -31,7 +36,7 @@ class Settings extends HookWidget {
     }
 
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, 'Settings'.i18n, false),
+      appBar: appBar,
       child: Column(
         children: [
           Expanded(
@@ -96,14 +101,6 @@ class Settings extends HookWidget {
       if (user.group == null) SizedBox(height: 20),
       Center(
         child: StyledButton(
-          key: Key('settings-change-language'),
-          icon: Icons.flag,
-          title: I18n.of(context).locale.languageCode == 'sv' ? 'Eng' : '🇸🇪',
-          onPressed: () => {},
-        ),
-      ),
-      Center(
-        child: StyledButton(
           key: Key('settings-delete-data'),
           icon: Icons.delete,
           title: 'Delete data'.i18n,
@@ -141,7 +138,7 @@ class Settings extends HookWidget {
       children: [
         SizedBox(height: 25),
         Text(
-          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fitness or Garmin.'
+          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fit or Garmin.'
               .i18n,
           style: TextStyle(fontSize: 12),
         ),

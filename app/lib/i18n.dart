@@ -7,7 +7,6 @@ class MyI18n {
   static Future<void> loadTranslations() async {
     translations +=
         await GettextImporter().fromAssetDirectory('assets/locales');
-    print(translations);
   }
 }
 

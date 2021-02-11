@@ -3,6 +3,7 @@ import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wfhmovement/pages/settings.dart';
+import 'package:wfhmovement/widgets/language-select.dart';
 
 class AppColors {
   static Color main = Colors.yellow[600];
@@ -26,7 +27,12 @@ class AppColors {
 }
 
 class AppWidgets {
-  static AppBar appBar(BuildContext context, [String title, bool settings]) {
+  static AppBar appBar({
+    BuildContext context,
+    String title,
+    bool settings = false,
+    bool language = false,
+  }) {
     return AppBar(
       backgroundColor: AppColors.main,
       centerTitle: true,
@@ -53,6 +59,10 @@ class AppWidgets {
                 color: AppColors.primaryText,
               ),
             ),
+          ),
+        if (language)
+          LanguageSelect(
+            inAppBar: true,
           )
       ],
     );

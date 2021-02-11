@@ -26,7 +26,7 @@ class DataSource extends HookWidget {
     }, [onboarding.authorized]);
 
     return MainScaffold(
-      appBar: AppWidgets.appBar(context, onboarding.dataSource, false),
+      appBar: AppWidgets.appBar(context: context, title: onboarding.dataSource),
       child: _body(context, onboarding),
     );
   }
@@ -210,7 +210,9 @@ class DataSource extends HookWidget {
       children: [
         Container(
           child: Text(
-            'Found data from ${_dateToString(onboarding.initialDataDate)}',
+            'Found data from %s.'
+                .i18n
+                .fill([_dateToString(onboarding.initialDataDate)]),
           ),
         ),
         _consentAndProceed(context, onboarding, register, consent, uploadSteps),
@@ -220,11 +222,9 @@ class DataSource extends HookWidget {
 
   Widget _consentAndProceed(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent, Function uploadSteps) {
-    if (onboarding.date.isBefore(onboarding.initialDataDate)) {
-      return _onlyDataAfterCompareDate(context, onboarding);
-    }
-    if (onboarding.date.isAfter(onboarding.lastDataDate)) {
-      return _noDataBeforeCompareDate(context, onboarding);
+    if (onboarding.date.isBefore(onboarding.initialDataDate) ||
+        onboarding.date.isAfter(onboarding.lastDataDate)) {
+      return _noDataBeforeOrAfter(context, onboarding);
     }
     return Column(
       children: [
@@ -239,8 +239,9 @@ class DataSource extends HookWidget {
               },
             ),
             Container(
+              width: MediaQuery.of(context).size.width * 0.7,
               child: Text(
-                'I agree to share my data with you.',
+                'I agree to share my data with you.'.i18n,
                 maxLines: 2,
               ),
             )
@@ -251,7 +252,7 @@ class DataSource extends HookWidget {
           opacity: consent.value ? 1 : 0.5,
           child: StyledButton(
             icon: Icons.directions_run,
-            title: 'Get started!',
+            title: 'Get started!'.i18n,
             onPressed: () async {
               if (!consent.value) return;
               await register();
@@ -266,40 +267,25 @@ class DataSource extends HookWidget {
     );
   }
 
-  Widget _noDataBeforeCompareDate(
+  Widget _noDataBeforeOrAfter(
       BuildContext context, OnboardingModel onboarding) {
-    return Column(
-      children: [
-        SizedBox(height: 20),
-        Text(
-          'You don\'t have any steps after the date you selected, so we can\'t create a comparison for you. If you want to explore the app anyway, you can go back and pick the option "I don\'t have any steps saved."',
-          style: TextStyle(fontSize: 14),
-        ),
-        SizedBox(height: 25),
-        StyledButton(
-          icon: Icons.arrow_back,
-          title: 'Go back',
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  }
+    String when = onboarding.date.isBefore(onboarding.initialDataDate)
+        ? 'before'.i18n
+        : 'after'.i18n;
 
-  Widget _onlyDataAfterCompareDate(
-      BuildContext context, OnboardingModel onboarding) {
     return Column(
       children: [
         SizedBox(height: 20),
         Text(
-          'You don\'t have any steps from before the date you selected, so we can\'t create a comparison for you. If you want to explore the app anyway, you can go back and pick the option "I don\'t have any steps saved."',
+          'You don\'t have any steps %s the date you selected, so we can\'t create a comparison for you. If you want to explore the app anyway, you can go back and pick the option "I don\'t have any steps saved."'
+              .i18n
+              .fill([when]),
           style: TextStyle(fontSize: 14),
         ),
         SizedBox(height: 25),
         StyledButton(
           icon: Icons.arrow_back,
-          title: 'Go back',
+          title: 'Go back'.i18n,
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -311,10 +297,13 @@ class DataSource extends HookWidget {
   Widget _noData(BuildContext context, OnboardingModel onboarding,
       Function getHealthAuthorization) {
     String description =
-        'You don\'t have any saved steps from ${onboarding.dataSource} or failed to give this app access to your health data. Try again after reviewing access to health data in your phone settings or go back and select another data source or proceed without steps.';
+        'You don\'t have any saved steps from %s or failed to give this app access to your health data. Try again after reviewing access to health data in your phone settings or go back and select another data source or proceed without steps.'
+            .i18n
+            .fill([onboarding.dataSource]);
     if (onboarding.availableData.length > 0) {
       description =
-          'You don\'t have enough steps saved to make any comparison, you need at least a couple of days before and after your set date for working from home. Go back and select another data source or proceed without steps.';
+          'You don\'t have enough steps saved to make any comparison, you need at least a couple of days before and after your set date for working from home. Go back and select another data source or proceed without steps.'
+              .i18n;
     }
 
     return Column(
@@ -326,7 +315,7 @@ class DataSource extends HookWidget {
         SizedBox(height: 25),
         StyledButton(
           icon: Icons.arrow_back,
-          title: 'Go back',
+          title: 'Go back'.i18n,
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -335,7 +324,7 @@ class DataSource extends HookWidget {
         if (onboarding.availableData.length == 0)
           StyledButton(
             icon: Icons.refresh,
-            title: 'Try again',
+            title: 'Try again'.i18n,
             onPressed: () => getHealthAuthorization(),
           ),
       ],
