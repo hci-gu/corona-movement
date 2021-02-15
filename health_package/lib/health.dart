@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
 import 'package:device_info/device_info.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 part 'package:health/src/units.dart';
 

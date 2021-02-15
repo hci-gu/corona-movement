@@ -24,6 +24,18 @@ class HealthFactory {
       types = types.toSet().toList();
     }
 
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    int sdkInt = androidInfo.version.sdkInt;
+
+    if (sdkInt > 28) {
+      bool activityRecognitionStatus =
+          await Permission.activityRecognition.status.isGranted;
+
+      if (!activityRecognitionStatus) {
+        if (await Permission.activityRecognition.request().isGranted) {}
+      }
+    }
+
     List<String> keys = types.map((e) => _enumToString(e)).toList();
     final bool isAuthorized =
         await _channel.invokeMethod('requestAuthorization', {'types': keys});
