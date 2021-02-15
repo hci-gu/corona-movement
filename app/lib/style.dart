@@ -8,6 +8,7 @@ import 'package:wfhmovement/widgets/language-select.dart';
 class AppColors {
   static Color main = Colors.yellow[600];
   static Color mainPressed = Colors.yellow[700];
+  static Color secondaryLight = Colors.blueGrey[400];
   static Color secondary = Colors.blueGrey[700];
   static Color secondaryPressed = Colors.blueGrey[800];
   static Color danger = Colors.red[700];

@@ -141,11 +141,19 @@ class StepsChart extends HookWidget {
                     touchedBarSpots.firstWhere((o) => o.barIndex == 1).y;
                 return [
                   LineTooltipItem(
-                    '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n ${_percentDiffForValues(beforeVal, afterVal)}',
+                    '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n before: ${beforeVal.round()}',
                     TextStyle(
-                        color: AppColors.main, fontWeight: FontWeight.bold),
+                      color: AppColors.main,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  null,
+                  LineTooltipItem(
+                    'after: ${afterVal.round()}',
+                    TextStyle(
+                      color: AppColors.secondaryLight,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ];
               },
             ),
@@ -214,11 +222,5 @@ class StepsChart extends HookWidget {
 
   String _timestampForValue(int value) {
     return '${value < 10 ? '0' : ''}$value:00';
-  }
-
-  String _percentDiffForValues(double beforeVal, double afterVal) {
-    if (beforeVal == 0 || afterVal == 0) return '-';
-    double diff = 100 - (beforeVal / afterVal) * 100;
-    return '${diff.toStringAsFixed(2)} %';
   }
 }

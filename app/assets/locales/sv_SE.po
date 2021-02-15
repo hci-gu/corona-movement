@@ -413,3 +413,9 @@ msgstr "Du"
 
 msgid "Others"
 msgstr "Andra"
+
+msgid "Join group"
+msgstr "Gå med i grupp"
+
+msgid "If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se"
+msgstr "Om du har en kod kan du skriva in den här för att gå med i en grupp. Det låter dig jämföra ditt resultat med andra i samma grupp.\n\nÄr du intresserad att testa den här funktionen med en grupp eller ett företag/organisation så kan du kontakta oss genom sebastian.andreasson@ait.gu.se"

@@ -143,8 +143,7 @@ Action initAction = (get) async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String languageOverride = prefs.getString('language');
-  // String userId = prefs.getString('id');
-  String userId = '6024dfe867d4990008962a47';
+  String userId = prefs.getString('id');
 
   if (userId != null) {
     UserResponse response;

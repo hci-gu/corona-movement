@@ -111,6 +111,7 @@ class LanguageSelect extends HookWidget {
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: List.generate(languages.length, (index) {
                         return GestureDetector(
                           onTap: () {

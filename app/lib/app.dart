@@ -1,4 +1,3 @@
-import 'package:i18n_extension/i18n_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/physics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -12,65 +11,23 @@ import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/pages/onboarding/sync-data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart';
-import 'package:wfhmovement/widgets/main_scaffold.dart';
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) => StateStore(),
-      child: RefreshConfiguration(
-        headerBuilder: () => WaterDropHeader(),
-        headerTriggerDistance: 80.0,
-        springDescription: SpringDescription(
-          stiffness: 170,
-          damping: 16,
-          mass: 1.9,
-        ),
-        maxOverScrollExtent: 100,
-        maxUnderScrollExtent: 0,
-        enableScrollWhenRefreshCompleted: true,
-        enableLoadingWhenFailed: true,
-        enableBallisticLoad: true,
-        child: InitUser(),
+    return RefreshConfiguration(
+      headerBuilder: () => WaterDropHeader(),
+      headerTriggerDistance: 80.0,
+      springDescription: SpringDescription(
+        stiffness: 170,
+        damping: 16,
+        mass: 1.9,
       ),
-    );
-  }
-}
-
-class InitUser extends HookWidget {
-  @override
-  Widget build(BuildContext context) {
-    User user = useModel(userAtom);
-    var init = useAction(initAction);
-    useEffect(() {
-      try {
-        init();
-      } catch (e) {}
-      return;
-    }, []);
-
-    if (!user.inited) {
-      return MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-          primarySwatch: Colors.amber,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: MainScaffold(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      );
-    }
-    String language = user.languageOverride != null
-        ? user.languageOverride
-        : Localizations.localeOf(context).languageCode;
-
-    return I18n(
-      initialLocale: Locale(language),
+      maxOverScrollExtent: 100,
+      maxUnderScrollExtent: 0,
+      enableScrollWhenRefreshCompleted: true,
+      enableLoadingWhenFailed: true,
+      enableBallisticLoad: true,
       child: MaterialApp(
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -78,8 +35,8 @@ class InitUser extends HookWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
-          Locale('en', 'GB'),
-          Locale('sv', 'SE'),
+          Locale('en'),
+          Locale('sv'),
         ],
         title: 'Work from home movement',
         theme: ThemeData(
@@ -126,7 +83,7 @@ class ScreenSelector extends HookWidget {
         getUriLinksStream().listen((Uri uri) {
           handleUri(uri);
         }, onError: (err) {
-          print('uri stream err ${err}');
+          print('uri stream err $err');
         });
       };
 

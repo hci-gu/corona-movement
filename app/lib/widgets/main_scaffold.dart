@@ -11,10 +11,11 @@ class MainScaffold extends StatelessWidget {
   final bool displaySnackbars;
 
   MainScaffold({
+    Key key,
     @required this.child,
     this.appBar,
     this.displaySnackbars = false,
-  }) : super();
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

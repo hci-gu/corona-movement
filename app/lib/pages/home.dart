@@ -47,6 +47,7 @@ class Home extends HookWidget {
     if (steps.data == null) {}
 
     return MainScaffold(
+      key: Key('Home'),
       appBar: AppWidgets.appBar(context: context, settings: true),
       child: SmartRefresher(
         enablePullDown: true,

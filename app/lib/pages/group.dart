@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,7 +11,7 @@ class GroupPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context: context, title: 'Join group'),
+      appBar: AppWidgets.appBar(context: context, title: 'Join group'.i18n),
       displaySnackbars: true,
       child: _body(context),
     );
@@ -27,7 +29,8 @@ class GroupPage extends HookWidget {
           ),
         ),
         AppWidgets.chartDescription(
-          'If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se',
+          'If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se'
+              .i18n,
         ),
         GroupCode(
           showInfo: false,
