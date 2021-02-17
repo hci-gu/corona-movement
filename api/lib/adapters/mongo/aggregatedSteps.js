@@ -3,6 +3,7 @@ const COLLECTION = 'aggregated-steps'
 const stepsCollection = require('./steps')
 const usersCollection = require('./users')
 const groupsCollection = require('./groups')
+const { FROM_DATE } = require('../../constants')
 let collection
 
 const getHoursForEveryone = async ({ from, to }) => {
@@ -60,45 +61,31 @@ const getHoursForEveryone = async ({ from, to }) => {
   }
 }
 
-const getInitialDataDate = async (id) => {
+const getFromToForUser = async (id) => {
+  if (id === 'all')
+    return {
+      from: FROM_DATE,
+      to: moment().add(1, 'days').format('YYYY-MM-DD'),
+    }
+
   const user = await usersCollection.get(id)
 
   if (!user) {
     return
   }
 
-  if (!user.initialDataDate) {
-    const initalStepData = await stepsCollection.getFirstUpload({ id })
-    if (initalStepData) {
-      return initalStepData.date
-    }
+  const [initalStepData, lastStepData] = await Promise.all([
+    stepsCollection.getFirstUpload({ id }),
+    stepsCollection.getLastUpload({ id }),
+  ])
+
+  if (!initalStepData || !lastStepData) {
+    throw new Error('user has no stepdata')
   }
 
-  return user.initialDataDate
-}
-
-const getFromToForUser = async (id) => {
-  if (id === 'all')
-    return {
-      from: '2020-01-01',
-      to: moment().add(1, 'days').format('YYYY-MM-DD'),
-    }
-  const initialDate = await getInitialDataDate(id)
-  let from = '2020-01-01'
-  if (initialDate && moment(initialDate).isAfter(moment(from))) {
-    from = moment(initialDate).add(1, 'day').format('YYYY-MM-DD')
-  }
-  const to = moment().add(1, 'days').format('YYYY-MM-DD')
-
-  return { from, to }
-}
-
-const shouldPopulateUntilDate = async (id) => {
-  const initalDataDate = await getInitialDataDate(id)
-  const user = await usersCollection.get(id)
-
-  if (moment(initalDataDate).isAfter(moment(user.compareDate))) {
-    return moment(user.compareDate).subtract(10, 'days')
+  return {
+    from: moment(initalStepData.date).add(1, 'day').format('YYYY-MM-DD'),
+    to: moment(lastStepData.date).subtract(1, 'day').format('YYYY-MM-DD'),
   }
 }
 
@@ -109,47 +96,56 @@ const sortSteps = (a, b) => {
 }
 
 const saveSteps = async ({ id, timezone }) => {
-  const { from, to } = await getFromToForUser(id)
+  try {
+    const { from, to } = await getFromToForUser(id)
 
-  let data
-  if (id === 'all') {
-    data = await getHoursForEveryone({ from, to })
-  } else {
-    data = await stepsCollection.getHours({
-      id,
-      from,
-      to,
-      timezone,
-    })
-    const days = moment(to).diff(moment(from), 'days')
-    const dates = Array.from({ length: days })
-      .map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
-      .filter((date) => data.result.every((d) => d.key.indexOf(date) === -1))
-      .map((date) => {
-        const key = `${date} 00`
-        return {
-          _id: key,
-          value: 0,
-          key,
-        }
+    let data
+    if (id === 'all') {
+      data = await getHoursForEveryone({ from, to })
+    } else {
+      data = await stepsCollection.getHours({
+        id,
+        from,
+        to,
+        timezone,
       })
-    if (dates.length > 0) {
-      data.result = [...data.result, ...dates].sort(sortSteps)
+      const days = moment(to).diff(moment(from), 'days')
+      const dates = Array.from({ length: days })
+        .map((_, i) => moment(from).add(i, 'days').format('YYYY-MM-DD'))
+        .filter((date) => data.result.every((d) => d.key.indexOf(date) === -1))
+        .map((date) => {
+          const key = `${date} 00`
+          return {
+            _id: key,
+            value: 0,
+            key,
+          }
+        })
+      if (dates.length > 0) {
+        data.result = [...data.result, ...dates].sort(sortSteps)
+      }
     }
-  }
 
-  await save({ id, type: 'steps', data })
+    await save({ id, type: 'steps', data })
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 const saveSummary = async (id) => {
   if (id === 'all') return
-  const { from } = await getFromToForUser(id)
-  const data = await stepsCollection.getSummaryForUser({
-    id,
-    from,
-  })
+  try {
+    const { from, to } = await getFromToForUser(id)
+    const data = await stepsCollection.getSummaryForUser({
+      id,
+      from,
+      to,
+    })
 
-  await save({ id, type: 'summary', data })
+    await save({ id, type: 'summary', data })
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 const save = ({ id, type, data }) =>
@@ -176,29 +172,6 @@ const getSteps = async ({ id }) => {
       result: null,
     }
   }
-
-  let dataPointsToAdd = []
-  if (id !== 'all') {
-    const addEmptyToDataToDate = await shouldPopulateUntilDate(id)
-    if (addEmptyToDataToDate) {
-      const firstDate = doc.data.result[0]
-        ? moment(doc.data.result[0].key.substring(0, 10))
-        : moment()
-      const daysToAdd = firstDate.diff(moment(addEmptyToDataToDate), 'days')
-      dataPointsToAdd = Array.from({ length: daysToAdd }).map((_, i) => {
-        const key = `${moment(addEmptyToDataToDate)
-          .add(i, 'days')
-          .format('YYYY-MM-DD')} 00`
-        return {
-          _id: key,
-          value: 0,
-          key,
-        }
-      })
-    }
-  }
-
-  doc.data.result = [...dataPointsToAdd, ...doc.data.result]
 
   return doc.data
 }
@@ -305,5 +278,4 @@ module.exports = {
   saveSummary,
   getSteps,
   getSummary,
-  shouldPopulateUntilDate,
 }

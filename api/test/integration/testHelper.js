@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb')
+
 const request = require('supertest')
 const moment = require('moment')
 
@@ -42,8 +43,10 @@ const userWithSteps = async (
   app,
   { compareDate, endDate, daysWithStepsBefore, daysWithStepsAfter, amount = 10 }
 ) => {
-  const from = moment(compareDate).subtract(daysWithStepsBefore, 'days')
-  const to = moment(compareDate).add(daysWithStepsAfter, 'days')
+  const from = moment(compareDate)
+    .subtract(daysWithStepsBefore, 'days')
+    .startOf('day')
+  const to = moment(compareDate).add(daysWithStepsAfter, 'days').endOf('day')
   const steps = generateHealthData({
     from,
     to,
@@ -71,21 +74,52 @@ const userWithSteps = async (
   return user
 }
 
+const userWithPeriods = async (
+  app,
+  { beforePeriods, afterPeriods, amount = 10 }
+) => {
+  const from = moment(beforePeriods[0].from).startOf('day')
+  const to = moment(afterPeriods[afterPeriods.length - 1].to).endOf('day')
+  const steps = generateHealthData({
+    from,
+    to,
+    steps: amount,
+  })
+
+  const user = await register({
+    app,
+    beforePeriods,
+    afterPeriods,
+    initialDataDate: moment(steps[0].date_from).format('YYYY-MM-DD'),
+    endDate: moment(steps[steps.length - 1].date_from).format('YYYY-MM-DD'),
+  })
+
+  await request(app)
+    .post('/health-data')
+    .send({
+      id: user._id,
+      dataPoints: steps,
+      createAggregation: true,
+    })
+    .expect(200)
+  return user
+}
+
 const generateStepsForHour = (date, value) =>
   Array.from({ length: 6 }).map((_, i) => {
     const _date = moment(date).add(10 * i, 'minutes')
     return {
       value,
       unit: 'COUNT',
-      date_from: moment(_date).subtract(5, 'minutes').valueOf(),
-      date_to: moment(_date).add(5, 'minutes').valueOf(),
+      date_from: moment(_date).valueOf(),
+      date_to: moment(_date).add(10, 'minutes').valueOf(),
       data_type: 'STEPS',
       platform: 'test',
     }
   })
 
 const generateHealthData = ({ from, to, steps = 10 }) => {
-  const days = moment(to).diff(moment(from), 'days') + 1
+  const days = moment(to).diff(moment(from), 'days')
   const hours = 24
 
   let dataPoints = []
@@ -104,4 +138,5 @@ module.exports = {
   generateHealthData,
   register,
   userWithSteps,
+  userWithPeriods,
 }
