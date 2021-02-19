@@ -220,7 +220,7 @@ class Settings extends HookWidget {
         onTap: () {
           FlutterClipboard.copy(user.id).then(
             (value) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
                     'User id copied to clipboard'.i18n,
