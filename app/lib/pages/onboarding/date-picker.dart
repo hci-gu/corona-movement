@@ -29,15 +29,7 @@ class DatePicker extends HookWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          var period = await showDialog(
-            context: context,
-            builder: (context) => AddPeriodDialog(
-              from: DateTime(2020, 03, 11),
-            ),
-          );
-          if (period != null) {
-            periods.value = [...periods.value, period];
-          }
+          _addToPeriods(context, periods, DateTime(2020, 03, 11));
         },
       ),
     );
@@ -52,22 +44,62 @@ class DatePicker extends HookWidget {
     int numWeeks = (DateTime.now().difference(startDay).inDays / 7).ceil();
 
     return SingleChildScrollView(
-      child: Stack(
+      child: Column(
         children: [
-          Container(width: width, height: numWeeks * dayWidth),
-          _months(context),
-          Positioned(
-            left: width * 0.13,
-            child: _days(context),
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Text('När har du arbetat hemifrån?'),
           ),
-          Positioned(
-            left: width * 0.13,
-            child: _periods(context, periods),
+          Stack(
+            children: [
+              Container(width: width, height: numWeeks * dayWidth),
+              _months(context),
+              Positioned(
+                left: width * 0.13,
+                child: _days(context, periods),
+              ),
+              Positioned(
+                left: width * 0.13,
+                child: _periods(context, periods),
+              ),
+              _events(context),
+            ],
           ),
-          _events(context),
         ],
       ),
     );
+  }
+
+  void _addToPeriods(BuildContext context, ValueNotifier<List<Period>> periods,
+      DateTime startDate) async {
+    var period = await showDialog(
+      context: context,
+      builder: (context) => AddPeriodDialog(
+        from: startDate,
+      ),
+    );
+    if (period != null) {
+      periods.value = [...periods.value, period];
+    }
+  }
+
+  void _editPeriodInPeriods(BuildContext context,
+      ValueNotifier<List<Period>> periods, Period period) async {
+    var newPeriod = await showDialog(
+      context: context,
+      builder: (context) => EditPeriodDialog(
+        from: period.from,
+        to: period.to,
+      ),
+    );
+    if (newPeriod == specialDeletePeriod) {
+      periods.value =
+          periods.value.where((element) => element != period).toList();
+    } else if (newPeriod != null) {
+      periods.value = periods.value
+          .map<Period>((p) => p == period ? newPeriod : p)
+          .toList();
+    }
   }
 
   Widget _months(context) {
@@ -148,7 +180,7 @@ class DatePicker extends HookWidget {
     );
   }
 
-  Widget _days(context) {
+  Widget _days(context, ValueNotifier<List<Period>> periods) {
     double width = MediaQuery.of(context).size.width * 0.52;
     DateTime startDay = DateTime(2019, 12, 30);
     double dayWidth = width / 7;
@@ -160,17 +192,22 @@ class DatePicker extends HookWidget {
       children.add(Positioned(
         left: (i % 7) * dayWidth,
         top: (i / 7).floor() * dayWidth,
-        child: Container(
-          width: dayWidth,
-          height: dayWidth,
-          decoration: BoxDecoration(
-              border: _numBorder(startDay.add(Duration(days: i)), i % 7)),
-          child: Center(
-            child: Text(
-                DateFormat('d').format(
-                  startDay.add(Duration(days: i)),
-                ),
-                style: TextStyle(color: dayColor, fontSize: 12)),
+        child: GestureDetector(
+          onTap: () async {
+            _addToPeriods(context, periods, startDay.add(Duration(days: i)));
+          },
+          child: Container(
+            width: dayWidth,
+            height: dayWidth,
+            decoration: BoxDecoration(
+                border: _numBorder(startDay.add(Duration(days: i)), i % 7)),
+            child: Center(
+              child: Text(
+                  DateFormat('d').format(
+                    startDay.add(Duration(days: i)),
+                  ),
+                  style: TextStyle(color: dayColor, fontSize: 12)),
+            ),
           ),
         ),
       ));
@@ -224,22 +261,7 @@ class DatePicker extends HookWidget {
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () async {
-              var newPeriod = await showDialog(
-                context: context,
-                builder: (context) => EditPeriodDialog(
-                  from: period.from,
-                  to: period.to,
-                ),
-              );
-              if (newPeriod == specialDeletePeriod) {
-                periods.value = periods.value
-                    .where((element) => element != period)
-                    .toList();
-              } else if (newPeriod != null) {
-                periods.value = periods.value
-                    .map<Period>((p) => p == period ? newPeriod : p)
-                    .toList();
-              }
+              _editPeriodInPeriods(context, periods, period);
             },
             child: Container(
               width: (eow - start + 1) * dayWidth,
@@ -280,44 +302,6 @@ class DatePicker extends HookWidget {
       width: width,
     );
   }
-
-  // Widget _body(BuildContext context, ValueNotifier<List<Period>> periods) {
-  //   return ListView(
-  //     children: periods.value
-  //         .map<Widget>(
-  //           (period) => ListTile(
-  //             title: Text(period.toString()),
-  //             trailing: IconButton(
-  //               icon: Icon(Icons.delete),
-  //               onPressed: () {
-  //                 periods.value = periods.value
-  //                     .where((element) => element != period)
-  //                     .toList();
-  //               },
-  //             ),
-  //             onTap: () async {
-  //               var newPeriod = await showDialog(
-  //                 context: context,
-  //                 builder: (context) => EditPeriodDialog(
-  //                   from: period.from,
-  //                   to: period.to,
-  //                 ),
-  //               );
-  //               if (newPeriod == specialDeletePeriod) {
-  //                 periods.value = periods.value
-  //                     .where((element) => element != period)
-  //                     .toList();
-  //               } else if (newPeriod != null) {
-  //                 periods.value = periods.value
-  //                     .map<Period>((p) => p == period ? newPeriod : p)
-  //                     .toList();
-  //               }
-  //             },
-  //           ),
-  //         )
-  //         .toList(),
-  //   );
-  // }
 }
 
 class AddPeriodDialog extends PeriodDialog {
@@ -343,12 +327,6 @@ class EditPeriodDialog extends PeriodDialog {
           leftButtonDanger: true,
         );
 }
-
-//
-//  Make a AddPeriodDialog and a ChangePeriodDialog
-//
-//  make sure you get the value of the dialog to a button
-//
 
 class PeriodDialog extends HookWidget {
   final DateTime from;
