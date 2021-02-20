@@ -354,14 +354,24 @@ class PeriodDialog extends HookWidget {
         _dialogTitle(title),
         SizedBox(height: 22),
         _dialogLabel('Från'),
-        _dialogDate(context, dialogFrom.value, (date) {
-          dialogFrom.value = date;
-        }),
+        _dialogDate(
+          context,
+          date: dialogFrom.value,
+          last: dialogTo.value,
+          onChanged: (date) {
+            dialogFrom.value = date;
+          },
+        ),
         SizedBox(height: 32),
         _dialogLabel('Till'),
-        _dialogDate(context, dialogTo.value, (date) {
-          dialogTo.value = date;
-        }),
+        _dialogDate(
+          context,
+          date: dialogTo.value,
+          first: dialogFrom.value,
+          onChanged: (date) {
+            dialogTo.value = date;
+          },
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
           child: Row(
@@ -403,14 +413,15 @@ class PeriodDialog extends HookWidget {
     return Text(text, style: TextStyle(fontSize: 12));
   }
 
-  Widget _dialogDate(context, DateTime date, onChanged) {
+  Widget _dialogDate(context,
+      {DateTime date, DateTime first, DateTime last, onChanged}) {
     return GestureDetector(
       onTap: () async {
         var newDate = await showDatePicker(
             context: context,
             initialDate: date != null ? date : DateTime.now(),
-            firstDate: DateTime(2020, 1, 1),
-            lastDate: DateTime.now());
+            firstDate: first ?? DateTime(2020, 1, 1),
+            lastDate: last ?? DateTime.now());
         if (newDate != null) {
           onChanged(newDate);
         }
