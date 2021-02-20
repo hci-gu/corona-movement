@@ -220,8 +220,9 @@ class DatePicker extends HookWidget {
 
         children.add(Positioned(
           left: (start % 7) * dayWidth,
-          top: weekIndex * dayWidth + dayWidth / 4,
+          top: weekIndex * dayWidth,
           child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () async {
               var newPeriod = await showDialog(
                 context: context,
@@ -242,16 +243,19 @@ class DatePicker extends HookWidget {
             },
             child: Container(
               width: (eow - start + 1) * dayWidth,
-              height: dayWidth / 2,
-              decoration: BoxDecoration(
-                color: Color.fromARGB(102, 245, 195, 68),
-                borderRadius: BorderRadius.only(
-                  topLeft: start == beginning ? radius : Radius.zero,
-                  bottomLeft: start == beginning ? radius : Radius.zero,
-                  topRight:
-                      eow == end && period.to != null ? radius : Radius.zero,
-                  bottomRight:
-                      eow == end && period.to != null ? radius : Radius.zero,
+              height: dayWidth,
+              padding: EdgeInsets.only(top: dayWidth / 4, bottom: dayWidth / 4),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(102, 245, 195, 68),
+                  borderRadius: BorderRadius.only(
+                    topLeft: start == beginning ? radius : Radius.zero,
+                    bottomLeft: start == beginning ? radius : Radius.zero,
+                    topRight:
+                        eow == end && period.to != null ? radius : Radius.zero,
+                    bottomRight:
+                        eow == end && period.to != null ? radius : Radius.zero,
+                  ),
                 ),
               ),
             ),
