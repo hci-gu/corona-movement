@@ -286,6 +286,8 @@ class DatePicker extends HookWidget {
         if (eow > end) eow = end;
 
         var radius = Radius.circular(dayWidth / 2);
+        var startRadius = start == beginning ? radius : Radius.zero;
+        var endRadius = eow == end && period.to != null ? radius : Radius.zero;
 
         children.add(Positioned(
           left: (start % 7) * dayWidth,
@@ -298,17 +300,15 @@ class DatePicker extends HookWidget {
             child: Container(
               width: (eow - start + 1) * dayWidth,
               height: dayWidth,
-              padding: EdgeInsets.only(top: dayWidth / 4, bottom: dayWidth / 4),
+              padding: EdgeInsets.symmetric(vertical: dayWidth / 4),
               child: Container(
                 decoration: BoxDecoration(
                   color: Color.fromARGB(102, 245, 195, 68),
                   borderRadius: BorderRadius.only(
-                    topLeft: start == beginning ? radius : Radius.zero,
-                    bottomLeft: start == beginning ? radius : Radius.zero,
-                    topRight:
-                        eow == end && period.to != null ? radius : Radius.zero,
-                    bottomRight:
-                        eow == end && period.to != null ? radius : Radius.zero,
+                    topLeft: startRadius,
+                    bottomLeft: startRadius,
+                    topRight: endRadius,
+                    bottomRight: endRadius,
                   ),
                 ),
               ),
