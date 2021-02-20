@@ -70,6 +70,38 @@ class DatePicker extends HookWidget {
     );
   }
 
+  List<Period> mergePeriods(List<Period> periods) {
+    if (periods.length <= 1) return periods;
+
+    periods.sort((a, b) => a.from.compareTo(b.from));
+
+    var merged = <Period>[];
+    var from = periods[0].from;
+    var to = periods[0].to;
+    var i = 1;
+
+    do {
+      if (to == null) {
+        to = null;
+        break;
+      }
+      if (periods[i].from.isBefore(to) ||
+          periods[i].from.isAtSameMomentAs(to)) {
+        to = periods[i].to == null || periods[i].to.isAfter(to)
+            ? periods[i].to
+            : to;
+      } else {
+        merged.add(Period(from: from, to: to));
+        from = periods[i].from;
+        to = periods[i].to;
+      }
+      i++;
+    } while (i < periods.length);
+    merged.add(Period(from: from, to: to));
+
+    return merged;
+  }
+
   void _addToPeriods(BuildContext context, ValueNotifier<List<Period>> periods,
       DateTime startDate) async {
     var period = await showDialog(
@@ -79,7 +111,7 @@ class DatePicker extends HookWidget {
       ),
     );
     if (period != null) {
-      periods.value = [...periods.value, period];
+      periods.value = mergePeriods([...periods.value, period]);
     }
   }
 
@@ -96,9 +128,9 @@ class DatePicker extends HookWidget {
       periods.value =
           periods.value.where((element) => element != period).toList();
     } else if (newPeriod != null) {
-      periods.value = periods.value
+      periods.value = mergePeriods(periods.value
           .map<Period>((p) => p == period ? newPeriod : p)
-          .toList();
+          .toList());
     }
   }
 
