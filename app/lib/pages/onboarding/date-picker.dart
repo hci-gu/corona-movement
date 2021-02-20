@@ -189,24 +189,24 @@ class DatePicker extends HookWidget {
     List<Widget> children = [];
 
     for (var i = 0; i < 7 * numWeeks; i++) {
+      final date = startDay.add(Duration(days: i));
+      if (date.isAfter(DateTime.now())) break;
       children.add(Positioned(
         left: (i % 7) * dayWidth,
         top: (i / 7).floor() * dayWidth,
         child: GestureDetector(
           onTap: () async {
-            _addToPeriods(context, periods, startDay.add(Duration(days: i)));
+            _addToPeriods(context, periods, date);
           },
           child: Container(
             width: dayWidth,
             height: dayWidth,
-            decoration: BoxDecoration(
-                border: _numBorder(startDay.add(Duration(days: i)), i % 7)),
+            decoration: BoxDecoration(border: _numBorder(date, i % 7)),
             child: Center(
               child: Text(
-                  DateFormat('d').format(
-                    startDay.add(Duration(days: i)),
-                  ),
-                  style: TextStyle(color: dayColor, fontSize: 12)),
+                DateFormat('d').format(date),
+                style: TextStyle(color: dayColor, fontSize: 12),
+              ),
             ),
           ),
         ),
