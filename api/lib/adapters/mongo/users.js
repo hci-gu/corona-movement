@@ -11,12 +11,16 @@ const create = async ({
   os,
   dataSource,
   code,
+  beforePeriods,
+  afterPeriods,
 }) => {
   const result = await collection.insert({
     created: new Date(),
-    compareDate: new Date(compareDate),
+    compareDate: compareDate ? new Date(compareDate) : undefined,
     initialDataDate: new Date(initialDataDate),
     endDate: endDate ? new Date(endDate) : undefined,
+    beforePeriods,
+    afterPeriods,
     os,
     dataSource,
     code,
