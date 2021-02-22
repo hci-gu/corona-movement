@@ -1,4 +1,6 @@
 const { ObjectId } = require('mongodb')
+const { FROM_DATE, BEFORE_END_DATE } = require('../../constants')
+const moment = require('moment')
 const COLLECTION = 'users'
 let collection
 
@@ -76,6 +78,22 @@ const joinGroup = async ({ id, groupId }) => {
 const leaveGroup = async ({ id, groupId }) =>
   collection.update({ _id: ObjectId(id) }, { $unset: { group: 1 } })
 
+const beforePeriodsForUser = (user) => {
+  let to = user.compareDate ? user.compareDate : BEFORE_END_DATE
+  if (user.afterPeriods && user.afterPeriods.length) {
+    to = user.afterPeriods[0].from
+  }
+
+  return [
+    {
+      from: moment(user.initialDataDate).isAfter(FROM_DATE)
+        ? user.initialDataDate
+        : FROM_DATE,
+      to,
+    },
+  ]
+}
+
 module.exports = {
   init: async (db) => {
     if (process.env.NODE_ENV != 'production')
@@ -85,7 +103,21 @@ module.exports = {
   insert,
   collection,
   create,
-  get,
+  get: async (id) => {
+    const user = await get(id)
+    if (user) {
+      user.beforePeriods = beforePeriodsForUser(user)
+      if (!user.afterPeriods) {
+        user.afterPeriods = [
+          {
+            from: user.compareDate,
+            to: null,
+          },
+        ]
+      }
+    }
+    return user
+  },
   update,
   remove,
   getAllExcept,
@@ -94,4 +126,5 @@ module.exports = {
   usersInGroup,
   count: ({ from = new Date('2020-01-01') }) =>
     collection.count({ created: { $gt: from } }),
+  beforePeriodsForUser,
 }

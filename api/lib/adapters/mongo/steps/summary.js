@@ -1,24 +1,7 @@
 let collection
 const moment = require('moment')
-const { FROM_DATE, BEFORE_END_DATE } = require('../../../constants')
+const { BEFORE_END_DATE } = require('../../../constants')
 const userCollection = require('../users')
-
-const getQuery = ({ id, from, to, weekDays }) => {
-  const query = {
-    date: {
-      $gte: new Date(from),
-      $lt: new Date(to),
-    },
-  }
-  if (weekDays !== undefined) {
-    query['day'] = { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] }
-  }
-  if (id !== 'all') {
-    query['id'] = id
-  }
-
-  return query
-}
 
 const queryForPeriods = ({ id, periods, weekDays }) => {
   const query = {
@@ -71,19 +54,19 @@ const getAverageStepsForUser = async ({ id, periods }) => {
   }
 }
 
-const getUserPeriods = (user, initialDataDate, latestDataDate) => {
-  if (user.beforePeriods && user.afterPeriods) {
-    return [user.beforePeriods, user.afterPeriods]
+const getUserPeriods = (user, latestDataDate) => {
+  const beforePeriods = userCollection.beforePeriodsForUser(user)
+
+  if (user.afterPeriods) {
+    return [
+      beforePeriods,
+      user.afterPeriods.map((p) => ({
+        from: p.from,
+        to: p.to ? p.to : moment().format('YYYY-MM-DD'),
+      })),
+    ]
   }
 
-  const beforePeriods = [
-    {
-      from: moment(initialDataDate).isAfter(FROM_DATE)
-        ? initialDataDate
-        : FROM_DATE,
-      to: user.compareDate ? user.compareDate : BEFORE_END_DATE,
-    },
-  ]
   const afterPeriods = [
     {
       from: user.compareDate ? user.compareDate : BEFORE_END_DATE,
@@ -94,9 +77,9 @@ const getUserPeriods = (user, initialDataDate, latestDataDate) => {
   return [beforePeriods, afterPeriods]
 }
 
-const getSummaryForUser = async ({ from, to, id }) => {
+const getSummaryForUser = async ({ id, from, to }) => {
   const user = await userCollection.get(id)
-  const [beforePeriods, afterPeriods] = getUserPeriods(user, from, to)
+  const [beforePeriods, afterPeriods] = getUserPeriods(user, to)
 
   const [before, after] = await Promise.all([
     getAverageStepsForUser({

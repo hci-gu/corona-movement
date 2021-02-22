@@ -51,7 +51,7 @@ module.exports = {
   getSummary: aggregatedStepsCollection.getSummary,
   // users
   createUser: userCollection.create,
-  getUser: async (id) => userCollection.get(id),
+  getUser: userCollection.get,
   updateUser: userCollection.update,
   removeUser: userCollection.remove,
   insertUser: userCollection.insert,
