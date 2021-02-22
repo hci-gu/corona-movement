@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -10,8 +12,9 @@ class Period {
   Period({this.from, this.to});
 
   String toString() {
-    var ts =
-        this.to == null ? 'pågående' : DateFormat('yyyy-MM-dd').format(this.to);
+    var ts = this.to == null
+        ? 'ongoing'.i18n
+        : DateFormat('yyyy-MM-dd').format(this.to);
     var fs = DateFormat('yyyy-MM-dd').format(this.from);
     return '$fs - $ts';
   }
@@ -21,16 +24,29 @@ final specialDeletePeriod = Period();
 
 class DatePicker extends HookWidget {
   Widget build(BuildContext context) {
-    var periods = useState([Period(from: DateTime(2020, 3, 11))]);
+    var periods = useState(<Period>[]);
 
     return Scaffold(
-      appBar: AppWidgets.appBar(context: context, title: 'WFH Perioder'),
+      appBar: AppWidgets.appBar(context: context, title: 'Pick periods'.i18n),
       body: _body(context, periods),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          _addToPeriods(context, periods, DateTime(2020, 03, 11));
-        },
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: null,
+            child: Icon(Icons.add),
+            onPressed: () async {
+              _addToPeriods(context, periods, DateTime(2020, 03, 11));
+            },
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: null,
+            child: Icon(Icons.done),
+            onPressed: () async {},
+          )
+        ],
       ),
     );
   }
@@ -48,7 +64,7 @@ class DatePicker extends HookWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(40.0),
-            child: Text('När har du arbetat hemifrån?'),
+            child: Text('When have you been working from home?'.i18n),
           ),
           Stack(
             children: [
@@ -341,9 +357,9 @@ class AddPeriodDialog extends PeriodDialog {
       : super(
           from: from,
           to: to,
-          title: 'Lägg till period',
-          leftButtonText: 'Ångra',
-          rightButtonText: 'Lägg till',
+          title: 'Add period'.i18n,
+          leftButtonText: 'Cancel'.i18n,
+          rightButtonText: 'Add'.i18n,
           leftButtonDanger: false,
         );
 }
@@ -353,9 +369,9 @@ class EditPeriodDialog extends PeriodDialog {
       : super(
           from: from,
           to: to,
-          title: 'Ändra period',
-          leftButtonText: 'Ta bort',
-          rightButtonText: 'Spara',
+          title: 'Change period'.i18n,
+          leftButtonText: 'Remove'.i18n,
+          rightButtonText: 'Save'.i18n,
           leftButtonDanger: true,
         );
 }
@@ -385,7 +401,7 @@ class PeriodDialog extends HookWidget {
       children: [
         _dialogTitle(title),
         SizedBox(height: 22),
-        _dialogLabel('Från'),
+        _dialogLabel('From'.i18n),
         _dialogDate(
           context,
           date: dialogFrom.value,
@@ -395,7 +411,7 @@ class PeriodDialog extends HookWidget {
           },
         ),
         SizedBox(height: 32),
-        _dialogLabel('Till'),
+        _dialogLabel('To'.i18n),
         _dialogDate(
           context,
           date: dialogTo.value,
@@ -419,7 +435,7 @@ class PeriodDialog extends HookWidget {
                 secondary: !leftButtonDanger,
                 danger: leftButtonDanger,
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 5),
               StyledButton(
                 onPressed: () {
                   Navigator.pop(
@@ -438,7 +454,13 @@ class PeriodDialog extends HookWidget {
   }
 
   Widget _dialogTitle(text) {
-    return Text(text, style: TextStyle(fontSize: 24));
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+      ),
+    );
   }
 
   Widget _dialogLabel(text) {
@@ -468,7 +490,7 @@ class PeriodDialog extends HookWidget {
         child: Center(
           child: Text(date != null
               ? DateFormat('yyyy-MM-dd').format(date)
-              : 'pågående'),
+              : 'ongoing'.i18n),
         ),
       ),
     );
