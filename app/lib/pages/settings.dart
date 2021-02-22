@@ -76,7 +76,7 @@ class Settings extends HookWidget {
         child: StyledButton(
           key: Key('settings-change-date'),
           icon: Icons.date_range,
-          title: 'Change date'.i18n,
+          title: 'Update periods'.i18n,
           onPressed: () => _onChangeDatePressed(
             context,
             user,

@@ -1,3 +1,5 @@
+import 'package:wfhmovement/i18n.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -49,7 +51,12 @@ class FormModel extends ValueNotifier {
     notifyListeners();
   }
 
-  static List genderChoices = ['Female', 'Male', 'Other', 'Prefer not to say'];
+  static List genderChoices = [
+    'Female'.i18n,
+    'Male'.i18n,
+    'Other'.i18n,
+    'Prefer not to say'.i18n
+  ];
   static List ageRanges = [
     '18-24',
     '25-34',
@@ -60,17 +67,17 @@ class FormModel extends ValueNotifier {
     '75-84',
     '85-94',
     '95-104',
-    '105 or older',
-    'prefer not to say'
+    '105 or older'.i18n,
+    'Prefer not to say'.i18n
   ];
   static List educations = [
-    'No higher education',
-    'High school',
-    'Bachelor\'s Degree',
-    'Master\'s Degree',
-    'PhD',
-    'Trade/Vocational School',
-    'Prefer not to say',
+    'No higher education'.i18n,
+    'High school'.i18n,
+    'Bachelor\'s Degree'.i18n,
+    'Master\'s Degree'.i18n,
+    'PhD'.i18n,
+    'Trade/Vocational School'.i18n,
+    'Prefer not to say'.i18n,
   ];
 }
 

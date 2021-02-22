@@ -19,7 +19,6 @@ import '../../style.dart';
 class Introduction extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    OnboardingModel onboarding = useModel(onboardingAtom);
     User user = useModel(userAtom);
 
     return MainScaffold(
@@ -64,23 +63,33 @@ class Introduction extends HookWidget {
     );
   }
 
-  Widget pickDateWidget(context, onboarding) {
+  Widget pickDateWidget(context, user) {
     return Column(
       children: [
         SizedBox(
           height: 50,
         ),
         Text(
-          'Begin by selecting the periods you have been working from home.'
-              .i18n,
+          'Have you been working from home?'.i18n,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20),
-        StyledButton(
-          icon: Icons.date_range,
-          title: 'Select periods'.i18n,
-          onPressed: () => _onSelectDatePressed(context, onboarding),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            StyledButton(
+              small: true,
+              title: 'Yes'.i18n,
+              onPressed: () => _onYesPressed(context, user),
+            ),
+            SizedBox(width: 10),
+            StyledButton(
+              small: true,
+              title: 'No'.i18n,
+              onPressed: () => _onNoPressed(context, user),
+            ),
+          ],
         ),
         SizedBox(height: 20),
         Image.asset(
@@ -91,7 +100,7 @@ class Introduction extends HookWidget {
     );
   }
 
-  void _onSelectDatePressed(BuildContext context, User user) async {
+  void _onYesPressed(BuildContext context, User user) async {
     Function done = (BuildContext doneContext, List<DatePeriod> periods) {
       String title = 'Vill du fortsätta?'.i18n;
       String text =
@@ -118,7 +127,7 @@ class Introduction extends HookWidget {
             Navigator.of(doneContext).push(
               MaterialPageRoute(
                 builder: (context) => SelectDataSource(),
-                settings: RouteSettings(name: 'Select periods'),
+                settings: RouteSettings(name: 'Select datasource'),
               ),
             );
           }
@@ -134,6 +143,25 @@ class Introduction extends HookWidget {
         ),
         settings: RouteSettings(name: 'Select periods'),
       ),
+    );
+  }
+
+  void _onNoPressed(BuildContext context, User user) {
+    AppWidgets.showConfirmDialog(
+      context: context,
+      title: 'Using the app without having worked from home'.i18n,
+      text:
+          'Even if you haven\'t worked from home you can still use the app. The difference is that you won\'t select a period to compare your movement before and after with.\n\nThe app will instead compare your movement before and after March 11 2020.'
+              .i18n,
+      onComplete: () {
+        user.setDidNotWorkFromHome();
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SelectDataSource(),
+            settings: RouteSettings(name: 'Select datasource'),
+          ),
+        );
+      },
     );
   }
 }

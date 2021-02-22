@@ -207,8 +207,8 @@ msgstr "Fortsätt"
 msgid "Have your movement patterns changed?"
 msgstr "Har dina rörelsemönster förändrats?"
 
-msgid "Begin by selecting the periods you have been working from home."
-msgstr "Börja med att välja perioderna du jobbat hemifrån."
+msgid "Have you been working from home?"
+msgstr "Har du jobbat hemifrån?"
 
 msgid "Select periods"
 msgstr "Välj perioder"
@@ -246,8 +246,8 @@ msgstr "Inställningar"
 msgid "You started working from home on %s."
 msgstr "Du började jobba hemifrån %s."
 
-msgid "Change date"
-msgstr "Byt datum"
+msgid "Update periods"
+msgstr "Ändra perioder"
 
 msgid "Join group"
 msgstr "Gå med i en grupp"
@@ -275,6 +275,9 @@ msgstr "Avbryt"
 
 msgid "Yes"
 msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
 
 msgid "User id copied to clipboard"
 msgstr "Användar-id kopierat till urklipp"
@@ -465,9 +468,44 @@ msgstr "\n\nDu kan lägga till fler perioder genom att trycka utanför det marke
 msgid "Proceed"
 msgstr "Fortsätt"
 
-msgid ""
-msgstr ""
+msgid "Using the app without having worked from home"
+msgstr "Använd appen utan att ha arbetat hemifrån"
 
-msgid ""
-msgstr ""
+msgid "Even if you haven\'t worked from home you can still use the app. The difference is that you won\'t select a period to compare your movement before and after with.\n\nThe app will instead compare your movement before and after March 11 2020."
+msgstr "Även om du inte arbetat hemifrån kan du fortfarande använda appen. Skillnaden är att du inte väljer en period att jämföra dig rörelse före och efter med.\n\nAppen kommer istället att jämföra din rörelse före och efter 11 Mars 2020."
+
+
+msgid "Female"
+msgstr "Kvinna"
+
+msgid "Male"
+msgstr "Man"
+
+msgid "Other"
+msgstr "Annat"
+
+msgid "Prefer not to say"
+msgstr "Föredrar att inte säga"
+
+msgid "105 or older"
+msgstr "105 eller äldre"
+
+msgid "No higher education"
+msgstr "Ingen högre utbildning"
+
+msgid "High school"
+msgstr "Gymnasium"
+
+msgid "Bachelor\'s Degree"
+msgstr "Kandidatexamen"
+
+msgid "Master\'s Degree"
+msgstr "Masterexamen"
+
+msgid "PhD"
+msgstr "Doktorsexamen"
+
+msgid "Trade/Vocational School"
+msgstr "Yrkeshögskola"
+
 

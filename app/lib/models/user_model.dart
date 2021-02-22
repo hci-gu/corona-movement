@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_native_timezone/generated/i18n.dart';
 import 'package:health/health.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wfhmovement/global-analytics.dart';
@@ -28,6 +29,7 @@ class User extends ValueNotifier {
   bool deeplinkOpen = false;
   DateTime lastSync;
   double stepsEstimate = 0.0;
+  bool workedFromHome;
 
   User() : super(null);
 
@@ -49,6 +51,12 @@ class User extends ValueNotifier {
 
   setAfterPeriods(List<DatePeriod> periods) {
     afterPeriods = periods;
+    workedFromHome = true;
+    notifyListeners();
+  }
+
+  setDidNotWorkFromHome() {
+    workedFromHome = false;
     notifyListeners();
   }
 
@@ -118,6 +126,7 @@ class User extends ValueNotifier {
     lastSync = null;
     beforePeriods = null;
     afterPeriods = null;
+    workedFromHome = null;
     stepsEstimate = 0.0;
 
     notifyListeners();
