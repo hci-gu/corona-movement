@@ -1,10 +1,20 @@
+import 'package:wfhmovement/i18n.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/utils.dart';
 
 class DatePeriod {
-  DateTime from;
-  DateTime to;
+  final DateTime _from;
+  final DateTime _to;
+
+  DateTime get from {
+    return _from;
+  }
+
+  DateTime get to {
+    if (_to == null) return DateTime.now();
+    return _to;
+  }
 
   String get fromAsString {
     return from.toIso8601String().substring(0, 10);
@@ -14,13 +24,28 @@ class DatePeriod {
     return to.toIso8601String().substring(0, 10);
   }
 
-  DatePeriod(Map<String, dynamic> json) {
-    from = DateTime.parse(json['from']);
-    to = DateTime.parse(json['to']);
+  String toString() {
+    var ts = this.to == null
+        ? 'ongoing'.i18n
+        : DateFormat('yyyy-MM-dd').format(this.to);
+    var fs = DateFormat('yyyy-MM-dd').format(this.from);
+    return '$fs - $ts';
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'from': from != null ? fromAsString : null,
+      'to': to != null ? toAsString : null,
+    };
+  }
+
+  DatePeriod(this._from, this._to);
+
   factory DatePeriod.fromJson(Map<String, dynamic> json) {
-    return DatePeriod(json);
+    return DatePeriod(
+      json['from'] != null ? DateTime.parse(json['from']) : null,
+      json['to'] != null ? DateTime.parse(json['to']) : null,
+    );
   }
 }
 

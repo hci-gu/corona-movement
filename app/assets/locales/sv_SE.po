@@ -419,3 +419,55 @@ msgstr "Gå med i grupp"
 
 msgid "If you have a code you can enter it here to join a group. This allows you to compare with others in the same group.\n\nIf you are interested in trying out this feature with your group, company or organization, feel free to contact us at sebastian.andreasson@ait.gu.se"
 msgstr "Om du har en kod kan du skriva in den här för att gå med i en grupp. Det låter dig jämföra ditt resultat med andra i samma grupp.\n\nÄr du intresserad att testa den här funktionen med en grupp eller ett företag/organisation så kan du kontakta oss genom sebastian.andreasson@ait.gu.se"
+
+msgid "ongoing"
+msgstr "pågående"
+
+msgid "Pick periods"
+msgstr "Välj perioder"
+
+msgid "When have you been working from home?"
+msgstr "När har du arbetat hemifrån?"
+
+msgid "Add period"
+msgstr "Lägg till period"
+
+msgid "Add"
+msgstr "Lägg till"
+
+msgid "Change period"
+msgstr "Ändra period"
+
+msgid "Remove"
+msgstr "Ta bort"
+
+msgid "Save"
+msgstr "Spara"
+
+msgid "From"
+msgstr "Från"
+
+msgid "To"
+msgstr "Till"
+
+msgid "Do you want to proceed"
+msgstr "Vill du fortsätta?"
+
+msgid "If you\'re satisfied with the periods you added press \"Proceed\""
+msgstr "Om du är nöjd med de perioder du lagt till tryck på \"Fortsätt\""
+
+msgid "You haven\'t added any periods\n\nYou add one by tapping a date in the calendar."
+msgstr "Du har inte lagt till några perioder\n\nDu lägger till en period genom att trycka på ett datum i kalendern."
+
+msgid "\n\nYou can add more periods by tapping outside the marked area in the calendar."
+msgstr "\n\nDu kan lägga till fler perioder genom att trycka utanför det markerade området i kalendern."
+
+msgid "Proceed"
+msgstr "Fortsätt"
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
+

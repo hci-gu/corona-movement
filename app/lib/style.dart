@@ -1,5 +1,5 @@
-import 'dart:ui';
 import 'package:wfhmovement/i18n.dart';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:wfhmovement/pages/settings.dart';
@@ -126,8 +126,15 @@ class AppWidgets {
     );
   }
 
-  static void showConfirmDialog(
-      BuildContext context, String title, String text, Function onComplete) {
+  static void showConfirmDialog({
+    BuildContext context,
+    String title,
+    String text,
+    String completeButtonText = 'Ok',
+    String cancelButtonText = 'Cancel',
+    Function onComplete,
+    Function onCancel,
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -135,8 +142,16 @@ class AppWidgets {
           title: Text(title),
           content: Text(text),
           actions: [
+            if (onCancel != null)
+              FlatButton(
+                child: Text(cancelButtonText.i18n),
+                onPressed: () {
+                  onComplete();
+                  Navigator.of(context).pop();
+                },
+              ),
             FlatButton(
-              child: Text('Ok'),
+              child: Text(completeButtonText.i18n),
               onPressed: () {
                 onComplete();
                 Navigator.of(context).pop();

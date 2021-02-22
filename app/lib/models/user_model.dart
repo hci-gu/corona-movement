@@ -14,7 +14,6 @@ class User extends ValueNotifier {
   bool inited = false;
   String id;
   String languageOverride;
-  DateTime compareDate;
   DateTime latestUploadDate;
   DateTime initialDataDate = DateTime.parse('2020-01-01');
   List<DatePeriod> beforePeriods;
@@ -39,7 +38,6 @@ class User extends ValueNotifier {
 
   setUser(UserResponse response) {
     id = response.id;
-    compareDate = response.compareDate;
     if (response.initialDataDate != null &&
         response.initialDataDate.isAfter(DateTime.parse('2020-01-01'))) {
       initialDataDate = response.initialDataDate.add(Duration(days: 1));
@@ -49,8 +47,8 @@ class User extends ValueNotifier {
     notifyListeners();
   }
 
-  setCompareDate(DateTime date) {
-    compareDate = date;
+  setAfterPeriods(List<DatePeriod> periods) {
+    afterPeriods = periods;
     notifyListeners();
   }
 
@@ -108,7 +106,6 @@ class User extends ValueNotifier {
   reset() {
     inited = true;
     id = null;
-    compareDate = null;
     latestUploadDate = null;
     dataSource = null;
     group = null;
@@ -119,6 +116,8 @@ class User extends ValueNotifier {
     gaveEstimate = false;
     deeplinkOpen = false;
     lastSync = null;
+    beforePeriods = null;
+    afterPeriods = null;
     stepsEstimate = 0.0;
 
     notifyListeners();
@@ -178,7 +177,7 @@ Action registerAction = (get) async {
   onboarding.setGaveConsent();
 
   UserResponse response = await api.register(
-    onboarding.date,
+    user.afterPeriods,
     onboarding.initialDataDate,
     onboarding.dataSource,
     user.code,
@@ -206,9 +205,18 @@ Action proceedWithoutStepsAction = (get) async {
 UserResponse fakeUser(OnboardingModel onboarding) {
   return UserResponse.fromJson({
     '_id': 'all',
-    'compareDate': onboarding.date != null
-        ? onboarding.date.toIso8601String()
-        : '2020-03-18',
+    'beforePeriods': [
+      DatePeriod(
+        DateTime.parse('2020-01-01'),
+        DateTime.parse('2020-03-11'),
+      )
+    ],
+    'afterPeriods': [
+      DatePeriod(
+        DateTime.parse('2020-03-11'),
+        null,
+      )
+    ],
   });
 }
 
@@ -216,7 +224,7 @@ Action updateUserCompareDateAction = (get) async {
   User user = get(userAtom);
   user.setLoading(true);
 
-  await api.updateUserCompareDate(user.id, user.compareDate);
+  // await api.updateUserCompareDate(user.id);
 
   user.setLoading(false);
 };

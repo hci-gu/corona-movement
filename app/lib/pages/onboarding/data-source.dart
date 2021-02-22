@@ -185,12 +185,15 @@ class DataSource extends HookWidget {
                 );
               }
               AppWidgets.showConfirmDialog(
-                  context,
-                  'Apple health',
-                  'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow.'
-                      .i18n, () {
-                getHealthAuthorization();
-              });
+                context: context,
+                title: 'Apple health',
+                text:
+                    'You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow.'
+                        .i18n,
+                onComplete: () {
+                  getHealthAuthorization();
+                },
+              );
             } else {
               getHealthAuthorization();
             }
@@ -222,10 +225,6 @@ class DataSource extends HookWidget {
 
   Widget _consentAndProceed(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent, Function uploadSteps) {
-    if (onboarding.date.isBefore(onboarding.initialDataDate) ||
-        onboarding.date.isAfter(onboarding.lastDataDate)) {
-      return _noDataBeforeOrAfter(context, onboarding);
-    }
     return Column(
       children: [
         SizedBox(height: 20),

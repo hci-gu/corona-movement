@@ -36,7 +36,7 @@ class Home extends HookWidget {
       getStepsChart();
       getStepsComparison();
       return;
-    }, [user.compareDate, user.group, user.lastSync]);
+    }, [user.group, user.lastSync]);
     useEffect(() {
       if (!steps.fetching) {
         _refreshController.refreshCompleted();
