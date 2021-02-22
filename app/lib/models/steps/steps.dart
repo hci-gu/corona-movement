@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/api/responses.dart';
+import 'package:wfhmovement/models/steps/utils.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 
@@ -57,96 +58,49 @@ class StepsModel extends ValueNotifier {
 
 var stepsAtom = Atom('steps', StepsModel());
 
-List groupByHour(List<HealthData> list) {
-  Map<String, dynamic> obj = list.fold({}, (obj, x) {
-    var key = x.hours.toString();
-    if (obj[key] == null) {
-      obj[key] = [];
-    }
-    obj[key].add(x);
-    return obj;
-  });
-  return obj.keys.map((key) {
-    return {
-      'key': key,
-      'values': obj[key],
-    };
-  }).toList();
-}
-
-List putDataInBuckets(List<Map<String, dynamic>> data) {
-  return List.generate(24, (index) {
-    var match = data.firstWhere((o) => o['key'] == index.toString(),
-        orElse: () => null);
-    return {
-      'key': index,
-      'value': match != null ? match['value'] : 0.0,
-    };
-  });
-}
-
-typedef Filter = bool Function(dynamic o);
-List filterDataIntoBuckets(List data, Filter filter, List<int> weekdays) {
-  List dataInFilter = data
-      .where(filter)
-      .toList()
-      .where((o) => weekdays.contains(o.weekday))
-      .toList();
-  var numDates = dataInFilter.map((o) => o.date).toSet().length;
-  List _group = groupByHour(dataInFilter);
-  return putDataInBuckets(_group.map((o) {
-    return {
-      'key': o['key'],
-      'value': o['values'].fold(0, (sum, x) => sum + x.value) / numDates
-    };
-  }).toList());
-}
-
 var stepsBeforeAndAfterSelector =
     Selector('steps-before-and-after-selector', (GetStateValue get) {
   StepsModel steps = get(stepsAtom);
-  List<String> dates = get(userDatesSelector);
+  List<List<DatePeriod>> datePeriods = get(userPeriodsSelector);
 
-  var start = dates[0];
-  var compareDate = dates[1];
-  if (steps.data.length == 0) return [];
+  List<DatePeriod> beforePeriods = datePeriods[0];
+  List<DatePeriod> afterPeriods = datePeriods[1];
 
   return [
     filterDataIntoBuckets(
       steps.data,
-      (o) =>
-          (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0),
+      filterForPeriods(beforePeriods),
       steps.days,
     ),
     filterDataIntoBuckets(
       steps.data,
-      (o) => (o.date.compareTo(compareDate) >= 0),
+      filterForPeriods(afterPeriods),
       steps.days,
     ),
   ];
 });
 
-int getDaysBetween(String from, String to, List<int> daysToInclude) {
-  var days = 0;
-  List dayDiff = List.generate(
-      DateTime.parse(to).difference(DateTime.parse(from)).inDays,
-      (index) => index);
-  dayDiff.forEach((value) {
-    var date = DateTime.parse(from).add(Duration(days: value));
-    if (daysToInclude.contains(date.weekday)) {
-      days++;
-    }
-  });
+var dailyStepsBeforeAndAfterSelector =
+    Selector('daily-steps-before-and-after-selector', (GetStateValue get) {
+  List buckets = get(stepsBeforeAndAfterSelector);
+  DataBucket before = buckets[0];
+  DataBucket after = buckets[1];
 
-  return days;
-}
+  return [
+    averageDailySteps(before),
+    averageDailySteps(after),
+  ];
+});
 
 var totalStepsBeforeAndAfterSelector =
     Selector('total-steps-before-and-after-selector', (GetStateValue get) {
+  List buckets = get(stepsBeforeAndAfterSelector);
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
   HealthComparison comparison = get(stepsComparisonSelector);
-  List<String> dates = get(userDatesSelector);
+
+  DataBucket before = buckets[0];
+  DataBucket after = buckets[1];
 
   if (steps.days.length == 7 && user.id != 'all') {
     if (comparison == null) {
@@ -155,24 +109,13 @@ var totalStepsBeforeAndAfterSelector =
     return [comparison.user.before.toInt(), comparison.user.after.toInt()];
   }
 
-  var start = dates[0];
-  var compareDate = dates[1];
-  var lastDate = dates[2];
-  var beforeDays = getDaysBetween(start, compareDate, steps.days);
-  var afterDays = getDaysBetween(compareDate, lastDate, steps.days);
-  var before = steps.data
-      .where((o) =>
-          (o.date.compareTo(start) >= 0 && o.date.compareTo(compareDate) < 0))
-      .where((o) => steps.days.contains(o.weekday))
-      .fold(0, (sum, o) => sum + o.value)
-      .toInt();
-  var after = steps.data
-      .where((o) => (o.date.compareTo(compareDate) >= 0))
-      .where((o) => steps.days.contains(o.weekday))
-      .fold(0, (sum, o) => sum + o.value)
-      .toInt();
+  var totalStepsBefore = before.data.fold(0, (sum, o) => sum + o.value).toInt();
+  var totalStepsAfter = after.data.fold(0, (sum, o) => sum + o.value).toInt();
 
-  return [(before / beforeDays).toInt(), (after / afterDays).toInt()];
+  return [
+    (totalStepsBefore / before.period).toInt(),
+    (totalStepsAfter / after.period).toInt()
+  ];
 });
 
 var stepsDiffBeforeAndAfterSelector =

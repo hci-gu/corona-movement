@@ -58,17 +58,17 @@ class Settings extends HookWidget {
     );
   }
 
-  List<Widget> _userWidgets(BuildContext context, user, updateUserCompareDate) {
-    String dateString = user.compareDate.toIso8601String().substring(0, 10);
+  List<Widget> _userWidgets(
+      BuildContext context, User user, updateUserCompareDate) {
+    String dateString = user.afterPeriods.first.fromAsString;
 
     return [
-      if (user.compareDate != null)
-        Text(
-          'You started working from home on %s.'.i18n.fill([dateString]),
-          style: TextStyle(
-            fontSize: 18,
-          ),
+      Text(
+        'You started working from home on %s.'.i18n.fill([dateString]),
+        style: TextStyle(
+          fontSize: 18,
         ),
+      ),
       SizedBox(height: 20),
       Center(
         child: StyledButton(
@@ -220,7 +220,7 @@ class Settings extends HookWidget {
         onTap: () {
           FlutterClipboard.copy(user.id).then(
             (value) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
                     'User id copied to clipboard'.i18n,

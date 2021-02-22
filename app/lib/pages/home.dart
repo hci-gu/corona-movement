@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/steps/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/compare-steps.dart';

@@ -1,3 +1,4 @@
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/global-analytics.dart';
-import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/steps/steps.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/style.dart';
@@ -30,12 +31,13 @@ class DaysBarChart extends HookWidget {
   Widget build(BuildContext context) {
     List days = useModel(stepsDayTotalSelector);
     User user = useModel(userAtom);
-    List<String> dates = useModel(userDatesSelector);
+    List<List<DatePeriod>> periods = useModel(userPeriodsSelector);
+    List<DatePeriod> afterPeriods = periods[1];
     useEffect(() {
-      if (days.length > 0 && user.id != 'all') {
+      if (days.length > 0 && user.id != 'all' && afterPeriods.first != null) {
         if (scrollController.hasClients) {
           scrollController.animateTo(
-            _scrollOffsetForDays(days, dates[1]),
+            _scrollOffsetForDays(days, afterPeriods.first?.fromAsString),
             duration: Duration(milliseconds: 500),
             curve: Curves.easeOut,
           );
@@ -53,7 +55,8 @@ class DaysBarChart extends HookWidget {
         child: NotificationListener(
           onNotification: (notification) {
             if (notification is ScrollEndNotification) {
-              double offset = _scrollOffsetForDays(days, dates[1]);
+              double offset =
+                  _scrollOffsetForDays(days, afterPeriods.first?.fromAsString);
               if (scrollController.offset != offset) {
                 globalAnalytics.sendEvent('dayBarChartScroll');
               }
@@ -64,7 +67,7 @@ class DaysBarChart extends HookWidget {
             padding: EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
             scrollDirection: Axis.horizontal,
             children: [
-              _barChart(days.length > 0 ? days : emptyDays, user, dates[1],
+              _barChart(days.length > 0 ? days : emptyDays, user, afterPeriods,
                   days.length == 0),
             ],
           ),
@@ -82,7 +85,7 @@ class DaysBarChart extends HookWidget {
     return index * barWidth - 50;
   }
 
-  Widget _barChart(days, user, String compareDate, [bool empty]) {
+  Widget _barChart(days, user, List<DatePeriod> afterPeriods, [bool empty]) {
     double maxValue = days.length > 0
         ? days.fold(
             0.0, (value, day) => value > day['value'] ? value : day['value'])
@@ -107,9 +110,18 @@ class DaysBarChart extends HookWidget {
                 int rodIndex,
               ) {
                 var day = days[groupIndex];
-                if (compareDate.compareTo(day['date']) == 0) {
+                if (_dateIsAtStartOfPeriod(day['date'], afterPeriods)) {
                   return BarTooltipItem(
                     'Started working from home'.i18n,
+                    TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+                if (_dateIsAtEndOfPeriod(day['date'], afterPeriods)) {
+                  return BarTooltipItem(
+                    'Stopped working from home'.i18n,
                     TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -159,10 +171,26 @@ class DaysBarChart extends HookWidget {
           borderData: FlBorderData(
             show: false,
           ),
-          barGroups: _barGroupsForDays(days, user, compareDate, maxValue),
+          barGroups: _barGroupsForDays(days, user, afterPeriods, maxValue),
         ),
       ),
     );
+  }
+
+  bool _dateIsAtStartOfPeriod(String dateString, List<DatePeriod> periods) {
+    return periods.any(
+        (DatePeriod period) => period.fromAsString.compareTo(dateString) == 0);
+  }
+
+  bool _dateIsAtEndOfPeriod(String dateString, List<DatePeriod> periods) {
+    return periods.any(
+        (DatePeriod period) => period.toAsString.compareTo(dateString) == 0);
+  }
+
+  bool _dateIsInPeriod(String dateString, List<DatePeriod> periods) {
+    DateTime date = DateTime.parse(dateString);
+    return periods.any((DatePeriod period) =>
+        period.from.isBefore(date) && period.to.isAfter(date));
   }
 
   String _labelforDate(DateTime date) {
@@ -201,11 +229,13 @@ class DaysBarChart extends HookWidget {
   }
 
   List<BarChartGroupData> _barGroupsForDays(
-      List days, User user, String compareDate, double maxValue) {
+      List days, User user, List<DatePeriod> afterPeriods, double maxValue) {
     List<BarChartGroupData> barGroups = [];
     days.forEach((day) {
       int index = days.indexOf(day);
-      if (compareDate.compareTo(day['date']) == 0 && user.id != 'all') {
+      if ((_dateIsAtStartOfPeriod(day['date'], afterPeriods) ||
+              _dateIsAtEndOfPeriod(day['date'], afterPeriods)) &&
+          user.id != 'all') {
         barGroups.add(
           BarChartGroupData(
             x: index,
@@ -221,9 +251,9 @@ class DaysBarChart extends HookWidget {
           ),
         );
       } else {
-        Color rodColor = compareDate.compareTo(day['date']) >= 1
-            ? AppColors.secondary
-            : AppColors.main;
+        Color rodColor = _dateIsInPeriod(day['date'], afterPeriods)
+            ? AppColors.main
+            : AppColors.secondary;
         if (user.id == 'all') rodColor = AppColors.main;
         barGroups.add(
           BarChartGroupData(x: index, barRods: [

@@ -1,7 +1,7 @@
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/steps/steps.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,7 +17,7 @@ class StepsChart extends HookWidget {
   @override
   Widget build(BuildContext context) {
     StepsModel chart = useModel(stepsAtom);
-    List data = useModel(stepsBeforeAndAfterSelector);
+    List data = useModel(dailyStepsBeforeAndAfterSelector);
     List totalSteps = useModel(totalStepsBeforeAndAfterSelector);
 
     if (chart.fetching) {
