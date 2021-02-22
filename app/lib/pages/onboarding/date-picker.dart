@@ -4,58 +4,33 @@ import 'package:wfhmovement/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
-import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/models/user_model.dart';
-import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 
 final specialDeletePeriod = DatePeriod(null, null);
 
 class DatePicker extends HookWidget {
+  final Function(BuildContext, List<DatePeriod>) onDone;
+  final List<DatePeriod> initialPeriods;
+
+  DatePicker({
+    Key key,
+    this.onDone,
+    this.initialPeriods,
+  }) : super(key: key);
+
   Widget build(BuildContext context) {
-    User user = useModel(userAtom);
-    var periods = useState(<DatePeriod>[]);
+    var periods = useState(
+      initialPeriods != null ? initialPeriods : <DatePeriod>[],
+    );
 
     return Scaffold(
       appBar: AppWidgets.appBar(context: context, title: 'Pick periods'.i18n),
       body: _body(context, periods),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
-        onPressed: () async {
-          String title = 'Vill du fortsätta?'.i18n;
-          String text =
-              'If you\'re satisfied with the periods you added press \"Proceed\"'
-                  .i18n;
-          if (periods.value.length == 0) {
-            title = 'Lägg till en period';
-            text =
-                'You haven\'t added any periods\n\nYou add one by tapping a date in the calendar.'
-                    .i18n;
-          } else if (periods.value.length == 1) {
-            text +=
-                '\n\nYou can add more periods by tapping outside the marked area in the calendar.'
-                    .i18n;
-          }
-          AppWidgets.showConfirmDialog(
-            context: context,
-            title: title,
-            text: text,
-            completeButtonText:
-                periods.value.length > 0 ? 'Proceed'.i18n : 'Ok',
-            onComplete: () {
-              if (periods.value.length > 0) {
-                user.setAfterPeriods(periods.value);
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SelectDataSource(),
-                    settings: RouteSettings(name: 'Select periods'),
-                  ),
-                );
-              }
-            },
-            onCancel: periods.value.length > 0 ? () {} : null,
-          );
+        onPressed: () {
+          onDone(context, periods.value);
         },
       ),
     );

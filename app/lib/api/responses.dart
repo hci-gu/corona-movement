@@ -4,23 +4,15 @@ import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/utils.dart';
 
 class DatePeriod {
-  final DateTime _from;
-  final DateTime _to;
-
-  DateTime get from {
-    return _from;
-  }
-
-  DateTime get to {
-    if (_to == null) return DateTime.now();
-    return _to;
-  }
+  final DateTime from;
+  final DateTime to;
 
   String get fromAsString {
     return from.toIso8601String().substring(0, 10);
   }
 
   String get toAsString {
+    if (to == null) return DateTime.now().toIso8601String().substring(0, 10);
     return to.toIso8601String().substring(0, 10);
   }
 
@@ -39,7 +31,7 @@ class DatePeriod {
     };
   }
 
-  DatePeriod(this._from, this._to);
+  DatePeriod(this.from, this.to);
 
   factory DatePeriod.fromJson(Map<String, dynamic> json) {
     return DatePeriod(

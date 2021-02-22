@@ -220,11 +220,11 @@ UserResponse fakeUser(OnboardingModel onboarding) {
   });
 }
 
-Action updateUserCompareDateAction = (get) async {
+Action updateUserAfterPeriodsAction = (get) async {
   User user = get(userAtom);
   user.setLoading(true);
 
-  // await api.updateUserCompareDate(user.id);
+  await api.updateUserAfterPeriods(user.id, user.afterPeriods);
 
   user.setLoading(false);
 };

@@ -102,7 +102,8 @@ Future<bool> deleteUser(String userId) async {
   return response.statusCode == 200;
 }
 
-Future updateUserCompareDate(String userId, DateTime compareDate) async {
+Future updateUserAfterPeriods(
+    String userId, List<DatePeriod> afterPeriods) async {
   var url = '$API_URL/user/$userId';
   await http.patch(
     url,
@@ -111,7 +112,7 @@ Future updateUserCompareDate(String userId, DateTime compareDate) async {
       'api-key': API_KEY,
     },
     body: jsonEncode({
-      'compareDate': compareDate.toIso8601String().substring(0, 10),
+      'afterPeriods': afterPeriods.map((e) => e.toJson()).toList(),
       'timezone': globalApiHandler.timezone,
     }),
   );

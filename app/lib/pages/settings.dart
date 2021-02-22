@@ -1,4 +1,5 @@
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/group.dart';
+import 'package:wfhmovement/pages/onboarding/date-picker.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 import 'package:wfhmovement/widgets/group_code.dart';
@@ -19,7 +21,7 @@ class Settings extends HookWidget {
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
     var deleteUser = useAction(deleteUserAction);
-    var updateUserCompareDate = useAction(updateUserCompareDateAction);
+    var updateUserAfterPeriods = useAction(updateUserAfterPeriodsAction);
     Widget appBar = AppWidgets.appBar(
       context: context,
       title: 'Settings'.i18n,
@@ -44,7 +46,7 @@ class Settings extends HookWidget {
               padding: EdgeInsets.all(25),
               children: [
                 if (user.id != 'all')
-                  ..._userWidgets(context, user, updateUserCompareDate),
+                  ..._userWidgets(context, user, updateUserAfterPeriods),
                 if (user.id != 'all')
                   ..._loggedInUserWidgets(context, user, deleteUser),
                 _appInformation(context),
@@ -59,7 +61,7 @@ class Settings extends HookWidget {
   }
 
   List<Widget> _userWidgets(
-      BuildContext context, User user, updateUserCompareDate) {
+      BuildContext context, User user, updateUserAfterPeriods) {
     String dateString = user.afterPeriods.first.fromAsString;
 
     return [
@@ -78,7 +80,7 @@ class Settings extends HookWidget {
           onPressed: () => _onChangeDatePressed(
             context,
             user,
-            updateUserCompareDate,
+            updateUserAfterPeriods,
           ),
         ),
       ),
@@ -115,22 +117,38 @@ class Settings extends HookWidget {
   }
 
   void _onChangeDatePressed(
-      BuildContext context, user, updateUserCompareDate) async {
-    DateTime compareDate = user.compareDate;
-    globalAnalytics.sendEvent('openChangeCompareDate');
+      BuildContext context, User user, updateUserAfterPeriods) async {
+    Function done = (BuildContext doneContext, List<DatePeriod> periods) {
+      Navigator.of(doneContext).pop();
+      user.setAfterPeriods(periods);
+      updateUserAfterPeriods();
+    };
 
-    var date = await showDatePicker(
-      locale: I18n.of(context).locale,
-      context: context,
-      initialDate: compareDate,
-      firstDate: DateTime.parse('2010-01-01'),
-      lastDate: DateTime.now(),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DatePicker(
+          initialPeriods: user.afterPeriods,
+          onDone: done,
+        ),
+        settings: RouteSettings(name: 'Select periods'),
+      ),
     );
-    if (date != null) {
-      globalAnalytics.sendEvent('changeCompareDate');
-      user.setCompareDate(DateTime(date.year, date.month, date.day));
-      updateUserCompareDate();
-    }
+
+    // DateTime compareDate = user.compareDate;
+    // globalAnalytics.sendEvent('openChangeCompareDate');
+
+    // var date = await showDatePicker(
+    //   locale: I18n.of(context).locale,
+    //   context: context,
+    //   initialDate: compareDate,
+    //   firstDate: DateTime.parse('2010-01-01'),
+    //   lastDate: DateTime.now(),
+    // );
+    // if (date != null) {
+    //   globalAnalytics.sendEvent('changeCompareDate');
+    //   user.setCompareDate(DateTime(date.year, date.month, date.day));
+    //   updateUserCompareDate();
+    // }
   }
 
   Widget _appInformation(BuildContext context) {

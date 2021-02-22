@@ -189,8 +189,10 @@ class DaysBarChart extends HookWidget {
 
   bool _dateIsInPeriod(String dateString, List<DatePeriod> periods) {
     DateTime date = DateTime.parse(dateString);
-    return periods.any((DatePeriod period) =>
-        period.from.isBefore(date) && period.to.isAfter(date));
+    return periods.any((DatePeriod period) {
+      DateTime to = period.to == null ? DateTime.now() : period.to;
+      return period.from.isBefore(date) && to.isAfter(date);
+    });
   }
 
   String _labelforDate(DateTime date) {
