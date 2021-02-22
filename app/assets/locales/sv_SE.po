@@ -207,11 +207,11 @@ msgstr "Fortsätt"
 msgid "Have your movement patterns changed?"
 msgstr "Har dina rörelsemönster förändrats?"
 
-msgid "Begin by picking the day you started working from home."
-msgstr "Börja med att välja dagen du började jobba hemifrån."
+msgid "Begin by selecting the periods you have been working from home."
+msgstr "Börja med att välja perioderna du jobbat hemifrån."
 
-msgid "Select date"
-msgstr "Välj datum"
+msgid "Select periods"
+msgstr "Välj perioder"
 
 msgid "Uploading your steps: %d uploads left."
 msgstr "Laddar upp dina steg: %d uppladdningar kvar."

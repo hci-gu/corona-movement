@@ -71,14 +71,15 @@ class Introduction extends HookWidget {
           height: 50,
         ),
         Text(
-          'Begin by picking the day you started working from home.'.i18n,
+          'Begin by selecting the periods you have been working from home.'
+              .i18n,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20),
         StyledButton(
           icon: Icons.date_range,
-          title: 'Select date'.i18n,
+          title: 'Select periods'.i18n,
           onPressed: () => _onSelectDatePressed(context, onboarding),
         ),
         SizedBox(height: 20),

@@ -59,7 +59,7 @@ class UserResponse {
       initialDataDate = DateTime.parse(json['initialDataDate']);
     }
     if (json['stepsEstimate'] != null) {
-      stepsEstimate = json['stepsEstimate'];
+      stepsEstimate = json['stepsEstimate'] + 0.000000001;
     }
     if (json['group'] != null) {
       groupId = json['group'];
