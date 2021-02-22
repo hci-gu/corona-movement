@@ -17,6 +17,8 @@ class User extends ValueNotifier {
   DateTime compareDate;
   DateTime latestUploadDate;
   DateTime initialDataDate = DateTime.parse('2020-01-01');
+  List<DatePeriod> beforePeriods;
+  List<DatePeriod> afterPeriods;
   String dataSource;
   String groupCode = '';
   Group group;
@@ -42,6 +44,8 @@ class User extends ValueNotifier {
         response.initialDataDate.isAfter(DateTime.parse('2020-01-01'))) {
       initialDataDate = response.initialDataDate.add(Duration(days: 1));
     }
+    beforePeriods = response.beforePeriods;
+    afterPeriods = response.afterPeriods;
     notifyListeners();
   }
 
@@ -124,16 +128,11 @@ class User extends ValueNotifier {
 int chunkSize = 750;
 var userAtom = Atom('user', User());
 
-var userDatesSelector = Selector('user-dates-selector', (GetStateValue get) {
+var userPeriodsSelector =
+    Selector('user-periods-selector', (GetStateValue get) {
   User user = get(userAtom);
 
-  return [
-    user.initialDataDate.toIso8601String().substring(0, 10),
-    user.compareDate.toIso8601String().substring(0, 10),
-    user.latestUploadDate != null
-        ? user.latestUploadDate.toIso8601String().substring(0, 10)
-        : DateTime.now().toIso8601String().substring(0, 10),
-  ];
+  return [user.beforePeriods, user.afterPeriods];
 });
 
 Action initAction = (get) async {

@@ -3,7 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/steps/steps.dart';
 
 class PendingComparisons extends HookWidget {
   @override

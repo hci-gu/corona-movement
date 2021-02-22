@@ -48,19 +48,6 @@ const getQuery = ({ id, from, to, weekDays }) => {
   return query
 }
 
-const getQueryForPeriods = ({ id, periods }) => {
-  const query = {
-    $or: [
-      periods.map(({ from, to }) => ({
-        date: {
-          $gte: new Date(from),
-          $lt: new Date(to),
-        },
-      })),
-    ],
-  }
-}
-
 const getHours = async ({ id, from, to, timezone = 'Europe/Stockholm' }) => {
   const result = (
     await collection

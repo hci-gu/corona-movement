@@ -1,5 +1,6 @@
 let collection
 const moment = require('moment')
+const { FROM_DATE, BEFORE_END_DATE } = require('../../../constants')
 const userCollection = require('../users')
 
 const getQuery = ({ id, from, to, weekDays }) => {
@@ -19,11 +20,37 @@ const getQuery = ({ id, from, to, weekDays }) => {
   return query
 }
 
-const getAverageStepsForUser = async ({ id, from, to, daysToPeriod = 0 }) => {
+const queryForPeriods = ({ id, periods, weekDays }) => {
+  const query = {
+    $or: periods.map(({ from, to }) => ({
+      date: {
+        $gte: new Date(from),
+        $lt: new Date(to),
+      },
+    })),
+  }
+  if (weekDays !== undefined) {
+    query['day'] = { $in: weekDays ? [1, 2, 3, 4, 5] : [0, 6] }
+  }
+  if (id !== 'all') {
+    query['id'] = id
+  }
+
+  return query
+}
+
+const daysInPeriods = (periods) => {
+  return periods.reduce((total, period) => {
+    const days = moment(period.to).diff(moment(period.from), 'days')
+    return total + days
+  }, 0)
+}
+
+const getAverageStepsForUser = async ({ id, periods }) => {
   const result = await collection
     .aggregate([
       {
-        $match: getQuery({ id, from, to }),
+        $match: queryForPeriods({ id, periods }),
       },
       {
         $group: {
@@ -34,31 +61,51 @@ const getAverageStepsForUser = async ({ id, from, to, daysToPeriod = 0 }) => {
     ])
     .toArray()
 
-  const period = moment(to).diff(moment(from), 'days') + daysToPeriod
+  const days = daysInPeriods(periods)
   let total = result.length ? result[0].value : 0
 
   return {
-    period,
+    days,
     total,
-    value: parseInt(total / period),
+    value: parseInt(total / days),
   }
+}
+
+const getUserPeriods = (user, initialDataDate, latestDataDate) => {
+  if (user.beforePeriods && user.afterPeriods) {
+    return [user.beforePeriods, user.afterPeriods]
+  }
+
+  const beforePeriods = [
+    {
+      from: moment(initialDataDate).isAfter(FROM_DATE)
+        ? initialDataDate
+        : FROM_DATE,
+      to: user.compareDate ? user.compareDate : BEFORE_END_DATE,
+    },
+  ]
+  const afterPeriods = [
+    {
+      from: user.compareDate ? user.compareDate : BEFORE_END_DATE,
+      to: latestDataDate,
+    },
+  ]
+
+  return [beforePeriods, afterPeriods]
 }
 
 const getSummaryForUser = async ({ from, to, id }) => {
   const user = await userCollection.get(id)
+  const [beforePeriods, afterPeriods] = getUserPeriods(user, from, to)
 
   const [before, after] = await Promise.all([
     getAverageStepsForUser({
       id,
-      from,
-      to: user.compareDate,
-      daysToPeriod: 0,
+      periods: beforePeriods,
     }),
     getAverageStepsForUser({
       id,
-      from: user.compareDate,
-      to: moment(to).format(),
-      daysToPeriod: -1,
+      periods: afterPeriods,
     }),
   ])
 

@@ -3,7 +3,7 @@ import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/garmin_client.dart';
-import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/steps/steps.dart';
 import 'package:wfhmovement/models/user_model.dart';
 
 class GarminModel extends ValueNotifier {

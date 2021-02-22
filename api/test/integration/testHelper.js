@@ -27,15 +27,8 @@ const init = async () => {
   await db.createCollection(AGGREGATED_STEPS_COLLECTION)
 }
 
-const register = async ({ app, compareDate, endDate, initialDataDate }) => {
-  const res = await request(app)
-    .post('/register')
-    .send({
-      compareDate,
-      endDate,
-      initialDataDate,
-    })
-    .expect(200)
+const register = async (app, user) => {
+  const res = await request(app).post('/register').send(user).expect(200)
   return res.body
 }
 
@@ -56,8 +49,7 @@ const userWithSteps = async (
   const lastDate = moment(steps[steps.length - 1].date_from).format(
     'YYYY-MM-DD'
   )
-  const user = await register({
-    app,
+  const user = await register(app, {
     compareDate,
     endDate: lastDate,
     initialDataDate,
@@ -86,8 +78,7 @@ const userWithPeriods = async (
     steps: amount,
   })
 
-  const user = await register({
-    app,
+  const user = await register(app, {
     beforePeriods,
     afterPeriods,
     initialDataDate: moment(steps[0].date_from).format('YYYY-MM-DD'),

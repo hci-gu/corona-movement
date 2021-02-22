@@ -2,16 +2,42 @@ import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/utils.dart';
 
+class DatePeriod {
+  DateTime from;
+  DateTime to;
+
+  String get fromAsString {
+    return from.toIso8601String().substring(0, 10);
+  }
+
+  String get toAsString {
+    return to.toIso8601String().substring(0, 10);
+  }
+
+  DatePeriod(Map<String, dynamic> json) {
+    from = DateTime.parse(json['from']);
+    to = DateTime.parse(json['to']);
+  }
+
+  factory DatePeriod.fromJson(Map<String, dynamic> json) {
+    return DatePeriod(json);
+  }
+}
+
 class UserResponse {
   String id;
   DateTime compareDate;
   DateTime initialDataDate;
   double stepsEstimate;
   String groupId;
+  List<DatePeriod> beforePeriods;
+  List<DatePeriod> afterPeriods;
 
   UserResponse(Map<String, dynamic> json) {
     id = json['_id'];
-    compareDate = DateTime.parse(json['compareDate']);
+    if (json['compareDate'] != null) {
+      compareDate = DateTime.parse(json['compareDate']);
+    }
     if (json['initialDataDate'] != null) {
       initialDataDate = DateTime.parse(json['initialDataDate']);
     }
@@ -20,6 +46,14 @@ class UserResponse {
     }
     if (json['group'] != null) {
       groupId = json['group'];
+    }
+    if (json['beforePeriods'] != null) {
+      List<dynamic> beforeData = json['beforePeriods'];
+      beforePeriods = beforeData.map((o) => DatePeriod.fromJson(o)).toList();
+    }
+    if (json['afterPeriods'] != null) {
+      List<dynamic> afterData = json['afterPeriods'];
+      afterPeriods = afterData.map((o) => DatePeriod.fromJson(o)).toList();
     }
   }
 

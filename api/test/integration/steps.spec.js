@@ -6,14 +6,15 @@ const testHelper = require('./testHelper')
 const { expect } = require('chai')
 
 describe('#Steps', () => {
+  before(() => testHelper.cleanup())
+
   let user
   let from = '2020-01-01'
   let to = '2020-01-04'
 
   describe('POST /health-data', () => {
     beforeEach(async () => {
-      user = await testHelper.register({
-        app,
+      user = await testHelper.register(app, {
         compareDate: '2020-01-02',
         endDate: to,
       })
@@ -36,7 +37,7 @@ describe('#Steps', () => {
   describe('GET /:id/hours', () => {
     beforeEach(async () => {
       user = await testHelper.userWithSteps(app, {
-        compareDate: '2020-01-02',
+        compareDate: '2020-01-01',
         endDate: to,
         daysWithStepsBefore: 3,
         daysWithStepsAfter: 3,
@@ -46,8 +47,8 @@ describe('#Steps', () => {
     it('can fetch uploaded steps per hour', async () => {
       const res = await request(app).get(`/${user._id}/hours`).expect(200)
       expect(res.body.result[0]).to.eql({
-        _id: '2019-12-30 00',
-        key: '2019-12-30 00',
+        _id: '2019-12-30 01',
+        key: '2019-12-30 01',
         value: 60,
       })
     })
@@ -84,7 +85,7 @@ describe('#Steps', () => {
     })
   })
 
-  xdescribe('User with periods', () => {
+  describe('User with periods', () => {
     let date = '2020-01-10'
     before(async () => {
       user = await testHelper.userWithPeriods(app, {
@@ -114,6 +115,11 @@ describe('#Steps', () => {
         key: '2020-01-01 01',
         value: 60,
       })
+    })
+
+    it('can get a summary for own hours before and after', async () => {
+      const res = await request(app).get(`/${user._id}/summary`).expect(200)
+      expect(res.body.user.before).to.eql(1 * 24 * 6 * 10)
     })
   })
 

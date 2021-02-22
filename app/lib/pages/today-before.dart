@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/models/recoil.dart';
-import 'package:wfhmovement/models/steps.dart';
+import 'package:wfhmovement/models/steps/steps.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 import 'package:wfhmovement/widgets/share.dart';
