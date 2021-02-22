@@ -29,24 +29,33 @@ class DatePicker extends HookWidget {
     return Scaffold(
       appBar: AppWidgets.appBar(context: context, title: 'Pick periods'.i18n),
       body: _body(context, periods),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: null,
-            child: Icon(Icons.add),
-            onPressed: () async {
-              _addToPeriods(context, periods, DateTime(2020, 03, 11));
-            },
-          ),
-          SizedBox(height: 10),
-          FloatingActionButton(
-            heroTag: null,
-            child: Icon(Icons.done),
-            onPressed: () async {},
-          )
-        ],
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.done),
+        onPressed: () async {
+          String title = 'Vill du fortsätta?'.i18n;
+          String text =
+              'If you\'re satisfied with the periods you added press \"Proceed\"'
+                  .i18n;
+          if (periods.value.length == 0) {
+            title = 'Lägg till en period';
+            text =
+                'You haven\'t added any periods\n\nYou add one by tapping a date in the calendar.'
+                    .i18n;
+          } else if (periods.value.length == 1) {
+            text +=
+                '\n\nYou can add more periods by tapping outside the marked area in the calendar.'
+                    .i18n;
+          }
+          AppWidgets.showConfirmDialog(
+            context: context,
+            title: title,
+            text: text,
+            completeButtonText:
+                periods.value.length > 0 ? 'Proceed'.i18n : 'Ok',
+            onComplete: () {},
+            onCancel: periods.value.length > 0 ? () {} : null,
+          );
+        },
       ),
     );
   }

@@ -432,9 +432,6 @@ msgstr "När har du arbetat hemifrån?"
 msgid "Add period"
 msgstr "Lägg till period"
 
-msgid "Cancel"
-msgstr "Ångra"
-
 msgid "Add"
 msgstr "Lägg till"
 
@@ -452,4 +449,25 @@ msgstr "Från"
 
 msgid "To"
 msgstr "Till"
+
+msgid "Do you want to proceed"
+msgstr "Vill du fortsätta?"
+
+msgid "If you\'re satisfied with the periods you added press \"Proceed\""
+msgstr "Om du är nöjd med de perioder du lagt till tryck på \"Fortsätt\""
+
+msgid "You haven\'t added any periods\n\nYou add one by tapping a date in the calendar."
+msgstr "Du har inte lagt till några perioder\n\nDu lägger till en period genom att trycka på ett datum i kalendern."
+
+msgid "\n\nYou can add more periods by tapping outside the marked area in the calendar."
+msgstr "\n\nDu kan lägga till fler perioder genom att trycka utanför det markerade området i kalendern."
+
+msgid "Proceed"
+msgstr "Fortsätt"
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
 
