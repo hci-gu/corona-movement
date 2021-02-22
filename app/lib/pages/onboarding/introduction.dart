@@ -17,8 +17,6 @@ class Introduction extends HookWidget {
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
 
-    return DatePicker();
-
     return MainScaffold(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 25),
@@ -88,21 +86,11 @@ class Introduction extends HookWidget {
   }
 
   void _onSelectDatePressed(BuildContext context, onboarding) async {
-    var date = await showDatePicker(
-      locale: I18n.of(context).locale,
-      context: context,
-      initialDate: DateTime.parse('2020-03-01'),
-      firstDate: DateTime.parse('2010-01-01'),
-      lastDate: DateTime.now(),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DatePicker(),
+        settings: RouteSettings(name: 'Select periods'),
+      ),
     );
-    if (date != null) {
-      onboarding.setDate(DateTime(date.year, date.month, date.day));
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SelectDataSource(),
-          settings: RouteSettings(name: 'Select datasource'),
-        ),
-      );
-    }
   }
 }

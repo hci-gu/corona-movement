@@ -1,30 +1,21 @@
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/models/user_model.dart';
+import 'package:wfhmovement/pages/onboarding/select-data-source.dart';
 import 'package:wfhmovement/style.dart';
 import 'package:wfhmovement/widgets/button.dart';
 
-class Period {
-  final DateTime from;
-  final DateTime to;
-  Period({this.from, this.to});
-
-  String toString() {
-    var ts = this.to == null
-        ? 'ongoing'.i18n
-        : DateFormat('yyyy-MM-dd').format(this.to);
-    var fs = DateFormat('yyyy-MM-dd').format(this.from);
-    return '$fs - $ts';
-  }
-}
-
-final specialDeletePeriod = Period();
+final specialDeletePeriod = DatePeriod(null, null);
 
 class DatePicker extends HookWidget {
   Widget build(BuildContext context) {
-    var periods = useState(<Period>[]);
+    User user = useModel(userAtom);
+    var periods = useState(<DatePeriod>[]);
 
     return Scaffold(
       appBar: AppWidgets.appBar(context: context, title: 'Pick periods'.i18n),
@@ -52,7 +43,17 @@ class DatePicker extends HookWidget {
             text: text,
             completeButtonText:
                 periods.value.length > 0 ? 'Proceed'.i18n : 'Ok',
-            onComplete: () {},
+            onComplete: () {
+              if (periods.value.length > 0) {
+                user.setAfterPeriods(periods.value);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SelectDataSource(),
+                    settings: RouteSettings(name: 'Select periods'),
+                  ),
+                );
+              }
+            },
             onCancel: periods.value.length > 0 ? () {} : null,
           );
         },
@@ -62,7 +63,7 @@ class DatePicker extends HookWidget {
 
   final dayColor = Color.fromARGB(50, 0, 0, 0);
 
-  Widget _body(BuildContext context, ValueNotifier<List<Period>> periods) {
+  Widget _body(BuildContext context, ValueNotifier<List<DatePeriod>> periods) {
     double width = MediaQuery.of(context).size.width;
     double dayWidth = width * 0.5 / 7;
     DateTime startDay = DateTime(2019, 12, 30);
@@ -95,12 +96,12 @@ class DatePicker extends HookWidget {
     );
   }
 
-  List<Period> mergePeriods(List<Period> periods) {
+  List<DatePeriod> mergePeriods(List<DatePeriod> periods) {
     if (periods.length <= 1) return periods;
 
     periods.sort((a, b) => a.from.compareTo(b.from));
 
-    var merged = <Period>[];
+    var merged = <DatePeriod>[];
     var from = periods[0].from;
     var to = periods[0].to;
     var i = 1;
@@ -116,19 +117,19 @@ class DatePicker extends HookWidget {
             ? periods[i].to
             : to;
       } else {
-        merged.add(Period(from: from, to: to));
+        merged.add(DatePeriod(from, to));
         from = periods[i].from;
         to = periods[i].to;
       }
       i++;
     } while (i < periods.length);
-    merged.add(Period(from: from, to: to));
+    merged.add(DatePeriod(from, to));
 
     return merged;
   }
 
-  void _addToPeriods(BuildContext context, ValueNotifier<List<Period>> periods,
-      DateTime startDate) async {
+  void _addToPeriods(BuildContext context,
+      ValueNotifier<List<DatePeriod>> periods, DateTime startDate) async {
     var period = await showDialog(
       context: context,
       builder: (context) => AddPeriodDialog(
@@ -141,7 +142,7 @@ class DatePicker extends HookWidget {
   }
 
   void _editPeriodInPeriods(BuildContext context,
-      ValueNotifier<List<Period>> periods, Period period) async {
+      ValueNotifier<List<DatePeriod>> periods, DatePeriod period) async {
     var newPeriod = await showDialog(
       context: context,
       builder: (context) => EditPeriodDialog(
@@ -154,7 +155,7 @@ class DatePicker extends HookWidget {
           periods.value.where((element) => element != period).toList();
     } else if (newPeriod != null) {
       periods.value = mergePeriods(periods.value
-          .map<Period>((p) => p == period ? newPeriod : p)
+          .map<DatePeriod>((p) => p == period ? newPeriod : p)
           .toList());
     }
   }
@@ -237,7 +238,7 @@ class DatePicker extends HookWidget {
     );
   }
 
-  Widget _days(context, ValueNotifier<List<Period>> periods) {
+  Widget _days(context, ValueNotifier<List<DatePeriod>> periods) {
     double width = MediaQuery.of(context).size.width * 0.52;
     DateTime startDay = DateTime(2019, 12, 30);
     double dayWidth = width / 7;
@@ -291,7 +292,7 @@ class DatePicker extends HookWidget {
     return Border(bottom: bottom, right: right);
   }
 
-  Widget _periods(context, ValueNotifier<List<Period>> periods) {
+  Widget _periods(context, ValueNotifier<List<DatePeriod>> periods) {
     double width = MediaQuery.of(context).size.width * 0.52;
     DateTime startDay = DateTime(2019, 12, 30);
     double dayWidth = width / 7;
@@ -299,7 +300,7 @@ class DatePicker extends HookWidget {
 
     List<Widget> children = [];
 
-    for (Period period in periods.value) {
+    for (DatePeriod period in periods.value) {
       var beginning = period.from.difference(startDay).inDays;
       var start = beginning;
       var end = (period.to ?? DateTime.now()).difference(startDay).inDays;
@@ -449,7 +450,7 @@ class PeriodDialog extends HookWidget {
                 onPressed: () {
                   Navigator.pop(
                     context,
-                    Period(from: dialogFrom.value, to: dialogTo.value),
+                    DatePeriod(dialogFrom.value, dialogTo.value),
                   );
                 },
                 title: rightButtonText,

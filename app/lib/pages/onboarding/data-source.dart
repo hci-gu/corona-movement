@@ -225,10 +225,6 @@ class DataSource extends HookWidget {
 
   Widget _consentAndProceed(BuildContext context, OnboardingModel onboarding,
       Function register, ValueNotifier consent, Function uploadSteps) {
-    if (onboarding.date.isBefore(onboarding.initialDataDate) ||
-        onboarding.date.isAfter(onboarding.lastDataDate)) {
-      return _noDataBeforeOrAfter(context, onboarding);
-    }
     return Column(
       children: [
         SizedBox(height: 20),

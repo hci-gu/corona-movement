@@ -53,8 +53,8 @@ Future postData(
   );
 }
 
-Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
-    String dataSource, String code) async {
+Future<UserResponse> register(List<DatePeriod> afterPeriods,
+    DateTime initialDataDate, String dataSource, String code) async {
   const url = '$API_URL/register';
   var response = await http.post(
     url,
@@ -63,7 +63,7 @@ Future<UserResponse> register(DateTime compareDate, DateTime initialDataDate,
       'api-key': API_KEY,
     },
     body: jsonEncode({
-      'compareDate': compareDate.toIso8601String().substring(0, 10),
+      'afterPeriods': afterPeriods.map((e) => e.toJson()).toList(),
       'initialDataDate': initialDataDate.toIso8601String().substring(0, 10),
       'code': code,
       'os': Platform.operatingSystem,
