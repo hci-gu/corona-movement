@@ -97,6 +97,42 @@ class ChartResult {
   }
 }
 
+class AllUserData {
+  int stepsBefore;
+  int stepsAfter;
+  List<dynamic> averageHoursBefore;
+  List<dynamic> averageHoursAfter;
+
+  List<dynamic> days;
+  List<dynamic> wfhDates;
+
+  AllUserData(Map<String, dynamic> json) {
+    stepsBefore = json['summary']['before'];
+    stepsAfter = json['summary']['after'];
+    averageHoursBefore = json['hours']['before'];
+    averageHoursAfter = json['hours']['after'];
+
+    days = json['days'];
+    wfhDates = json['dates'];
+  }
+
+  factory AllUserData.fromJson(Map<String, dynamic> json) {
+    return AllUserData(json);
+  }
+
+  static empty() {
+    return AllUserData({
+      'summary': {
+        'before': 0,
+        'after': 0,
+      },
+      'hours': {'before': [], 'after': []},
+      'days': [],
+      'dates': []
+    });
+  }
+}
+
 class HealthData {
   String date;
   int hours;

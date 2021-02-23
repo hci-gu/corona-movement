@@ -143,14 +143,14 @@ class StepsChart extends HookWidget {
                   LineTooltipItem(
                     '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n before: ${beforeVal.round()}',
                     TextStyle(
-                      color: AppColors.main,
+                      color: AppColors.secondaryLight,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   LineTooltipItem(
                     'after: ${afterVal.round()}',
                     TextStyle(
-                      color: AppColors.secondaryLight,
+                      color: AppColors.main,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

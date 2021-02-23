@@ -180,6 +180,17 @@ Future<List<HealthData>> getSteps(
   return null;
 }
 
+Future<AllUserData> getDataForAllUser() async {
+  var url = '$API_URL/all';
+  var response = await http.get(url, headers: <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'api-key': API_KEY,
+  });
+
+  AllUserData data = AllUserData.fromJson(json.decode(response.body));
+  return data;
+}
+
 Future<HealthComparison> getComparison(String userId) async {
   var url = '$API_URL/$userId/summary';
   var response = await http.get(

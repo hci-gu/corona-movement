@@ -12,6 +12,7 @@ class StepsModel extends ValueNotifier {
   DateTime from = DateTime.parse(StepsModel.fromDate);
   DateTime to;
   List<HealthData> data = [];
+  AllUserData aggregatedData = AllUserData.empty();
   HealthComparison comparison;
   bool fetching = true;
   bool refresh = true;
@@ -26,6 +27,12 @@ class StepsModel extends ValueNotifier {
 
   setData(List<HealthData> steps) {
     data = steps;
+    fetching = false;
+    notifyListeners();
+  }
+
+  setAggregatedData(AllUserData data) {
+    aggregatedData = data;
     fetching = false;
     notifyListeners();
   }
@@ -82,6 +89,14 @@ var stepsBeforeAndAfterSelector =
 
 var dailyStepsBeforeAndAfterSelector =
     Selector('daily-steps-before-and-after-selector', (GetStateValue get) {
+  User user = get(userAtom);
+  StepsModel steps = get(stepsAtom);
+  if (user.id == 'all') {
+    return [
+      steps.aggregatedData.averageHoursBefore,
+      steps.aggregatedData.averageHoursAfter,
+    ];
+  }
   List buckets = get(stepsBeforeAndAfterSelector);
   DataBucket before = buckets[0];
   DataBucket after = buckets[1];
@@ -98,6 +113,10 @@ var totalStepsBeforeAndAfterSelector =
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
   HealthComparison comparison = get(stepsComparisonSelector);
+
+  if (user.id == 'all') {
+    return [steps.aggregatedData.stepsBefore, steps.aggregatedData.stepsAfter];
+  }
 
   DataBucket before = buckets[0];
   DataBucket after = buckets[1];
@@ -154,6 +173,13 @@ var stepsDayBreakdownSelector =
 
 var stepsDayTotalSelector =
     Selector('steps-day-total-selector', (GetStateValue get) {
+  StepsModel steps = get(stepsAtom);
+  User user = get(userAtom);
+
+  if (user.id == 'all') {
+    return steps.aggregatedData.days;
+  }
+
   Map days = get(stepsDayBreakdownSelector);
 
   return days.keys.map((key) {
@@ -183,7 +209,15 @@ Action getStepsComparisonAction = (get) async {
 Action getStepsAction = (get) async {
   StepsModel steps = get(stepsAtom);
   User user = get(userAtom);
+
   steps.setFetching();
+
+  if (user.id == 'all') {
+    AllUserData data = await api.getDataForAllUser();
+    steps.setAggregatedData(data);
+    return;
+  }
+
   List<HealthData> data = await api.getSteps(
     user.id,
     steps.from,

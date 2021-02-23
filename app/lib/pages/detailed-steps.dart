@@ -46,7 +46,7 @@ class DetailedSteps extends HookWidget {
                 : 'Above you can see how your activity has changed over a typical day before and after working from home.'
                     .i18n,
           ),
-          DaySelect(),
+          if (user.id != 'all') DaySelect(),
           ShareButton(
             widgets: [
               StepsDifference(share: true),

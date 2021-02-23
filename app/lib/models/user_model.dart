@@ -219,13 +219,13 @@ UserResponse fakeUser(OnboardingModel onboarding) {
       DatePeriod(
         DateTime.parse('2020-01-01'),
         DateTime.parse('2020-03-11'),
-      )
+      ).toJson()
     ],
     'afterPeriods': [
       DatePeriod(
         DateTime.parse('2020-03-11'),
         null,
-      )
+      ).toJson()
     ],
   });
 }
