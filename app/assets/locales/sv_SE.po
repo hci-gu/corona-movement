@@ -513,5 +513,3 @@ msgstr "Doktorsexamen"
 
 msgid "Trade/Vocational School"
 msgstr "Yrkeshögskola"
-
-
