@@ -39,13 +39,13 @@ msgstr "Stäng"
 msgid "Your steps are still processing...\n Pull to refresh."
 msgstr "Dina steg bearbetas fortfarande...\n Dra för att uppdatera."
 
-msgid "This is the number of steps others have taken each day (on average). Below you can see how working from home has affected how people move throughout the day."
+msgid "This is the number of steps others have taken each day (on average). Below you see how working from home has affected people\'s movement  throughout the day."
 msgstr "Det här är det antalet steg som andra har tagit varje dag i genomsnitt. Nedan kan du se hur distansarbete har påverkat deras rörelse över dagen."
 
-msgid "This is the number of steps you've taken every day. Below you can pick different views of this data."
+msgid "This is the number of steps you\'ve taken every day. Below you can pick different views of this data."
 msgstr "Det här är antalet steg du har tagit varje dag. Nedan kan du välja olika sätt att visa din förändring."
 
-msgid "Since you don’t have any data before working from home, you can't compare yourself to others. Below you can see other people’s data."
+msgid "Since you don’t have any data before working from home, you can\'t compare yourself to others. Below you can see other people’s data."
 msgstr "Eftersom du inte har några sparade steg kan du inte jämföra dig med andra. Nedan kan du se andra människors resultat."
 
 msgid "Add data source"
@@ -57,13 +57,13 @@ msgstr "Utforska dina steg"
 msgid "Before & after"
 msgstr "Före & efter"
 
-msgid "You vs others"
+msgid "You & others"
 msgstr "Du & andra"
 
 msgid "Today & before"
 msgstr "Idag & tidigare"
 
-msgid "Your's and other's difference in movement before and after working from home."
+msgid "Mine and other\'s difference in movement before and after working from home."
 msgstr "Din och andras förändring i rörelse före och efter att ni började arbeta hemifrån."
 
 msgid "My change in movement compared to others before and after working from home."
@@ -111,10 +111,10 @@ msgstr "min"
 msgid "This is how how %s movement has changed after working from home."
 msgstr "Det här är hur %s rörelse har förändrats efter hemarbete."
 
-msgid "Above you can see how working from home has affected how people move throughout the day."
+msgid "Above you see how working from home has affected people’s movement throughout the day."
 msgstr "Ovan kan du se hur hemarbete har påverkat hur människor rör sig över dagen."
 
-msgid "Above you can see how your activity has changed over a typical day before and after working from home."
+msgid "Above you can see how your activity has changed over a typical day, before and after working from home."
 msgstr "Här kan du se hur din rörelse har förändrats över en typisk dag före och efter du började arbeta hemifrån."
 
 msgid "\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement"
@@ -126,7 +126,7 @@ msgstr "Välj datakälla"
 msgid "Please select where you keep your step data."
 msgstr "Välj var du har sparat dina steg"
 
-msgid "I don't have any steps saved."
+msgid "I don\'t have any steps saved."
 msgstr "Jag har inga sparade steg."
 
 msgid "For us to tell you how your moment patterns has changed we need access to your step data."
@@ -135,7 +135,7 @@ msgstr "För att vi ska kunna visa hur dina rörelsemönster förändrats behöv
 msgid "Selecting a data source"
 msgstr "Att välja en datakälla"
 
-msgid "The app will fetch data from a source where you may have step data. Some people with android use Google fit (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others."
+msgid "The app will fetch data from a source where you may have step data. Some people with android use Google fit (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to explore the app and see the overall change."
 msgstr "Appen kommer att hämta data från en källa där telefonen kan ha sparat dina steg. Personer med Android använder ofta Google fit och personer med iOS har Apple Health som automatiskt sparar rörelsedata. Om du inte har några sparade steg kan du ändå använda appen för att utforska appen och se hur andra människor har rört sig i genomsnitt."
 
 msgid "This app is part of an exploratory research project at the University of Gothenburg investigating the impact of the pandemic on our physical movement. For this purpose, we will collect and store the following data:"
@@ -144,7 +144,7 @@ msgstr "Den här appen är en del av ett forskningsprojekt vid Göteborgs Univer
 msgid "Any data stored will be removed upon opting out of the study by deleting your account."
 msgstr "All lagrad data tas bort om du väljer att gå ur studien genom att radera ditt konto."
 
-msgid "So far we've found data until %s"
+msgid "So far we\'ve found data until %s"
 msgstr "Hittills har vi hittat data från %s"
 
 msgid "Step data"
@@ -174,7 +174,7 @@ msgstr "Ge åtkomst"
 msgid "Apple health is not available on an Android device."
 msgstr "Apple health är inte tillgänglig på Android-enheter."
 
-msgid "You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow."
+msgid "You will now see a dialog for allowing access to Apple health\n\nTo give us access to your steps make sure check the box for steps before pressing allow. You may need to scroll down to find your step-data"
 msgstr "Du kommer nu att se en dialogruta för att tillåta åtkomst till Apple health.\n\nFör att ge oss tillgång till dina steg, se till att kryssa i rutan för steg innan du trycker på tillåt."
 
 msgid "Country"
@@ -201,7 +201,7 @@ msgstr "Din sysselsättning (valfritt)"
 msgid "No steps"
 msgstr "Ingen stegdata"
 
-msgid "If you don't have any steps saved you can still proceed without uploading to just explore others results."
+msgid "If you don\'t have any steps saved you can still proceed without uploading to just explore others results."
 msgstr "Om du inte har några steg sparade kan du ändå gå vidare i appen för att utforska andras resultat."
 
 msgid "Proceed"
@@ -336,7 +336,7 @@ msgstr "Byt dagar"
 msgid "How much do you think your movement has changed?"
 msgstr "Hur mycket tror du att din rörelse har förändrats?"
 
-msgid "Use the slider below to give an estimate of how much you think your average daily steps have changed."
+msgid "Use the slider below to give an estimate (in percentage) of how much you think your average daily steps have changed."
 msgstr "Använd reglaget nedan för att ge din uppskattning på hur du tror att dina dagliga steg har förändrats."
 
 msgid "Set estimate"
