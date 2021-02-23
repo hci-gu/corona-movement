@@ -34,7 +34,7 @@ msgid "Sunday"
 msgstr "Söndag"
 
 msgid "Close"
-msgstr "Stäng"
+msgstr "Stänga"
 
 msgid "Your steps are still processing...\n Pull to refresh."
 msgstr "Din stegdata bearbetas fortfarande…\n Dra för att uppdatera."
