@@ -41,9 +41,9 @@ class DetailedSteps extends HookWidget {
           ),
           AppWidgets.chartDescription(
             user.id == 'all'
-                ? 'Above you can see how working from home has affected how people move throughout the day.'
+                ? 'Above you see how working from home has affected people’s movement throughout the day.'
                     .i18n
-                : 'Above you can see how your activity has changed over a typical day before and after working from home.'
+                : 'Above you can see how your activity has changed over a typical day, before and after working from home.'
                     .i18n,
           ),
           if (user.id != 'all') DaySelect(),

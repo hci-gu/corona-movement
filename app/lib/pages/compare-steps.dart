@@ -25,7 +25,7 @@ class CompareSteps extends StatelessWidget {
               ),
             ),
             AppWidgets.chartDescription(
-              'Your\'s and other\'s difference in movement before and after working from home.'
+              'Mine and other\'s difference in movement before and after working from home.'
                   .i18n,
             ),
             PendingComparisons(),

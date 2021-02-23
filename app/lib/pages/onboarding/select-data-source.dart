@@ -90,7 +90,7 @@ class SelectDataSource extends HookWidget {
       onTap: () => AppWidgets.showAlert(
         context,
         'Selecting a data source'.i18n,
-        'The app will fetch data from a source where you may have step data. Some people with android use google fit (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to compare yourself with others.'
+        'The app will fetch data from a source where you may have step data. Some people with android use Google fit (you might not even know about it). People with iOS devices typically have apple health that automatically record movement data. Some people use Garmin. If you do not have any historical data, you may use the app anyway to explore the app and see the overall change.'
             .i18n,
       ),
     );

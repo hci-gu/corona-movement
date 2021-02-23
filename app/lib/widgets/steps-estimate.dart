@@ -39,7 +39,7 @@ class StepsEstimate extends HookWidget {
       ),
       SizedBox(height: 25),
       Text(
-        'Use the slider below to give an estimate of how much you think your average daily steps have changed.'
+        'Use the slider below to give an estimate (in percentage) of how much you think your average daily steps have changed.'
             .i18n,
       ),
       SizedBox(height: 15),

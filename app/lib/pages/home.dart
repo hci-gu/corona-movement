@@ -97,7 +97,7 @@ class Home extends HookWidget {
 
   List<Widget> _body(BuildContext context, User user, deleteUser) {
     String description = user.id == 'all'
-        ? 'This is the number of steps others have taken each day (on average). Below you can see how working from home has affected how people move throughout the day.'
+        ? 'This is the number of steps others have taken each day (on average). Below you see how working from home has affected people\'s movement  throughout the day.'
             .i18n
         : 'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.'
             .i18n;
