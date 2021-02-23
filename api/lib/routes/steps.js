@@ -3,6 +3,26 @@ const router = express.Router()
 const moment = require('moment')
 const db = require('../adapters/db')
 
+router.get('/all', async (req, res) => {
+  const { before, after } = await db.getAllHours()
+  const days = await db.getAllDays()
+  const summary = await db.getAllSummary()
+  res.send({
+    summary,
+    hours: {
+      before,
+      after,
+    },
+    days,
+    dates: [],
+  })
+})
+
+router.get('/all/save', async (req, res) => {
+  await db.saveAllUser()
+  res.send('OK')
+})
+
 router.post('/health-data', async (req, res) => {
   const { id, dataPoints, createAggregation, timezone } = req.body
 

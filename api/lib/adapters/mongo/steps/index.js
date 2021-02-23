@@ -1,4 +1,3 @@
-const moment = require('moment')
 const analyze = require('./analyze')
 const summary = require('./summary')
 const COLLECTION = 'steps'
@@ -92,6 +91,8 @@ const getLastUpload = ({ id }) =>
 const getFirstUpload = ({ id }) =>
   collection.findOne({ id }, { sort: { date: 1 } })
 
+const stepDataPointCountForUser = ({ id }) => collection.find({ id }).count()
+
 const removeStepsForUser = async (id) => collection.deleteMany({ id })
 
 const getTotalSteps = async () => {
@@ -111,12 +112,38 @@ const getTotalSteps = async () => {
 
 const insertSteps = (steps) => collection.insertMany(steps)
 
+const getDailySteps = (id) => {
+  return collection
+    .aggregate([
+      {
+        $match: { id },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$date',
+              timezone: 'Europe/Stockholm',
+            },
+          },
+          value: { $sum: '$value' },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ])
+    .toArray()
+}
+
 module.exports = {
   init: async (db) => {
     if (process.env.NODE_ENV != 'production')
       await db.createCollection(COLLECTION)
     collection = db.collection(COLLECTION)
     summary.init(collection)
+    analyze.init(collection)
   },
   collection,
   save: (dataPoints) =>
@@ -130,12 +157,15 @@ module.exports = {
   getHours,
   getFirstUpload,
   getLastUpload,
+  stepDataPointCountForUser,
   removeStepsForUser,
   getTotalSteps,
+  getDailySteps,
   insertSteps,
   // summary for user
   getSummaryForUser: summary.getSummaryForUser,
-  // analyze ( not used by app )
+  // analyze
   getHoursForDay: analyze.getHoursForDay,
   getDaysForUser: analyze.getDaysForUser,
+  getAverageHoursForUserPeriods: analyze.getAverageHoursForUserPeriods,
 }

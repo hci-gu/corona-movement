@@ -1,8 +1,43 @@
-const moment = require('moment')
-const userCollection = require('../users')
 const { countCertainDays } = require('../../../utils/date')
-const COLLECTION = 'steps'
+const { queryForPeriods, daysInPeriods } = require('./utils')
 let collection
+
+const getAverageHoursForUserPeriods = async ({ id, periods }) => {
+  const result = await collection
+    .aggregate([
+      {
+        $match: queryForPeriods({ id, periods }),
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%H',
+              date: '$date',
+              timezone: 'Europe/Stockholm',
+            },
+          },
+          value: { $sum: '$value' },
+        },
+      },
+    ])
+    .toArray()
+
+  const numDays = daysInPeriods(periods)
+  const map = result.reduce((acc, curr) => {
+    acc[parseInt(curr._id)] = {
+      hour: parseInt(curr._id),
+      value: Math.round(curr.value / numDays),
+    }
+    return acc
+  }, {})
+
+  return Array.from({ length: 24 }).map((_, i) => ({
+    hour: i,
+    value: 0,
+    ...map[i],
+  }))
+}
 
 const getHoursForDay = async ({
   id,
@@ -90,6 +125,10 @@ const getDaysForUser = async ({ id, timezone = 'Europe/Stockholm' }) => {
 }
 
 module.exports = {
+  init: (c) => {
+    collection = c
+  },
   getHoursForDay,
   getDaysForUser,
+  getAverageHoursForUserPeriods,
 }
