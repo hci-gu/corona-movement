@@ -66,7 +66,7 @@ class Settings extends HookWidget {
 
     return [
       Text(
-        'You started working from home on %s.'.i18n.fill([dateString]),
+        'The first day you worked from home was %s.'.i18n.fill([dateString]),
         style: TextStyle(
           fontSize: 18,
         ),

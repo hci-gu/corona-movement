@@ -33,7 +33,7 @@ class StepsEstimate extends HookWidget {
   List<Widget> giveEstimate(BuildContext context, User user, updateEstimate) {
     return [
       Text(
-        'How much do you think your movement have changed?'.i18n,
+        'How much do you think your movement has changed?'.i18n,
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),

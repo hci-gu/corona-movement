@@ -190,6 +190,7 @@ Action registerAction = (get) async {
     onboarding.initialDataDate,
     onboarding.dataSource,
     user.code,
+    user.workedFromHome,
   );
   user.setUser(response);
 
@@ -335,6 +336,8 @@ Action updateEstimateAction = (get) async {
   user.setLoading(true);
 
   await api.updateUserEstimate(user.id, user.stepsEstimate);
+  UserResponse response = await api.getUser(user.id);
+  user.setUser(response);
 
   user.setLoading(false);
 };

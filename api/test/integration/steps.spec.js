@@ -123,5 +123,43 @@ describe('#Steps', () => {
     })
   })
 
-  after(() => testHelper.cleanup())
+  describe('User with periods with gaps', () => {
+    let date = '2020-01-10'
+    before(async () => {
+      user = await testHelper.userWithPeriods(app, {
+        beforePeriods: [
+          {
+            from: moment(date).subtract(20, 'days').format('YYYY-MM-DD'),
+            to: moment(date).subtract(10, 'days').format('YYYY-MM-DD'),
+          },
+        ],
+        afterPeriods: [
+          {
+            from: moment(date).subtract(8, 'days').format('YYYY-MM-DD'),
+            to: moment(date).subtract(6, 'days').format('YYYY-MM-DD'),
+          },
+          {
+            from: moment(date).subtract(4, 'days').format('YYYY-MM-DD'),
+            to: moment(date).subtract(2, 'days').format('YYYY-MM-DD'),
+          },
+        ],
+      })
+    })
+
+    it('can fetch uploaded steps per hour', async () => {
+      const res = await request(app).get(`/${user._id}/hours`).expect(200)
+      expect(res.body.result[0]).to.eql({
+        _id: '2019-12-22 01',
+        key: '2019-12-22 01',
+        value: 60,
+      })
+    })
+
+    it('can get a summary for own hours before and after', async () => {
+      const res = await request(app).get(`/${user._id}/summary`).expect(200)
+      expect(res.body.user.before).to.eql(1 * 24 * 6 * 10)
+    })
+  })
+
+  // after(() => testHelper.cleanup())
 })

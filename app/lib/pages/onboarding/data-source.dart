@@ -16,6 +16,7 @@ class DataSource extends HookWidget {
   @override
   Widget build(BuildContext context) {
     OnboardingModel onboarding = useModel(onboardingAtom);
+    User user = useModel(userAtom);
     var getAvailableSteps = useAction(getAvailableStepsAction);
 
     useEffect(() {
@@ -27,11 +28,11 @@ class DataSource extends HookWidget {
 
     return MainScaffold(
       appBar: AppWidgets.appBar(context: context, title: onboarding.dataSource),
-      child: _body(context, onboarding),
+      child: _body(context, onboarding, user),
     );
   }
 
-  Widget _body(BuildContext context, OnboardingModel onboarding) {
+  Widget _body(BuildContext context, OnboardingModel onboarding, User user) {
     var consent = useState(false);
     var getHealthAuthorization = useAction(getHealthAuthorizationAction);
     var register = useAction(registerAction);
@@ -69,8 +70,8 @@ class DataSource extends HookWidget {
                   style: TextStyle(fontSize: 12),
                 ),
               ),
-            _widgetForUserData(context, onboarding, getHealthAuthorization,
-                register, consent, uploadSteps),
+            _widgetForUserData(context, onboarding, user,
+                getHealthAuthorization, register, consent, uploadSteps),
           ],
         ),
       ),
@@ -78,7 +79,7 @@ class DataSource extends HookWidget {
   }
 
   Widget _widgetForUserData(BuildContext context, OnboardingModel onboarding,
-      getHealthAuthorization, register, consent, uploadSteps) {
+      user, getHealthAuthorization, register, consent, uploadSteps) {
     if (onboarding.fetching) {
       return Center(
         child: Column(
@@ -88,8 +89,9 @@ class DataSource extends HookWidget {
             if (onboarding.loadingMessage != null)
               Text(onboarding.loadingMessage),
             if (onboarding.displayDateWhileLoading != null)
-              Text(
-                  'So far we\'ve found data until ${onboarding.displayDateWhileLoading.toString().substring(0, 10)}'),
+              Text('So far we\'ve found data until %s'.i18n.fill([
+                onboarding.displayDateWhileLoading.toString().substring(0, 10)
+              ])),
           ],
         ),
       );
@@ -100,7 +102,8 @@ class DataSource extends HookWidget {
     if ((onboarding.availableData.length > 500) ||
         (onboarding.dataSource == 'Garmin' &&
             onboarding.initialDataDate != null)) {
-      return _hasData(context, onboarding, register, consent, uploadSteps);
+      return _hasData(
+          context, onboarding, user, register, consent, uploadSteps);
     }
     if (onboarding.availableData.length <= 500) {
       return _noData(context, onboarding, getHealthAuthorization);
@@ -207,7 +210,7 @@ class DataSource extends HookWidget {
     return date.toString().substring(0, 10);
   }
 
-  Widget _hasData(BuildContext context, OnboardingModel onboarding,
+  Widget _hasData(BuildContext context, OnboardingModel onboarding, User user,
       Function register, ValueNotifier consent, Function uploadSteps) {
     return Column(
       children: [
@@ -218,13 +221,23 @@ class DataSource extends HookWidget {
                 .fill([_dateToString(onboarding.initialDataDate)]),
           ),
         ),
-        _consentAndProceed(context, onboarding, register, consent, uploadSteps),
+        _consentAndProceed(
+            context, onboarding, user, register, consent, uploadSteps),
       ],
     );
   }
 
-  Widget _consentAndProceed(BuildContext context, OnboardingModel onboarding,
-      Function register, ValueNotifier consent, Function uploadSteps) {
+  Widget _consentAndProceed(
+      BuildContext context,
+      OnboardingModel onboarding,
+      User user,
+      Function register,
+      ValueNotifier consent,
+      Function uploadSteps) {
+    if (_hasNoDataBeforeOrAfter(user, onboarding)) {
+      return _noDataBeforeOrAfter(context, user, onboarding);
+    }
+
     return Column(
       children: [
         SizedBox(height: 20),
@@ -266,9 +279,23 @@ class DataSource extends HookWidget {
     );
   }
 
+  DateTime _userFromDate(User user) {
+    if (user.afterPeriods != null && user.afterPeriods.length > 0) {
+      return user.afterPeriods.first.from;
+    }
+    return DateTime.parse('2020-03-11');
+  }
+
+  bool _hasNoDataBeforeOrAfter(User user, OnboardingModel onboarding) {
+    DateTime fromDate = _userFromDate(user);
+    return fromDate.isBefore(onboarding.initialDataDate) ||
+        fromDate.isAfter(onboarding.lastDataDate);
+  }
+
   Widget _noDataBeforeOrAfter(
-      BuildContext context, OnboardingModel onboarding) {
-    String when = onboarding.date.isBefore(onboarding.initialDataDate)
+      BuildContext context, User user, OnboardingModel onboarding) {
+    DateTime fromDate = _userFromDate(user);
+    String when = fromDate.isBefore(onboarding.initialDataDate)
         ? 'before'.i18n
         : 'after'.i18n;
 

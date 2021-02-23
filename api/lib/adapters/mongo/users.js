@@ -15,6 +15,7 @@ const create = async ({
   code,
   beforePeriods,
   afterPeriods,
+  workedFromHome,
 }) => {
   const result = await collection.insert({
     created: new Date(),
@@ -26,6 +27,7 @@ const create = async ({
     os,
     dataSource,
     code,
+    workedFromHome,
   })
   return result.ops[0]
 }
@@ -107,6 +109,16 @@ module.exports = {
     const user = await get(id)
     if (user) {
       user.beforePeriods = beforePeriodsForUser(user)
+      if (user.workedFromHome === false) {
+        user.afterPeriods = [
+          {
+            from: BEFORE_END_DATE,
+            to: null,
+          },
+        ]
+        return user
+      }
+
       if (!user.afterPeriods) {
         user.afterPeriods = [
           {

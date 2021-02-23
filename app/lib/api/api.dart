@@ -17,19 +17,21 @@ const API_KEY = 'some-key';
 Future postJsonData(String userId, List<Map<String, dynamic>> data,
     bool createAggregation) async {
   var url = '$API_URL/health-data';
-  var response = await http.post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
-    body: jsonEncode({
-      'id': userId,
-      'dataPoints': data,
-      'createAggregation': createAggregation,
-      'timezone': globalApiHandler.timezone,
-    }),
-  );
+  var response = await http
+      .post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'api-key': API_KEY,
+        },
+        body: jsonEncode({
+          'id': userId,
+          'dataPoints': data,
+          'createAggregation': createAggregation,
+          'timezone': globalApiHandler.timezone,
+        }),
+      )
+      .timeout(Duration(seconds: 20));
   print('Response status: ${response.statusCode}');
   print('Response body: ${response.body}');
   return response.body;
@@ -53,8 +55,12 @@ Future postData(
   );
 }
 
-Future<UserResponse> register(List<DatePeriod> afterPeriods,
-    DateTime initialDataDate, String dataSource, String code) async {
+Future<UserResponse> register(
+    List<DatePeriod> afterPeriods,
+    DateTime initialDataDate,
+    String dataSource,
+    String code,
+    bool workedFromHome) async {
   const url = '$API_URL/register';
   var response = await http.post(
     url,
@@ -63,11 +69,14 @@ Future<UserResponse> register(List<DatePeriod> afterPeriods,
       'api-key': API_KEY,
     },
     body: jsonEncode({
-      'afterPeriods': afterPeriods.map((e) => e.toJson()).toList(),
+      'afterPeriods': afterPeriods != null
+          ? afterPeriods.map((e) => e.toJson()).toList()
+          : null,
       'initialDataDate': initialDataDate.toIso8601String().substring(0, 10),
       'code': code,
       'os': Platform.operatingSystem,
       'dataSource': dataSource,
+      'workedFromHome': workedFromHome,
     }),
   );
 

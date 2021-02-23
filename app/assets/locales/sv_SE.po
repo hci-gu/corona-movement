@@ -129,7 +129,7 @@ msgstr "Vänligen välj var du lagrar din stegdata."
 msgid "I don\'t have any steps saved."
 msgstr "Jag har ingen stegdata sparad."
 
-msgid "For us to tell you how your moment patterns have changed we need access to your step data."
+msgid "For us to tell you how your moment patterns has changed we need access to your step data."
 msgstr "För att vi ska kunna visa hur dina rörelsemönster förändrats behöver vi tillgång till din stegdata."
 
 msgid "Selecting a data source"
@@ -143,6 +143,9 @@ msgstr "Den här appen är en del av ett forskningsprojekt vid Göteborgs Univer
 
 msgid "Any data stored will be removed upon opting out of the study by deleting your account."
 msgstr "All lagrad data tas bort om du väljer att gå ur studien genom att radera ditt konto."
+
+msgid "So far we\'ve found data until %s"
+msgstr "Hittills har vi hittat data från %s"
 
 msgid "Step data"
 msgstr "Stegdata"
@@ -243,8 +246,8 @@ msgstr "Tillbaka"
 msgid "Settings"
 msgstr "Inställningar"
 
-msgid "You started working from home on %s."
-msgstr "Du började jobba hemifrån %s."
+msgid "The first day you worked from home was %s."
+msgstr "Första dagen du jobbade hemifrån var %s."
 
 msgid "Update periods"
 msgstr "Ändra perioder"
@@ -327,7 +330,7 @@ msgstr "Efter"
 msgid "Change days"
 msgstr "Byt dagar"
 
-msgid "How much do you think your movement have changed?"
+msgid "How much do you think your movement has changed?"
 msgstr "Hur mycket tror du att din rörelse har förändrats?"
 
 msgid "Use the slider below to give an estimate of how much you think your average daily steps have changed."

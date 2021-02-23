@@ -78,7 +78,7 @@ class SelectDataSource extends HookWidget {
           ),
           Expanded(
             child: Text(
-              'For us to tell you how your moment patterns have changed we need access to your step data.'
+              'For us to tell you how your moment patterns has changed we need access to your step data.'
                   .i18n,
               style: TextStyle(
                 fontSize: 16,

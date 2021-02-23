@@ -28,14 +28,13 @@ router.get('/user/:id', async (req, res) => {
 router.patch('/user/:id', async (req, res) => {
   const { id } = req.params
   console.log('PATCH /user/', id, req.body)
-  if (!req.body.compareDate) {
+  if (!req.body.compareDate && !req.body.afterPeriods) {
     const user = await db.updateUser({ id, update: req.body })
-    res.send(user)
-    return
+    return res.send(user)
   }
   const user = await db.updateUser({
     id,
-    update: { compareDate: req.body.compareDate },
+    update: req.body,
   })
   await Promise.all([
     db.saveAggregatedSteps({

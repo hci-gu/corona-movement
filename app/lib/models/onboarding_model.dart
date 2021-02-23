@@ -235,14 +235,21 @@ Action getAvailableStepsAction = (get) async {
   }
 };
 
-Future syncHealthData(OnboardingModel onboarding, String userId) async {
-  await api.postData(
-      userId, onboarding.dataChunks[0], onboarding.dataChunks.length == 1);
+Future syncHealthData(OnboardingModel onboarding, String userId,
+    [int retries = 3]) async {
+  try {
+    await api.postData(
+        userId, onboarding.dataChunks[0], onboarding.dataChunks.length == 1);
+  } catch (e) {
+    if (retries > 0) {
+      return syncHealthData(onboarding, userId, retries - 1);
+    }
+  }
 
   onboarding.removeDataChunk();
 
   if (onboarding.dataChunks.length > 0) {
-    return syncHealthData(onboarding, userId);
+    return syncHealthData(onboarding, userId, 3);
   }
 }
 
@@ -267,7 +274,7 @@ Action uploadStepsAction = (get) async {
       );
     }
     onboarding.setDataChunks(stepsChunks);
-    await syncHealthData(onboarding, user.id);
+    await syncHealthData(onboarding, user.id, 3);
     onboarding.setUploading(false);
     onboarding.setDone();
     user.setLastSync();
