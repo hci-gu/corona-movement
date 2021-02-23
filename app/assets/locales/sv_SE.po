@@ -291,6 +291,9 @@ msgstr "Användar-id: %s"
 msgid "Started working from home"
 msgstr "Började jobba hemifrån"
 
+msgid "Stopped working from home"
+msgstr "Slutade jobba hemifrån"
+
 msgid "steps"
 msgstr "Steg"
 
