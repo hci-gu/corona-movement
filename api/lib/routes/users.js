@@ -5,7 +5,8 @@ const db = require('../adapters/db')
 
 router.post('/register', async (req, res) => {
   console.log('POST /register', req.body)
-  const user = await db.createUser(req.body)
+  const { _id } = await db.createUser(req.body)
+  const user = await db.getUser(_id.toString())
   res.send(user)
 })
 router.delete('/user/:id', async (req, res) => {

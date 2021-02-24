@@ -39,8 +39,11 @@ const run = async () => {
   const localClient = await MongoClient.connect(process.env.CONNECT_TO, {})
   localDB = localClient.db(DB_NAME)
 
-  await syncDocs('users')
-  await syncDocs('analytics')
+  const docs = await localDB.collection('allUser').find().toArray()
+  await prodDB.collection('allUser').insertMany(docs)
+
+  // await syncDocs('users')
+  // await syncDocs('analytics')
 
   console.log('all done!')
 }
