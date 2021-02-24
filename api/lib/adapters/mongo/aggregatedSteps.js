@@ -61,7 +61,7 @@ const getHoursForEveryone = async ({ from, to }) => {
   }
 }
 
-const getFromToForUser = async (id) => {
+const getFromToForUser = async (id, onlyFullDays = false) => {
   if (id === 'all')
     return {
       from: FROM_DATE,
@@ -85,7 +85,9 @@ const getFromToForUser = async (id) => {
 
   return {
     from: moment(initalStepData.date).add(1, 'day').format('YYYY-MM-DD'),
-    to: moment(lastStepData.date).subtract(1, 'day').format('YYYY-MM-DD'),
+    to: onlyFullDays
+      ? moment(lastStepData.date).subtract(1, 'day').format('YYYY-MM-DD')
+      : moment(lastStepData.date).add(1, 'day').format('YYYY-MM-DD'),
   }
 }
 
@@ -135,7 +137,7 @@ const saveSteps = async ({ id, timezone }) => {
 const saveSummary = async (id) => {
   if (id === 'all') return
   try {
-    const { from, to } = await getFromToForUser(id)
+    const { from, to } = await getFromToForUser(id, true)
     const data = await stepsCollection.getSummaryForUser({
       id,
       from,
