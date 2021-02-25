@@ -1,6 +1,5 @@
-import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
-import 'package:wfhmovement/models/onboarding_model.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:wfhmovement/models/recoil.dart';
@@ -33,7 +32,7 @@ class Introduction extends HookWidget {
               shrinkWrap: true,
               children: <Widget>[
                 Text(
-                  'WFH Movement',
+                  AppTexts().appName,
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
                   textAlign: TextAlign.center,
                 ),
@@ -70,7 +69,7 @@ class Introduction extends HookWidget {
           height: 50,
         ),
         Text(
-          'Have you been working from home?'.i18n,
+          AppTexts().introductionQuestion,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
