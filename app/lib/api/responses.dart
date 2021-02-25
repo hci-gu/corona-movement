@@ -12,7 +12,12 @@ class DatePeriod {
   }
 
   String get toAsString {
-    if (to == null) return DateTime.now().toIso8601String().substring(0, 10);
+    if (to == null) {
+      var now = DateTime.now();
+      return DateTime(now.year, now.month, now.day)
+          .toIso8601String()
+          .substring(0, 10);
+    }
     return to.toIso8601String().substring(0, 10);
   }
 
