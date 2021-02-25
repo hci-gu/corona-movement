@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 
@@ -120,6 +121,7 @@ class LanguageSelect extends HookWidget {
                                 : Locale('en');
                             user.languageOverride = selectedLocale.languageCode;
                             I18n.of(context).locale = selectedLocale;
+                            AppTexts().init(EnvironmentConfig.APP_NAME);
                             setUserLanguageOverride();
                             this.close(isOpen);
                           },

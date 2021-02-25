@@ -1,3 +1,4 @@
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:country_list_pick/country_list_pick.dart';
@@ -65,28 +66,49 @@ class UserForm extends HookWidget {
             ),
           ]),
         ),
-        UserFormField(
-          name: 'Gender'.i18n,
-          child: _dropDown(
-              FormModel.genderChoices, 'gender', form.gender, form.setField),
-        ),
-        UserFormField(
-          name: 'Age range'.i18n,
-          child: _dropDown(
-              FormModel.ageRanges, 'ageRange', form.ageRange, form.setField),
-        ),
-        UserFormField(
-          name: 'Education'.i18n,
-          child: _dropDown(
-              FormModel.educations, 'education', form.education, form.setField),
-        ),
-        UserFormField(
-          name: 'Occupation'.i18n,
-          child: _freeForm('occupation', form.occupation, form.setField),
-        ),
+        if (EnvironmentConfig.APP_NAME == 'WFH Movement') ..._wfhFields(form),
+        if (EnvironmentConfig.APP_NAME == 'SFH Movement') ..._sfhFields(form),
         GroupCode(key: Key('userForm')),
       ],
     );
+  }
+
+  List<Widget> _wfhFields(FormModel form) {
+    return [
+      UserFormField(
+        name: 'Gender'.i18n,
+        child: _dropDown(
+            FormModel.genderChoices, 'gender', form.gender, form.setField),
+      ),
+      UserFormField(
+        name: 'Age range'.i18n,
+        child: _dropDown(
+            FormModel.ageRanges, 'ageRange', form.ageRange, form.setField),
+      ),
+      UserFormField(
+        name: 'Education'.i18n,
+        child: _dropDown(
+            FormModel.educations, 'education', form.education, form.setField),
+      ),
+      UserFormField(
+        name: 'Occupation'.i18n,
+        child: _freeForm('occupation', form.occupation, form.setField),
+      ),
+    ];
+  }
+
+  List<Widget> _sfhFields(FormModel form) {
+    return [
+      UserFormField(
+        name: 'Gender'.i18n,
+        child: _dropDown(
+            FormModel.genderChoices, 'gender', form.gender, form.setField),
+      ),
+      UserFormField(
+        name: 'Age'.i18n,
+        child: _freeForm('age', form.age, form.setField, int.parse),
+      ),
+    ];
   }
 
   Widget _dropDown(List values, String type, String value, onChange) {
@@ -103,15 +125,21 @@ class UserForm extends HookWidget {
     );
   }
 
-  Widget _freeForm(String type, String value, onChange) {
-    final controller = useTextEditingController(text: value);
+  Widget _freeForm(String type, value, onChange, [parseFunction]) {
+    final controller = useTextEditingController(text: value.toString());
 
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Your occupation (optional)'.i18n,
+        hintText: 'Your %s (optional)'.i18n.fill([type]),
       ),
-      onChanged: (val) => onChange(type, val),
+      onChanged: (val) {
+        if (parseFunction != null) {
+          onChange(type, parseFunction(val));
+        } else {
+          onChange(type, val);
+        }
+      },
     );
   }
 }

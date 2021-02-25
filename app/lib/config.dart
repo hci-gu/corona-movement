@@ -11,6 +11,9 @@ class EnvironmentConfig {
 class AppTexts {
   String appName;
   String introductionQuestion;
+  String work;
+  String working;
+  String worked;
 
   init(String appName) {
     switch (appName) {
@@ -27,11 +30,17 @@ class AppTexts {
   initWFHMovement(String name) {
     appName = name;
     introductionQuestion = 'Have you worked from home?'.i18n;
+    work = 'work'.i18n;
+    working = 'working'.i18n;
+    worked = 'worked'.i18n;
   }
 
   initSFHMovement(String name) {
     appName = name;
     introductionQuestion = 'Have you studied from home?'.i18n;
+    work = 'study'.i18n;
+    working = 'studying'.i18n;
+    worked = 'studied'.i18n;
   }
 
   static final AppTexts _appTexts = AppTexts._internal();

@@ -1,3 +1,4 @@
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
@@ -69,7 +70,11 @@ class Introduction extends HookWidget {
           height: 50,
         ),
         Text(
-          AppTexts().introductionQuestion,
+          'Have you been %s from home?'.i18n.fill([
+            I18n.of(context).locale.languageCode == 'en'
+                ? AppTexts().working
+                : AppTexts().worked
+          ]),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
           textAlign: TextAlign.center,
         ),
@@ -148,10 +153,13 @@ class Introduction extends HookWidget {
   void _onNoPressed(BuildContext context, User user) {
     AppWidgets.showConfirmDialog(
       context: context,
-      title: 'Using the app without having worked from home'.i18n,
+      title: 'Using the app without having %s from home'
+          .i18n
+          .fill([AppTexts().worked]),
       text:
-          'Even if you haven\'t worked from home you can still use the app. The difference is that you won\'t select a period to compare your movement before and after with.\n\nThe app will instead compare your movement before and after March 11 2020.'
-              .i18n,
+          'Even if you haven\'t %s from home you can still use the app. The difference is that you won\'t select a period to compare your movement before and after with.\n\nThe app will instead compare your movement before and after March 11 2020.'
+              .i18n
+              .fill([AppTexts().worked]),
       onComplete: () {
         user.setDidNotWorkFromHome();
         Navigator.of(context).push(

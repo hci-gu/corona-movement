@@ -6,6 +6,7 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/app.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
+import 'config.dart';
 import 'models/recoil.dart';
 import 'models/user_model.dart';
 
@@ -26,6 +27,7 @@ class _LanguageSetterState extends State<LanguageSetter>
         ? widget.user.languageOverride
         : Localizations.localeOf(context).languageCode;
     I18n.of(context).locale = Locale(language);
+    AppTexts().init(EnvironmentConfig.APP_NAME);
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(

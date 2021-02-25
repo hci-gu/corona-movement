@@ -210,8 +210,8 @@ msgstr "Fortsätt"
 msgid "Have your movement patterns changed?"
 msgstr "Har dina rörelsemönster förändrats?"
 
-msgid "Have you been working from home?"
-msgstr "Har du arbetat hemifrån?"
+msgid "Have you been %s from home?"
+msgstr "Har du %s hemifrån?"
 
 msgid "Select periods"
 msgstr "Välj perioder"
@@ -435,8 +435,8 @@ msgstr "pågående"
 msgid "Pick periods"
 msgstr "Välj perioder"
 
-msgid "When have you been working from home?"
-msgstr "När har du arbetat hemifrån?"
+msgid "When have you been %s from home?"
+msgstr "När har du %s hemifrån?"
 
 msgid "Add period"
 msgstr "Lägg till period"
@@ -474,11 +474,11 @@ msgstr "\n\nDu kan lägga till fler perioder genom att trycka utanför det marke
 msgid "Proceed"
 msgstr "Fortsätt"
 
-msgid "Using the app without having worked from home"
-msgstr "Använd appen utan att ha arbetat hemifrån"
+msgid "Using the app without having %s from home"
+msgstr "Använd appen utan att ha %s hemifrån"
 
-msgid "Even if you haven\'t worked from home you can still use the app. The difference is that you won\'t select a period to compare your movement before and after with.\n\nThe app will instead compare your movement before and after March 11 2020."
-msgstr "Även om du inte arbetat hemifrån kan du fortfarande använda appen. Skillnaden är att du inte väljer en period att jämföra din förändring utifrån.\n\nAppen kommer istället att jämföra din rörelse före och efter 11 Mars 2020."
+msgid "Even if you haven\'t %s from home you can still use the app. The difference is that you won\'t select a period to compare your movement before and after with.\n\nThe app will instead compare your movement before and after March 11 2020."
+msgstr "Även om du inte %s hemifrån kan du fortfarande använda appen. Skillnaden är att du inte väljer en period att jämföra din förändring utifrån.\n\nAppen kommer istället att jämföra din rörelse före och efter 11 Mars 2020."
 
 msgid "Female"
 msgstr "Kvinna"
@@ -512,3 +512,21 @@ msgstr "Doktorsexamen"
 
 msgid "Trade/Vocational School"
 msgstr "Yrkeshögskola"
+
+msgid "work"
+msgstr "arbeta"
+
+msgid "working"
+msgstr "arbetar"
+
+msgid "worked"
+msgstr "arbetat"
+
+msgid "study"
+msgstr "studera"
+
+msgid "studying"
+msgstr "studerar"
+
+msgid "studied"
+msgstr "studerat"

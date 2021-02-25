@@ -9,6 +9,7 @@ class FormModel extends ValueNotifier {
   String country = 'Sweden';
   String gender;
   String ageRange;
+  int age;
   String education;
   String occupation;
   bool loading = false;
@@ -21,13 +22,16 @@ class FormModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setField(String type, String value) {
+  setField(String type, value) {
     switch (type) {
       case 'gender':
         gender = value;
         break;
       case 'ageRange':
         ageRange = value;
+        break;
+      case 'age':
+        age = value;
         break;
       case 'education':
         education = value;
