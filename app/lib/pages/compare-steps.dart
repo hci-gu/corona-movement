@@ -11,7 +11,7 @@ class CompareSteps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      appBar: AppWidgets.appBar(context: context, title: 'You vs others'.i18n),
+      appBar: AppWidgets.appBar(context: context, title: 'You & others'.i18n),
       child: Container(
         child: ListView(
           padding: EdgeInsets.only(top: 25),

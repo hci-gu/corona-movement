@@ -172,11 +172,11 @@ class Home extends HookWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => CompareSteps(),
-                  settings: RouteSettings(name: 'You vs others'),
+                  settings: RouteSettings(name: 'You & others'),
                 ));
               },
             ),
-            'You vs others'.i18n,
+            'You & others'.i18n,
           ),
         if (user.id != 'all')
           _pageItem(

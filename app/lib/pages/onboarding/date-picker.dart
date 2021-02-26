@@ -222,25 +222,25 @@ class DatePicker extends HookWidget {
   }
 
   Widget _day(context, double width, DateTime date, int i) {
-    BoxDecoration decoration = BoxDecoration(border: _numBorder(date, i % 7));
-    if (_dateIsOnEvent(date)) {
-      decoration = BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: AppColors.secondaryPressed,
-        ),
-        borderRadius: BorderRadius.circular(50),
-      );
-    }
-
     return Container(
-      width: width,
-      height: width,
-      decoration: decoration,
-      child: Center(
-        child: Text(
-          DateFormat('d').format(date),
-          style: TextStyle(color: dayColor, fontSize: 12),
+      decoration: BoxDecoration(border: _numBorder(date, i % 7)),
+      child: Container(
+        width: width,
+        height: width,
+        decoration: _dateIsOnEvent(date)
+            ? BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: AppColors.secondaryPressed,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              )
+            : BoxDecoration(),
+        child: Center(
+          child: Text(
+            DateFormat('d').format(date),
+            style: TextStyle(color: dayColor, fontSize: 12),
+          ),
         ),
       ),
     );

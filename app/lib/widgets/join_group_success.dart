@@ -62,7 +62,7 @@ class JoinGroupMessage extends HookWidget {
                       textAlign: TextAlign.center,
                     ),
                     AppWidgets.chartDescription(
-                      'you can now see a comparison between you and the average of your group in "You vs others".\n\n Tap anywhere to dismiss this message.',
+                      'You can now see a comparison between you and the average of your group in "You & others".\n\n Tap anywhere to dismiss this message.',
                     ),
                   ],
                 ),

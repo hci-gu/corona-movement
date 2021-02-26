@@ -1,9 +1,8 @@
-import 'package:wfhmovement/i18n.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/api/responses.dart';
+import 'package:wfhmovement/models/steps/daysFilter.dart';
 import 'package:wfhmovement/models/steps/utils.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
@@ -16,7 +15,6 @@ class StepsModel extends ValueNotifier {
   HealthComparison comparison;
   bool fetching = true;
   bool refresh = true;
-  List<int> days = [1, 2, 3, 4, 5, 6, 7];
 
   StepsModel() : super(null);
 
@@ -42,25 +40,7 @@ class StepsModel extends ValueNotifier {
     notifyListeners();
   }
 
-  updateDays(int day, bool add) {
-    if (add)
-      days.add(day);
-    else
-      days.remove(day);
-    days.sort();
-    notifyListeners();
-  }
-
   static String fromDate = '2020-01-01';
-  static List<Map<String, dynamic>> weekdays = [
-    {'display': 'Monday'.i18n, 'value': 1},
-    {'display': 'Tuesday'.i18n, 'value': 2},
-    {'display': 'Wednesday'.i18n, 'value': 3},
-    {'display': 'Thursday'.i18n, 'value': 4},
-    {'display': 'Friday'.i18n, 'value': 5},
-    {'display': 'Saturday'.i18n, 'value': 6},
-    {'display': 'Sunday'.i18n, 'value': 7}
-  ];
 }
 
 var stepsAtom = Atom('steps', StepsModel());
@@ -68,6 +48,7 @@ var stepsAtom = Atom('steps', StepsModel());
 var stepsBeforeAndAfterSelector =
     Selector('steps-before-and-after-selector', (GetStateValue get) {
   StepsModel steps = get(stepsAtom);
+  DayFilterModel dayFilter = get(dayFilterAtom);
   List<List<DatePeriod>> datePeriods = get(userPeriodsSelector);
 
   List<DatePeriod> beforePeriods = datePeriods[0];
@@ -77,12 +58,12 @@ var stepsBeforeAndAfterSelector =
     filterDataIntoBuckets(
       steps.data,
       filterForPeriods(beforePeriods),
-      steps.days,
+      dayFilter.days,
     ),
     filterDataIntoBuckets(
       steps.data,
       filterForPeriods(afterPeriods),
-      steps.days,
+      dayFilter.days,
     ),
   ];
 });
@@ -111,6 +92,7 @@ var totalStepsBeforeAndAfterSelector =
     Selector('total-steps-before-and-after-selector', (GetStateValue get) {
   List buckets = get(stepsBeforeAndAfterSelector);
   StepsModel steps = get(stepsAtom);
+  DayFilterModel dayFilter = get(dayFilterAtom);
   User user = get(userAtom);
   HealthComparison comparison = get(stepsComparisonSelector);
 
@@ -121,7 +103,7 @@ var totalStepsBeforeAndAfterSelector =
   DataBucket before = buckets[0];
   DataBucket after = buckets[1];
 
-  if (steps.days.length == 7 && user.id != 'all') {
+  if (dayFilter.days.length == 7 && user.id != 'all') {
     if (comparison == null) {
       return [0, 0];
     }

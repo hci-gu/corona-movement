@@ -1,4 +1,3 @@
-import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/i18n.dart';
 
@@ -122,6 +121,7 @@ class Settings extends HookWidget {
       Navigator.of(doneContext).pop();
       user.setAfterPeriods(periods);
       updateUserAfterPeriods();
+      globalAnalytics.sendEvent('changeAfterPeriods');
     };
 
     Navigator.of(context).push(
@@ -133,22 +133,6 @@ class Settings extends HookWidget {
         settings: RouteSettings(name: 'Select periods'),
       ),
     );
-
-    // DateTime compareDate = user.compareDate;
-    // globalAnalytics.sendEvent('openChangeCompareDate');
-
-    // var date = await showDatePicker(
-    //   locale: I18n.of(context).locale,
-    //   context: context,
-    //   initialDate: compareDate,
-    //   firstDate: DateTime.parse('2010-01-01'),
-    //   lastDate: DateTime.now(),
-    // );
-    // if (date != null) {
-    //   globalAnalytics.sendEvent('changeCompareDate');
-    //   user.setCompareDate(DateTime(date.year, date.month, date.day));
-    //   updateUserCompareDate();
-    // }
   }
 
   Widget _appInformation(BuildContext context) {
@@ -244,6 +228,7 @@ class Settings extends HookWidget {
                     'User id copied to clipboard'.i18n,
                     textAlign: TextAlign.center,
                   ),
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
             },
@@ -251,7 +236,12 @@ class Settings extends HookWidget {
         },
         child: Container(
           padding: EdgeInsets.all(25),
-          child: Text('User id: %s'.i18n.fill([user.id])),
+          child: Text(
+            'User id: %s'.i18n.fill([user.id]),
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
         ),
       ),
     );

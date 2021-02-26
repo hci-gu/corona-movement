@@ -40,36 +40,69 @@ class TodayBeforeText extends HookWidget {
     double diff = (100 * (stepsToday - typicalSteps) / stepsToday);
     String diffText = diff > 0 ? 'increase'.i18n : 'decrease'.i18n;
 
-    return Container(
-      child: ListView(
-        padding: padding,
-        children: [
-          _description(context, stepsToday, typicalSteps, false),
-          SizedBox(height: 25),
-          if (diff.isFinite && !diff.isNaN)
-            Text(
-              'This is a %s of %s.'
-                  .i18n
-                  .fill([diffText, '${diff.toStringAsFixed(1)}%']),
-            ),
-          SizedBox(
-            height: 50,
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            padding: padding,
+            children: [
+              _description(context, stepsToday, typicalSteps, false),
+              SizedBox(height: 25),
+              if (diff.isFinite && !diff.isNaN)
+                Text(
+                  'This is a %s of %s.'
+                      .i18n
+                      .fill([diffText, '${diff.toStringAsFixed(1)}%']),
+                ),
+              SizedBox(
+                height: 50,
+              ),
+              if (!preview)
+                ShareButton(
+                  widgets: [
+                    _description(context, stepsToday, typicalSteps, true),
+                  ],
+                  text:
+                      'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/wfh-movement'
+                          .i18n,
+                  subject:
+                      'This is how my movement have changed after working from home.'
+                          .i18n,
+                  screen: 'Today & before',
+                ),
+            ],
           ),
-          if (!preview)
-            ShareButton(
-              widgets: [
-                _description(context, stepsToday, typicalSteps, true),
-              ],
-              text:
-                  'Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/wfh-movement'
+        ),
+        if (!preview)
+          SafeArea(
+            child: GestureDetector(
+              onTap: () {
+                AppWidgets.showAlert(
+                  context,
+                  'About this view'.i18n,
+                  'Sometimes the app does not receive your latest steps when you sync depending on datasource and devices used.\n\nThis affects the number you see here ( can be 0 ), but not the average you see elsewhere in the app.'
                       .i18n,
-              subject:
-                  'This is how my movement have changed after working from home.'
-                      .i18n,
-              screen: 'Today & before',
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(Icons.info_outline_rounded),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      child: Text(
+                        'Depending on datasource and what devices you use to track your movement you may not be able to see your latest steps.'
+                            .i18n,
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
