@@ -52,6 +52,23 @@ app.post('/feedback', async (req, res) => {
 app.get('/deeplink', async (req, res) =>
   res.redirect(`wfhmovement://localhost?${querystring.encode(req.query)}`)
 )
+app.get('/events', async (req, res) => {
+  const { language } = req.headers
+  if (language === 'sv') {
+    return res.send([
+      {
+        date: '2020-03-16',
+        text: 'Rekommendationer att jobba hemifrån.',
+      },
+    ])
+  }
+  res.send([
+    {
+      date: '2020-03-16',
+      text: 'Swedish recommendations to work from home.',
+    },
+  ])
+})
 
 if (process.env.NODE_ENV !== 'production')
   app.listen(PORT, () => console.log(`listening on ${PORT}`))
