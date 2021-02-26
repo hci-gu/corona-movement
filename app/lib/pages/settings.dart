@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wfhmovement/global-analytics.dart';
+import 'package:wfhmovement/models/app_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/models/user_model.dart';
 import 'package:wfhmovement/pages/group.dart';
@@ -19,6 +20,7 @@ class Settings extends HookWidget {
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
+    AppModel appModel = useModel(appModelAtom);
     var deleteUser = useAction(deleteUserAction);
     var updateUserAfterPeriods = useAction(updateUserAfterPeriodsAction);
     Widget appBar = AppWidgets.appBar(
@@ -45,7 +47,8 @@ class Settings extends HookWidget {
               padding: EdgeInsets.all(25),
               children: [
                 if (user.id != 'all')
-                  ..._userWidgets(context, user, updateUserAfterPeriods),
+                  ..._userWidgets(
+                      context, user, appModel, updateUserAfterPeriods),
                 if (user.id != 'all')
                   ..._loggedInUserWidgets(context, user, deleteUser),
                 _appInformation(context),
@@ -59,8 +62,8 @@ class Settings extends HookWidget {
     );
   }
 
-  List<Widget> _userWidgets(
-      BuildContext context, User user, updateUserAfterPeriods) {
+  List<Widget> _userWidgets(BuildContext context, User user, AppModel appModel,
+      updateUserAfterPeriods) {
     String dateString = user.afterPeriods.first.fromAsString;
 
     return [
@@ -79,6 +82,7 @@ class Settings extends HookWidget {
           onPressed: () => _onChangeDatePressed(
             context,
             user,
+            appModel,
             updateUserAfterPeriods,
           ),
         ),
@@ -115,8 +119,8 @@ class Settings extends HookWidget {
     ];
   }
 
-  void _onChangeDatePressed(
-      BuildContext context, User user, updateUserAfterPeriods) async {
+  void _onChangeDatePressed(BuildContext context, User user, AppModel appModel,
+      updateUserAfterPeriods) async {
     Function done = (BuildContext doneContext, List<DatePeriod> periods) {
       Navigator.of(doneContext).pop();
       user.setAfterPeriods(periods);
@@ -128,6 +132,7 @@ class Settings extends HookWidget {
       MaterialPageRoute(
         builder: (context) => DatePicker(
           initialPeriods: user.afterPeriods,
+          events: appModel.events,
           onDone: done,
         ),
         settings: RouteSettings(name: 'Select periods'),

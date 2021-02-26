@@ -7,7 +7,7 @@ import 'package:wfhmovement/api/api.dart' as api;
 
 class AppModel extends ValueNotifier {
   String snackMessage;
-  List<DateEvent> events;
+  List<DateEvent> events = [];
   Locale locale;
 
   AppModel() : super(null);

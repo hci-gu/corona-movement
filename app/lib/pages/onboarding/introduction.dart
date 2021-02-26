@@ -22,12 +22,6 @@ class Introduction extends HookWidget {
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
     AppModel appModel = useModel(appModelAtom);
-    var getEvents = useAction(getEventsAction);
-
-    useEffect(() {
-      getEvents();
-      return;
-    }, []);
 
     return MainScaffold(
       child: Container(
