@@ -6,13 +6,15 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/app.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
+import 'models/app_model.dart';
 import 'models/recoil.dart';
 import 'models/user_model.dart';
 
 class LanguageSetter extends StatefulWidget {
   final User user;
+  final AppModel appModel;
 
-  const LanguageSetter({Key key, this.user}) : super(key: key);
+  const LanguageSetter({Key key, this.user, this.appModel}) : super(key: key);
 
   @override
   _LanguageSetterState createState() => _LanguageSetterState();
@@ -26,6 +28,7 @@ class _LanguageSetterState extends State<LanguageSetter>
         ? widget.user.languageOverride
         : Localizations.localeOf(context).languageCode;
     I18n.of(context).locale = Locale(language);
+    widget.appModel.setlocale(I18n.of(context).locale);
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
@@ -47,6 +50,7 @@ class _LanguageSetterState extends State<LanguageSetter>
 class UserInit extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    AppModel appModel = useModel(appModelAtom);
     User user = useModel(userAtom);
     var init = useAction(initAction);
 
@@ -81,7 +85,10 @@ class UserInit extends HookWidget {
         primarySwatch: Colors.amber,
       ),
       debugShowCheckedModeBanner: false,
-      home: LanguageSetter(user: user),
+      home: LanguageSetter(
+        user: user,
+        appModel: appModel,
+      ),
     );
   }
 }

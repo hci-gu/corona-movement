@@ -363,6 +363,21 @@ Future sendAnalyticsEvent(String event,
   );
 }
 
+Future<List<DateEvent>> getEvents(String languageCode) async {
+  var url = '$API_URL/events';
+  var response = await http.get(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'api-key': API_KEY,
+      'language': languageCode,
+    },
+  );
+  List data = json.decode(response.body);
+
+  return data.map((e) => DateEvent.fromJson(e)).toList();
+}
+
 Future<bool> ping() async {
   print('pingpong');
   const url = '$API_URL/ping';

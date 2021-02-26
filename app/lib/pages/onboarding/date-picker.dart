@@ -12,11 +12,13 @@ final specialDeletePeriod = DatePeriod(null, null);
 class DatePicker extends HookWidget {
   final Function(BuildContext, List<DatePeriod>) onDone;
   final List<DatePeriod> initialPeriods;
+  List<DateEvent> events;
 
   DatePicker({
     Key key,
     this.onDone,
     this.initialPeriods,
+    this.events,
   }) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -213,10 +215,41 @@ class DatePicker extends HookWidget {
     );
   }
 
+  double _dayWidth(BuildContext context) {
+    double width = MediaQuery.of(context).size.width * 0.52;
+    double dayWidth = width / 7;
+    return dayWidth;
+  }
+
+  Widget _day(context, double width, DateTime date, int i) {
+    BoxDecoration decoration = BoxDecoration(border: _numBorder(date, i % 7));
+    if (_dateIsOnEvent(date)) {
+      decoration = BoxDecoration(
+        border: Border.all(
+          width: 1,
+          color: AppColors.secondaryPressed,
+        ),
+        borderRadius: BorderRadius.circular(50),
+      );
+    }
+
+    return Container(
+      width: width,
+      height: width,
+      decoration: decoration,
+      child: Center(
+        child: Text(
+          DateFormat('d').format(date),
+          style: TextStyle(color: dayColor, fontSize: 12),
+        ),
+      ),
+    );
+  }
+
   Widget _days(context, ValueNotifier<List<DatePeriod>> periods) {
     double width = MediaQuery.of(context).size.width * 0.52;
     DateTime startDay = DateTime(2019, 12, 30);
-    double dayWidth = width / 7;
+    double dayWidth = _dayWidth(context);
     int numWeeks = (DateTime.now().difference(startDay).inDays / 7).ceil();
 
     List<Widget> children = [];
@@ -231,17 +264,7 @@ class DatePicker extends HookWidget {
           onTap: () async {
             _addToPeriods(context, periods, date);
           },
-          child: Container(
-            width: dayWidth,
-            height: dayWidth,
-            decoration: BoxDecoration(border: _numBorder(date, i % 7)),
-            child: Center(
-              child: Text(
-                DateFormat('d').format(date),
-                style: TextStyle(color: dayColor, fontSize: 12),
-              ),
-            ),
-          ),
+          child: _day(context, dayWidth, date, i),
         ),
       ));
     }
@@ -329,11 +352,78 @@ class DatePicker extends HookWidget {
     );
   }
 
+  int numOfWeeks(int year) {
+    DateTime dec28 = DateTime(year, 12, 28);
+    int dayOfDec28 = int.parse(DateFormat("D").format(dec28));
+    return ((dayOfDec28 - dec28.weekday + 10) / 7).floor();
+  }
+
+  int weekOfYear(DateTime date) {
+    int dayOfYear = int.parse(DateFormat("D").format(date));
+    int woy = ((dayOfYear - date.weekday + 10) / 7).floor();
+    if (woy < 1) {
+      woy = numOfWeeks(date.year - 1);
+    } else if (woy > numOfWeeks(date.year)) {
+      woy = 1;
+    }
+    return woy;
+  }
+
   Widget _events(context) {
     double width = MediaQuery.of(context).size.width * 0.37;
-    return Container(
-      width: width,
+    double dayWidth = _dayWidth(context);
+    DateTime startDay = DateTime(2019, 12, 30);
+    int numWeeks = (DateTime.now().difference(startDay).inDays / 7).ceil();
+
+    return Positioned(
+      right: 0,
+      child: Container(
+        width: width,
+        height: dayWidth * numWeeks,
+        child: Stack(
+          children: events
+              .map(
+                (e) => Positioned(
+                  top: dayWidth * (weekOfYear(e.date) - 1),
+                  child: Container(
+                    width: width,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: dayWidth * 0.5,
+                      vertical: dayWidth * 0.2,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          DateFormat('yyyy-MM-dd').format(e.date),
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.secondaryPressed),
+                        ),
+                        Text(
+                          e.text,
+                          style: TextStyle(
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
     );
+  }
+
+  bool _dateIsOnEvent(DateTime date) {
+    return events.any((element) =>
+        DateTime.utc(date.year, date.month, date.day).compareTo(DateTime.utc(
+            element.date.year, element.date.month, element.date.day)) ==
+        0);
   }
 }
 
@@ -381,20 +471,18 @@ class PeriodDialog extends HookWidget {
     var dialogFrom = useState(from);
     var dialogTo = useState<DateTime>(to);
 
+    bool hasOngoing = dialogTo.value == null;
+
     return SimpleDialog(
-      contentPadding: EdgeInsets.all(10),
+      contentPadding: EdgeInsets.all(15),
       children: [
         _dialogTitle(title),
         SizedBox(height: 22),
         _dialogLabel('From'.i18n),
-        _dialogDate(
-          context,
-          date: dialogFrom.value,
-          last: dialogTo.value,
-          onChanged: (date) {
-            dialogFrom.value = date;
-          },
-        ),
+        _dialogDate(context, date: dialogFrom.value, last: dialogTo.value,
+            onChanged: (date) {
+          dialogFrom.value = date;
+        }, hasOngoing: hasOngoing),
         SizedBox(height: 32),
         _dialogLabel('To'.i18n),
         _dialogDate(
@@ -404,6 +492,8 @@ class PeriodDialog extends HookWidget {
           onChanged: (date) {
             dialogTo.value = date;
           },
+          hasOngoing: hasOngoing,
+          canClear: !hasOngoing,
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
@@ -443,7 +533,7 @@ class PeriodDialog extends HookWidget {
       text,
       style: TextStyle(
         fontSize: 24,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
@@ -452,8 +542,15 @@ class PeriodDialog extends HookWidget {
     return Text(text, style: TextStyle(fontSize: 12));
   }
 
-  Widget _dialogDate(context,
-      {DateTime date, DateTime first, DateTime last, onChanged}) {
+  Widget _dialogDate(
+    context, {
+    DateTime date,
+    DateTime first,
+    DateTime last,
+    onChanged,
+    bool hasOngoing,
+    bool canClear = false,
+  }) {
     return GestureDetector(
       onTap: () async {
         var newDate = await showDatePicker(
@@ -465,18 +562,36 @@ class PeriodDialog extends HookWidget {
           onChanged(newDate);
         }
       },
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-            border: Border.all(
-          color: Colors.black,
-          width: 1,
-        )),
-        child: Center(
-          child: Text(date != null
-              ? DateFormat('yyyy-MM-dd').format(date)
-              : 'ongoing'.i18n),
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  border: Border.all(
+                color: Colors.black,
+                width: 1,
+              )),
+              child: Center(
+                child: Text(date != null
+                    ? DateFormat('yyyy-MM-dd').format(date)
+                    : 'ongoing'.i18n),
+              ),
+            ),
+          ),
+          if (canClear)
+            GestureDetector(
+              onTap: () {
+                onChanged(null);
+              },
+              child: Container(
+                width: 40,
+                alignment: Alignment.centerRight,
+                child: Icon(Icons.close),
+              ),
+            ),
+          if (!canClear && !hasOngoing) SizedBox(width: 40)
+        ],
       ),
     );
   }

@@ -3,6 +3,20 @@ import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
 import 'package:wfhmovement/api/utils.dart';
 
+class DateEvent {
+  final DateTime date;
+  final String text;
+
+  DateEvent(this.date, this.text);
+
+  factory DateEvent.fromJson(Map<String, dynamic> json) {
+    return DateEvent(
+      DateTime.parse(json['date']),
+      json['text'],
+    );
+  }
+}
+
 class DatePeriod {
   final DateTime from;
   final DateTime to;
