@@ -1,11 +1,7 @@
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
-<<<<<<< HEAD
 import 'package:wfhmovement/config.dart';
-=======
 import 'package:wfhmovement/models/app_model.dart';
-import 'package:wfhmovement/models/onboarding_model.dart';
->>>>>>> master
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:wfhmovement/models/recoil.dart';
