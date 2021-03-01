@@ -11,6 +11,7 @@ class FormModel extends ValueNotifier {
   String ageRange;
   int age;
   String education;
+  int educationYear = 1;
   String occupation;
   bool loading = false;
   bool uploaded = false;
@@ -35,6 +36,9 @@ class FormModel extends ValueNotifier {
         break;
       case 'education':
         education = value;
+        break;
+      case 'educationYear':
+        educationYear = value;
         break;
       case 'occupation':
         occupation = value;
@@ -83,6 +87,7 @@ class FormModel extends ValueNotifier {
     'Trade/Vocational School'.i18n,
     'Prefer not to say'.i18n,
   ];
+  static List educationYears = ['1', '2', '3'];
 }
 
 var formAtom = Atom('form', FormModel());

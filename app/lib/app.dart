@@ -98,12 +98,12 @@ class ScreenSelector extends HookWidget {
       return;
     }, []);
 
-    // if ((user.id == null || !onboarding.done) && !onboarding.uploading) {
-    //   return Introduction();
-    // }
-    // if (onboarding.uploading || !user.gaveEstimate || !form.uploaded) {
-    return SyncData();
-    // }
+    if ((user.id == null || !onboarding.done) && !onboarding.uploading) {
+      return Introduction();
+    }
+    if (onboarding.uploading || !user.gaveEstimate || !form.uploaded) {
+      return SyncData();
+    }
     return Home();
   }
 }

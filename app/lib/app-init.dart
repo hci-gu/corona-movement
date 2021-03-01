@@ -6,11 +6,8 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/app.dart';
 import 'package:wfhmovement/widgets/main_scaffold.dart';
 
-<<<<<<< HEAD
 import 'config.dart';
-=======
 import 'models/app_model.dart';
->>>>>>> master
 import 'models/recoil.dart';
 import 'models/user_model.dart';
 

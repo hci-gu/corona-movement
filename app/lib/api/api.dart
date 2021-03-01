@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/api/utils.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/models/form_model.dart';
 
 // const API_URL = 'http://10.0.2.2:4000';
@@ -14,16 +15,23 @@ const API_URL = 'http://192.168.0.32:4000';
 const API_KEY = 'some-key';
 // const API_URL = 'https://api.mycoronamovement.com';
 
+Map<String, String> getHeaders([String languageCode = 'en']) {
+  Map<String, String> headers = <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'api-key': API_KEY,
+    'app-name': EnvironmentConfig.APP_NAME,
+    'language': languageCode,
+  };
+  return headers;
+}
+
 Future postJsonData(String userId, List<Map<String, dynamic>> data,
     bool createAggregation) async {
   var url = '$API_URL/health-data';
   var response = await http
       .post(
         url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'api-key': API_KEY,
-        },
+        headers: getHeaders(),
         body: jsonEncode({
           'id': userId,
           'dataPoints': data,
@@ -64,10 +72,7 @@ Future<UserResponse> register(
   const url = '$API_URL/register';
   var response = await http.post(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: jsonEncode({
       'afterPeriods': afterPeriods != null
           ? afterPeriods.map((e) => e.toJson()).toList()
@@ -87,10 +92,7 @@ Future<UserResponse> getUser(String userId) async {
   var url = '$API_URL/user/$userId';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
 
   if (response.body == null || response.body == '') return null;
@@ -102,10 +104,7 @@ Future<bool> deleteUser(String userId) async {
   var url = '$API_URL/user/$userId';
   var response = await http.delete(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
 
   return response.statusCode == 200;
@@ -116,10 +115,7 @@ Future updateUserAfterPeriods(
   var url = '$API_URL/user/$userId';
   await http.patch(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: jsonEncode({
       'afterPeriods': afterPeriods.map((e) => e.toJson()).toList(),
       'timezone': globalApiHandler.timezone,
@@ -131,10 +127,7 @@ Future updateUserEstimate(String userId, double stepsEstimate) async {
   var url = '$API_URL/user/$userId';
   await http.patch(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: jsonEncode({
       'stepsEstimate': stepsEstimate,
     }),
@@ -145,10 +138,7 @@ Future setUserFormData(String userId, FormModel form) async {
   var url = '$API_URL/user/$userId';
   await http.patch(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: jsonEncode({
       'country': form.country,
       'gender': form.gender,
@@ -165,10 +155,7 @@ Future<List<HealthData>> getSteps(
       '$API_URL/$userId/hours?from=${from.toIso8601String().substring(0, 10)}&to=${to.toIso8601String().substring(0, 10)}';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
   ChartResult chart = ChartResult.fromJson(json.decode(response.body));
 
@@ -182,10 +169,7 @@ Future<List<HealthData>> getSteps(
 
 Future<AllUserData> getDataForAllUser() async {
   var url = '$API_URL/all';
-  var response = await http.get(url, headers: <String, String>{
-    'Content-Type': 'application/json; charset=UTF-8',
-    'api-key': API_KEY,
-  });
+  var response = await http.get(url, headers: getHeaders());
 
   AllUserData data = AllUserData.fromJson(json.decode(response.body));
   return data;
@@ -195,10 +179,7 @@ Future<HealthComparison> getComparison(String userId) async {
   var url = '$API_URL/$userId/summary';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
   HealthComparison comparison =
       HealthComparison.fromJson(json.decode(response.body));
@@ -210,55 +191,18 @@ Future<LatestUpload> getLatestUpload(String userId) async {
   var url = '$API_URL/$userId/last-upload';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
   Map<String, dynamic> data = json.decode(response.body);
 
   return LatestUpload.fromJson(data);
 }
 
-Future<bool> shouldUnlock() async {
-  const url = '$API_URL/should-unlock';
-  var response = await http.get(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
-  );
-
-  bool locked = json.decode(response.body);
-
-  return locked;
-}
-
-Future<bool> unlock(String code) async {
-  const url = '$API_URL/unlock';
-  var response = await http.post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
-    body: jsonEncode({
-      'code': code,
-    }),
-  );
-
-  return response.statusCode == 200;
-}
-
 Future<Group> getGroup(String groupId) async {
   var url = '$API_URL/groups/$groupId';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
   Group group = Group(json.decode(response.body));
   return group;
@@ -268,10 +212,7 @@ Future<Group> getAndjoinGroup(String groupCode, String userId) async {
   var url = '$API_URL/groups/code/$groupCode';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
   if (response.statusCode == 200) {
     Group group = Group(json.decode(response.body));
@@ -287,10 +228,7 @@ Future<bool> joinGroup(String groupId, String userId) async {
   var url = '$API_URL/groups/$groupId/join';
   var response = await http.post(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: json.encode({
       'userId': userId,
     }),
@@ -303,10 +241,7 @@ Future<bool> leaveGroup(String groupId, String userId) async {
   var url = '$API_URL/groups/$groupId/$userId';
   var response = await http.delete(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
   );
   return response.statusCode == 200;
 }
@@ -317,10 +252,7 @@ Future<bool> feedback(String text, Uint8List screenshot) async {
   const url = '$API_URL/feedback';
   var response = await http.post(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: jsonEncode({
       'text': text,
       'os': Platform.operatingSystem,
@@ -345,10 +277,7 @@ Future sendAnalyticsEvent(String event,
   const url = '$API_URL/analytics';
   await http.post(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
+    headers: getHeaders(),
     body: jsonEncode({
       'userId': userId,
       'event': event,
@@ -367,30 +296,9 @@ Future<List<DateEvent>> getEvents(String languageCode) async {
   var url = '$API_URL/events';
   var response = await http.get(
     url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-      'language': languageCode,
-    },
+    headers: getHeaders(languageCode),
   );
   List data = json.decode(response.body);
 
   return data.map((e) => DateEvent.fromJson(e)).toList();
-}
-
-Future<bool> ping() async {
-  print('pingpong');
-  const url = '$API_URL/ping';
-  var response = await http.post(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'api-key': API_KEY,
-    },
-    body: jsonEncode(
-      {'date': DateTime.now().toIso8601String()},
-    ),
-  );
-
-  return response.statusCode == 200;
 }

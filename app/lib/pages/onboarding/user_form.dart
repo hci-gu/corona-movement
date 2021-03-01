@@ -67,7 +67,8 @@ class UserForm extends HookWidget {
           ]),
         ),
         if (EnvironmentConfig.APP_NAME == 'WFH Movement') ..._wfhFields(form),
-        if (EnvironmentConfig.APP_NAME == 'SFH Movement') ..._sfhFields(form),
+        if (EnvironmentConfig.APP_NAME == 'SFH Movement')
+          ..._sfhFields(context, form),
         GroupCode(key: Key('userForm')),
       ],
     );
@@ -97,7 +98,7 @@ class UserForm extends HookWidget {
     ];
   }
 
-  List<Widget> _sfhFields(FormModel form) {
+  List<Widget> _sfhFields(BuildContext context, FormModel form) {
     return [
       UserFormField(
         name: 'Gender'.i18n,
@@ -108,27 +109,67 @@ class UserForm extends HookWidget {
         name: 'Age'.i18n,
         child: _freeForm('age', form.age, form.setField, int.parse),
       ),
+      Container(
+        width: MediaQuery.of(context).size.width * 2,
+        child: Row(
+          children: [
+            Flexible(
+              child: UserFormField(
+                name: 'Education'.i18n,
+                child: _dropDown(
+                  FormModel.educations,
+                  'education',
+                  form.education,
+                  form.setField,
+                ),
+              ),
+            ),
+            if (form.education == 'High school') SizedBox(width: 25),
+            if (form.education == 'High school')
+              Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: UserFormField(
+                  name: 'Year'.i18n,
+                  child: _dropDown(
+                    FormModel.educationYears,
+                    'educationYear',
+                    form.educationYear,
+                    form.setField,
+                    int.parse,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     ];
   }
 
-  Widget _dropDown(List values, String type, String value, onChange) {
+  Widget _dropDown(List values, String type, value, onChange, [parseFunction]) {
     return DropdownButton(
       isExpanded: true,
       hint: Text('Please choose one'.i18n),
       items: [
         ...values
-            .map((e) => DropdownMenuItem(child: Text(e), value: e))
+            .map((e) => DropdownMenuItem(child: Text(e.toString()), value: e))
             .toList(),
       ],
-      value: value,
-      onChanged: (val) => onChange(type, val),
+      value: value?.toString(),
+      onChanged: (val) {
+        if (parseFunction != null) {
+          onChange(type, parseFunction(val));
+        } else {
+          onChange(type, val);
+        }
+      },
     );
   }
 
   Widget _freeForm(String type, value, onChange, [parseFunction]) {
-    final controller = useTextEditingController(text: value.toString());
+    final controller = useTextEditingController(text: value?.toString());
 
     return TextField(
+      keyboardType: type == 'age' ? TextInputType.number : TextInputType.text,
       controller: controller,
       decoration: InputDecoration(
         hintText: 'Your %s (optional)'.i18n.fill([type]),
