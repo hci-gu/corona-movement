@@ -44,8 +44,7 @@ class NoSteps extends HookWidget {
               title: 'Proceed'.i18n,
               onPressed: () {
                 proceedWithoutSteps();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             )
           ],

@@ -1,6 +1,11 @@
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
+<<<<<<< HEAD
 import 'package:wfhmovement/config.dart';
+=======
+import 'package:wfhmovement/models/app_model.dart';
+import 'package:wfhmovement/models/onboarding_model.dart';
+>>>>>>> master
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:wfhmovement/models/recoil.dart';
@@ -20,6 +25,7 @@ class Introduction extends HookWidget {
   @override
   Widget build(BuildContext context) {
     User user = useModel(userAtom);
+    AppModel appModel = useModel(appModelAtom);
 
     return MainScaffold(
       child: Container(
@@ -49,7 +55,7 @@ class Introduction extends HookWidget {
                     height: 150,
                   ),
                 ),
-                pickDateWidget(context, user)
+                pickDateWidget(context, user, appModel)
               ],
             ),
             Positioned(
@@ -63,7 +69,7 @@ class Introduction extends HookWidget {
     );
   }
 
-  Widget pickDateWidget(context, user) {
+  Widget pickDateWidget(context, user, appModel) {
     return Column(
       children: [
         SizedBox(
@@ -85,7 +91,7 @@ class Introduction extends HookWidget {
             StyledButton(
               small: true,
               title: 'Yes'.i18n,
-              onPressed: () => _onYesPressed(context, user),
+              onPressed: () => _onYesPressed(context, user, appModel),
             ),
             SizedBox(width: 10),
             StyledButton(
@@ -104,7 +110,7 @@ class Introduction extends HookWidget {
     );
   }
 
-  void _onYesPressed(BuildContext context, User user) async {
+  void _onYesPressed(BuildContext context, User user, AppModel appModel) async {
     Function done = (BuildContext doneContext, List<DatePeriod> periods) {
       String title = 'Vill du fortsätta?'.i18n;
       String text =
@@ -144,6 +150,7 @@ class Introduction extends HookWidget {
       MaterialPageRoute(
         builder: (context) => DatePicker(
           onDone: done,
+          events: appModel.events,
         ),
         settings: RouteSettings(name: 'Select periods'),
       ),

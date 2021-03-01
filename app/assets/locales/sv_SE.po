@@ -513,6 +513,7 @@ msgstr "Doktorsexamen"
 msgid "Trade/Vocational School"
 msgstr "Yrkeshögskola"
 
+<<<<<<< HEAD
 msgid "work"
 msgstr "arbeta"
 
@@ -530,3 +531,13 @@ msgstr "studerar"
 
 msgid "studied"
 msgstr "studerat"
+=======
+msgid "Depending on datasource and what devices you use to track your movement you may not be able to see your latest steps."
+msgstr "Beroende på datakälla och vilka enheter du använder för att spåra dina steg kanske du inte ser din senaste data."
+
+msgid "About this view"
+msgstr "Om den här vyn"
+
+msgid "Sometimes the app does not receive your latest steps when you sync depending on datasource and devices used.\n\nThis affects the number you see here ( can be 0 ), but not the average you see elsewhere in the app."
+msgstr "Ibland får appen inte dina senaste steg när du synkar data beroende på datakälla och enheter som används.\n\nDet påverkar numret du ser här ( kan vara 0 ), men inte snittet som visas på andra ställen i appen."
+>>>>>>> master

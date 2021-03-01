@@ -4,24 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/recoil.dart';
+import 'package:wfhmovement/models/steps/daysFilter.dart';
 import 'package:wfhmovement/models/steps/steps.dart';
 import 'package:wfhmovement/widgets/button.dart';
 
 class DaySelect extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    StepsModel steps = useModel(stepsAtom);
-
     return Center(
       child: StyledButton(
         title: 'Change days'.i18n,
         icon: Icons.arrow_drop_down,
-        onPressed: () => _onPressed(context, steps),
+        onPressed: () => _onPressed(context),
       ),
     );
   }
 
-  _onPressed(BuildContext context, StepsModel steps) {
+  _onPressed(BuildContext context) {
     globalAnalytics.sendEvent('showDaySelect');
     showDialog(
       useSafeArea: false,
@@ -49,7 +48,6 @@ class DaySelect extends HookWidget {
 class DaySelectDialog extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    StepsModel steps = useModel(stepsAtom);
     final animationController =
         useAnimationController(duration: Duration(milliseconds: 300));
     final _offsetAnimation =
@@ -81,16 +79,25 @@ class DaySelectDialog extends HookWidget {
           body: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: StepsModel.weekdays
-                .map((day) => _daySelect(steps, day))
+            children: DayFilterModel.weekdays
+                .map((day) => DaySelectInput(day))
                 .toList(),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _daySelect(StepsModel steps, Map<String, dynamic> day) {
+class DaySelectInput extends HookWidget {
+  final Map<String, dynamic> day;
+
+  DaySelectInput(this.day);
+
+  @override
+  Widget build(BuildContext context) {
+    DayFilterModel dayFilter = useModel(dayFilterAtom);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -101,9 +108,9 @@ class DaySelectDialog extends HookWidget {
           width: 48,
           child: Checkbox(
             materialTapTargetSize: MaterialTapTargetSize.padded,
-            value: steps.days.contains(day['value']),
+            value: dayFilter.days.contains(day['value']),
             onChanged: (value) {
-              steps.updateDays(day['value'], value);
+              dayFilter.updateDays(day['value'], value);
             },
           ),
         ),

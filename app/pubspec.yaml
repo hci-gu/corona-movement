@@ -2,7 +2,11 @@ name: wfhmovement
 description: A new Flutter project.
 publish_to: 'none'
 
+<<<<<<< HEAD
 version: 1.11.5+60
+=======
+version: 1.11.6+62
+>>>>>>> master
 
 environment:
   sdk: '>=2.6.0 <3.0.0'

@@ -2,6 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/physics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:wfhmovement/models/app_model.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/user_model.dart';
@@ -57,6 +58,12 @@ class ScreenSelector extends HookWidget {
     FormModel form = useModel(formAtom);
     User user = useModel(userAtom);
     var joinGroup = useAction(joinGroupAction);
+    var getEvents = useAction(getEventsAction);
+
+    useEffect(() {
+      getEvents();
+      return;
+    }, []);
 
     useEffect(() {
       var handleUri = (Uri uri) {
