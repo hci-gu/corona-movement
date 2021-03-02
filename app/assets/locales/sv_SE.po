@@ -39,8 +39,8 @@ msgstr "Stäng"
 msgid "Your steps are still processing...\n Pull to refresh."
 msgstr "Dina steg bearbetas fortfarande...\n Dra för att uppdatera."
 
-msgid "This is the number of steps others have taken each day (on average). Below you see how working from home has affected people\'s movement  throughout the day."
-msgstr "Det här är det antalet steg som andra har tagit varje dag i genomsnitt. Nedan kan du se hur distansarbete har påverkat deras rörelse över dagen."
+msgid "This is the number of steps others have taken each day (on average). Below you see how %s from home has affected people\'s movement  throughout the day."
+msgstr "Det här är det antalet steg som andra har tagit varje dag i genomsnitt. Nedan kan du se hur %s har påverkat deras rörelse över dagen."
 
 msgid "This is the number of steps you\'ve taken every day. Below you can pick different views of this data."
 msgstr "Det här är antalet steg du har tagit varje dag. Nedan kan du välja olika sätt att visa din förändring."
@@ -111,8 +111,8 @@ msgstr "min"
 msgid "This is how how %s movement has changed after working from home."
 msgstr "Det här är hur %s rörelse har förändrats efter hemarbete."
 
-msgid "Above you see how working from home has affected people’s movement throughout the day."
-msgstr "Ovan kan du se hur hemarbete har påverkat hur människor rör sig över dagen."
+msgid "Above you see how %s from home has affected people’s movement throughout the day."
+msgstr "Ovan kan du se hur %s har påverkat hur människor rör sig över dagen."
 
 msgid "Above you can see how your activity has changed over a typical day, before and after working from home."
 msgstr "Här kan du se hur din rörelse har förändrats över en typisk dag före och efter du började arbeta hemifrån."
@@ -156,14 +156,29 @@ msgstr "Demografisk data"
 msgid "App interactions"
 msgstr "Appinteraktioner"
 
-msgid "Collected from %s.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for working from home. ( for comparisons before/after )"
-msgstr "Hämtad från %s. \n\n- Uppgifter om antalet steg som tagits, med tidstämplar\n- Valt datum då du började arbeta hemifrån (för jämförelse före/efter)"
+msgid "Collected from %s.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for %s from home. ( for comparisons before/after )"
+msgstr "Hämtad från %s. \n\n- Uppgifter om antalet steg som tagits, med tidstämplar\n- Valt datum då du började %s hemifrån (för jämförelse före/efter)"
 
-msgid "The following points are collected by filling out the form in the next step:\n\n- Gender\n- Age range\n- Education\n- Profession"
-msgstr "Följande information samlas in genom att fylla i formuläret i nästa steg:\n\n- Kön\n- Åldersspann\n- Utbildning\n -Yrke"
+msgid "The following points are collected by filling out the form in the next step:"
+msgstr "Följande information samlas in genom att fylla i formuläret i nästa steg:"
 
-msgid "Automatically sent via app usage.\n\n- App open/close\n- Navigating through views\n- Sync steps button pressed\n- Change work from home date\n- Day selection in Before & after\n- Using share feature"
-msgstr "Sänds automatiskt via appanvändning.\n\n- När appen öppnas/stängs\n- Navigering genom vyer\n- Synkning av stegdata\n- Byte av datum för hemarbete\n- Val av dagar i ”Före & efter” vyn\n- Användning av dela-funktionen"
+msgid "Gender"
+msgstr "Kön"
+
+msgid "Age"
+msgstr "Ålder"
+
+msgid "Age range"
+msgstr "Åldersspann"
+
+msgid "Education"
+msgstr "Utbildning"
+
+msgid "Occupation"
+msgstr "Sysselsättning"
+
+msgid "Automatically sent via app usage.\n\n- App open/close\n- Navigating through views\n- Sync steps button pressed\n- Change %s from home date\n- Day selection in Before & after\n- Using share feature"
+msgstr "Sänds automatiskt via appanvändning.\n\n- När appen öppnas/stängs\n- Navigering genom vyer\n- Synkning av stegdata\n- Byte av datum för %s\n- Val av dagar i ”Före & efter” vyn\n- Användning av dela-funktionen"
 
 msgid "To proceeed you must grant access for us to retrieve data from %s."
 msgstr "För att fortsätta måste du ge oss åtkomst att hämta data från %s."
@@ -258,11 +273,11 @@ msgstr "Gå med i en grupp"
 msgid "Delete data"
 msgstr "Ta bort data"
 
-msgid "By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fit or Garmin."
-msgstr "Genom att välja det datum du började arbeta hemifrån kan du se om dina rörelsemönster förändrats under hemarbetet. Appen visualiserar din rörelse i form av stegdata från din telefon, genom Apple Health, Google fit eller Garmin."
+msgid "By picking a date where you started %s from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fit or Garmin."
+msgstr "Genom att välja det datum du började %s hemifrån kan du se om dina rörelsemönster förändrats under hemarbetet. Appen visualiserar din rörelse i form av stegdata från din telefon, genom Apple Health, Google fit eller Garmin."
 
-msgid "The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden."
-msgstr "Work From Home-appen är utvecklad i forskningssyfte av Avdelningen för människa-datorinteraktion på Institutionen för tillämpad informationsteknologi, Göteborgs Universitet."
+msgid "%s was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden."
+msgstr "%s är utvecklad i forskningssyfte av Avdelningen för människa-datorinteraktion på Institutionen för tillämpad informationsteknologi, Göteborgs Universitet."
 
 msgid "Read more about the project here:"
 msgstr "Läs mer om projektet här:"
@@ -530,6 +545,13 @@ msgstr "studerar"
 
 msgid "studied"
 msgstr "studerat"
+
+msgid "teleworking"
+msgstr "distansarbete"
+
+msgid "home studies"
+msgstr "hemmastudier"
+
 msgid "Depending on datasource and what devices you use to track your movement you may not be able to see your latest steps."
 msgstr "Beroende på datakälla och vilka enheter du använder för att spåra dina steg kanske du inte ser din senaste data."
 

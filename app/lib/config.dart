@@ -14,6 +14,8 @@ class AppTexts {
   String work;
   String working;
   String worked;
+  String teleworking;
+  List<String> formFields = [];
 
   init(String appName) {
     switch (appName) {
@@ -33,6 +35,13 @@ class AppTexts {
     work = 'work'.i18n;
     working = 'working'.i18n;
     worked = 'worked'.i18n;
+    teleworking = 'teleworking'.i18n;
+    formFields = [
+      'Gender'.i18n,
+      'Age range'.i18n,
+      'Education'.i18n,
+      'Occupation'.i18n,
+    ];
   }
 
   initSFHMovement(String name) {
@@ -41,6 +50,12 @@ class AppTexts {
     work = 'study'.i18n;
     working = 'studying'.i18n;
     worked = 'studied'.i18n;
+    teleworking = 'home studies'.i18n;
+    formFields = [
+      'Gender'.i18n,
+      'Age'.i18n,
+      'Education'.i18n,
+    ];
   }
 
   static final AppTexts _appTexts = AppTexts._internal();

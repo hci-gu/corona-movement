@@ -139,16 +139,18 @@ class StepsChart extends HookWidget {
                     touchedBarSpots.firstWhere((o) => o.barIndex == 0).y;
                 double afterVal =
                     touchedBarSpots.firstWhere((o) => o.barIndex == 1).y;
+                String before = 'Before'.i18n;
+                String after = 'After'.i18n;
                 return [
                   LineTooltipItem(
-                    '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n before: ${beforeVal.round()}',
+                    '${_timestampForValue(touchedBarSpots[0].x.toInt())}\n $before: ${beforeVal.round()}',
                     TextStyle(
                       color: AppColors.secondaryLight,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   LineTooltipItem(
-                    'after: ${afterVal.round()}',
+                    '$after: ${afterVal.round()}',
                     TextStyle(
                       color: AppColors.main,
                       fontWeight: FontWeight.bold,
