@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -28,6 +29,7 @@ class GarminStep {
 class GarminClient {
   String username;
   String password;
+  String displayName;
 
   Dio dio;
 
@@ -91,11 +93,34 @@ class GarminClient {
     if (claimResponse.statusCode != 200) {
       throw GarminException('Failed to get session through auth ticket URL');
     }
+    List<Cookie> cookies =
+        CookieJar().loadForRequest(Uri.parse('https://connect.garmin.com'));
+    print(cookies);
+
+    // Step 4: Get user displayName
+    await getDisplayName();
+  }
+
+  Future<void> getDisplayName() async {
+    Response response = await dio
+        .get('https://connect.garmin.com/modern/currentuser-service/user/info');
+    displayName = response.data['displayName'];
+    print(response);
   }
 
   Future<List<Map<String, dynamic>>> fetchSteps(String dateString) async {
     Response response = await dio.get(
-        'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySummaryChart?date=$dateString');
+      'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySummaryChart/$displayName?date=$dateString',
+      options: Options(
+        headers: {
+          'User-Agent':
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',
+          'Referer': 'https://connect.garmin.com/modern/dashboard/',
+          'origin': 'https://sso.garmin.com',
+          'nk': 'NT',
+        },
+      ),
+    );
     List<dynamic> data = response.data;
     List<GarminStep> steps = data.map((d) => GarminStep.fromJson(d)).toList();
 

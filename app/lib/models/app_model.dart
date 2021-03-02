@@ -33,7 +33,8 @@ var appModelAtom = Atom('app', AppModel());
 Action getEventsAction = (get) async {
   AppModel appModel = get(appModelAtom);
 
-  List<DateEvent> events = await api.getEvents(appModel.locale.languageCode);
-
-  appModel.setEvents(events);
+  try {
+    List<DateEvent> events = await api.getEvents(appModel.locale.languageCode);
+    appModel.setEvents(events);
+  } catch (e) {}
 };
