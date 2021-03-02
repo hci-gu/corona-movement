@@ -22,6 +22,11 @@ app.use(async (_, __, next) => {
   await db.inited()
   next()
 })
+app.use(async (req, _, next) => {
+  if (!req.headers['app-name']) {
+    req.headers['app-name'] = 'WFH Movement'
+  }
+})
 
 app.use('/analytics', analyticsRoutes)
 app.use('/groups', groupsRoutes)
