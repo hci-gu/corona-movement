@@ -1,3 +1,5 @@
+import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
@@ -97,8 +99,13 @@ class Home extends HookWidget {
 
   List<Widget> _body(BuildContext context, User user, deleteUser) {
     String description = user.id == 'all'
-        ? 'This is the number of steps others have taken each day (on average). Below you see how working from home has affected people\'s movement  throughout the day.'
+        ? 'This is the number of steps others have taken each day (on average). Below you see how %s from home has affected people\'s movement  throughout the day.'
             .i18n
+            .fill([
+            I18n.of(context).locale.languageCode == 'en'
+                ? AppTexts().working
+                : AppTexts().teleworking,
+          ])
         : 'This is the number of steps you\'ve taken every day. Below you can pick different views of this data.'
             .i18n;
 

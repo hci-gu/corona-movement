@@ -1,4 +1,5 @@
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
@@ -125,9 +126,15 @@ class TodayBeforeText extends HookWidget {
           ),
           TextSpan(
             text:
-                ' steps so far. On a typical %s, before working from home, %s had normally taken '
+                ' steps so far. On a typical %s, before %s from home, %s had normally taken '
                     .i18n
-                    .fill([day, subject]),
+                    .fill([
+              day,
+              I18n.of(context).locale.languageCode == 'en'
+                  ? AppTexts().working
+                  : AppTexts().teleworking,
+              subject
+            ]),
           ),
           TextSpan(
             text: typicalSteps.toString(),

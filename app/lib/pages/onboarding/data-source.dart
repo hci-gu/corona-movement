@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:wfhmovement/models/onboarding_model.dart';
@@ -118,13 +120,24 @@ class DataSource extends HookWidget {
       'App interactions'.i18n
     ];
     final List<String> descriptions = [
-      'Collected from %s.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for working from home. ( for comparisons before/after )'
+      'Collected from %s.\n\n- Historical data of number of steps taken with timestamps\n- Date selected for %s from home. ( for comparisons before/after )'
           .i18n
-          .fill([dataSource]),
-      'The following points are collected by filling out the form in the next step:\n\n- Gender\n- Age range\n- Education\n- Profession'
-          .i18n,
-      'Automatically sent via app usage.\n\n- App open/close\n- Navigating through views\n- Sync steps button pressed\n- Change work from home date\n- Day selection in Before & after\n- Using share feature'
+          .fill([
+        dataSource,
+        I18n.of(context).locale.languageCode == 'en'
+            ? AppTexts().working
+            : AppTexts().work
+      ]),
+      'The following points are collected by filling out the form in the next step:'
+              .i18n +
+          '\n\n - ${AppTexts().formFields.join('\n - ')}'.i18n,
+      'Automatically sent via app usage.\n\n- App open/close\n- Navigating through views\n- Sync steps button pressed\n- Change %s from home date\n- Day selection in Before & after\n- Using share feature'
           .i18n
+          .fill([
+        I18n.of(context).locale.languageCode == 'en'
+            ? AppTexts().work
+            : AppTexts().teleworking
+      ])
     ];
 
     return Container(

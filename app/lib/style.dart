@@ -1,3 +1,4 @@
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 import 'dart:ui';
 
@@ -38,7 +39,7 @@ class AppWidgets {
       backgroundColor: AppColors.main,
       centerTitle: true,
       title: Text(
-        title != null ? title : 'WFH Movement',
+        title != null ? title : EnvironmentConfig.APP_NAME,
         style: TextStyle(
           fontWeight: FontWeight.w800,
           color: AppColors.primaryText,

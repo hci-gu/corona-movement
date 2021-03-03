@@ -1,4 +1,6 @@
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
@@ -51,7 +53,11 @@ class DatePicker extends HookWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(40.0),
-            child: Text('When have you been working from home?'.i18n),
+            child: Text('When have you been %s from home?'.i18n.fill(([
+                  I18n.of(context).locale.languageCode == 'en'
+                      ? AppTexts().working
+                      : AppTexts().worked
+                ]))),
           ),
           Stack(
             children: [

@@ -1,3 +1,5 @@
+import 'package:i18n_extension/i18n_widget.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
@@ -41,10 +43,20 @@ class DetailedSteps extends HookWidget {
           ),
           AppWidgets.chartDescription(
             user.id == 'all'
-                ? 'Above you see how working from home has affected people’s movement throughout the day.'
+                ? 'Above you see how %s from home has affected people’s movement throughout the day.'
                     .i18n
-                : 'Above you can see how your activity has changed over a typical day, before and after working from home.'
-                    .i18n,
+                    .fill([
+                    I18n.of(context).locale.languageCode == 'en'
+                        ? AppTexts().working
+                        : AppTexts().teleworking,
+                  ])
+                : 'Above you can see how your activity has changed over a typical day, before and after %s from home.'
+                    .i18n
+                    .fill([
+                    I18n.of(context).locale.languageCode == 'en'
+                        ? AppTexts().working
+                        : AppTexts().work,
+                  ]),
           ),
           if (user.id != 'all') DaySelect(),
           ShareButton(

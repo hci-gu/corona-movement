@@ -1,4 +1,6 @@
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/material.dart';
@@ -145,14 +147,20 @@ class Settings extends HookWidget {
       children: [
         SizedBox(height: 25),
         Text(
-          'By picking a date where you started working from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fit or Garmin.'
-              .i18n,
+          'By picking a date where you started %s from home, you will be able to explore whether your movement patterns have changed since you started working from home. The app visualizes your movement in the form of steps data from your phone, through Apple Health, Google fit or Garmin.'
+              .i18n
+              .fill([
+            I18n.of(context).locale.languageCode == 'en'
+                ? AppTexts().working
+                : AppTexts().work,
+          ]),
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 10),
         Text(
-          'The Work From Home app was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.'
-              .i18n,
+          '%s was developed for research purposes by the Division of Human Computer Interaction at the Department of Applied Information Technology, University of Gothenburg, Sweden.'
+              .i18n
+              .fill([EnvironmentConfig.APP_NAME]),
           style: TextStyle(fontSize: 12),
         ),
         SizedBox(height: 10),

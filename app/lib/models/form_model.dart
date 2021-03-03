@@ -1,3 +1,4 @@
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/foundation.dart';
@@ -9,7 +10,9 @@ class FormModel extends ValueNotifier {
   String country = 'Sweden';
   String gender;
   String ageRange;
+  int age;
   String education;
+  int educationYear = 1;
   String occupation;
   bool loading = false;
   bool uploaded = false;
@@ -21,7 +24,7 @@ class FormModel extends ValueNotifier {
     notifyListeners();
   }
 
-  setField(String type, String value) {
+  setField(String type, value) {
     switch (type) {
       case 'gender':
         gender = value;
@@ -29,8 +32,14 @@ class FormModel extends ValueNotifier {
       case 'ageRange':
         ageRange = value;
         break;
+      case 'age':
+        age = value;
+        break;
       case 'education':
         education = value;
+        break;
+      case 'educationYear':
+        educationYear = value;
         break;
       case 'occupation':
         occupation = value;
@@ -79,12 +88,20 @@ class FormModel extends ValueNotifier {
     'Trade/Vocational School'.i18n,
     'Prefer not to say'.i18n,
   ];
+  static List educationYears = ['1', '2', '3'];
 }
 
 var formAtom = Atom('form', FormModel());
 
 var formDoneSelector = Selector('form-done-selector', (GetStateValue get) {
   FormModel form = get(formAtom);
+
+  if (EnvironmentConfig.APP_NAME == 'SFH Movement') {
+    return form.country != null &&
+        form.gender != null &&
+        form.age != null &&
+        form.education != null;
+  }
 
   return form.country != null &&
       form.gender != null &&

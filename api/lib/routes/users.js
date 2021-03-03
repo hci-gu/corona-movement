@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const moment = require('moment')
 const db = require('../adapters/db')
 
 router.post('/register', async (req, res) => {
   console.log('POST /register', req.body)
-  const { _id } = await db.createUser(req.body)
+  const { _id } = await db.createUser({
+    ...req.body,
+    appName: req.headers['app-name'],
+  })
   const user = await db.getUser(_id.toString())
   res.send(user)
 })

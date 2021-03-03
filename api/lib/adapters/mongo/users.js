@@ -16,6 +16,7 @@ const create = async ({
   beforePeriods,
   afterPeriods,
   workedFromHome,
+  appName,
 }) => {
   const result = await collection.insert({
     created: new Date(),
@@ -28,6 +29,7 @@ const create = async ({
     dataSource,
     code,
     workedFromHome,
+    appName,
   })
   return result.ops[0]
 }

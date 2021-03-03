@@ -1,4 +1,6 @@
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/api/responses.dart';
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -67,8 +69,8 @@ class DaysBarChart extends HookWidget {
             padding: EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
             scrollDirection: Axis.horizontal,
             children: [
-              _barChart(days.length > 0 ? days : emptyDays, user, afterPeriods,
-                  days.length == 0),
+              _barChart(context, days.length > 0 ? days : emptyDays, user,
+                  afterPeriods, days.length == 0),
             ],
           ),
         ),
@@ -85,7 +87,9 @@ class DaysBarChart extends HookWidget {
     return index * barWidth - 50;
   }
 
-  Widget _barChart(days, user, List<DatePeriod> afterPeriods, [bool empty]) {
+  Widget _barChart(
+      BuildContext context, days, user, List<DatePeriod> afterPeriods,
+      [bool empty]) {
     double maxValue = days.length > 0
         ? days.fold(
             0.0, (value, day) => value > day['value'] ? value : day['value'])
@@ -112,7 +116,11 @@ class DaysBarChart extends HookWidget {
                 var day = days[groupIndex];
                 if (_dateIsAtStartOfPeriod(day['date'], afterPeriods)) {
                   return BarTooltipItem(
-                    'Started working from home'.i18n,
+                    'Started %s from home'.i18n.fill([
+                      I18n.of(context).locale.languageCode == 'en'
+                          ? AppTexts().working
+                          : AppTexts().work
+                    ]),
                     TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -121,7 +129,11 @@ class DaysBarChart extends HookWidget {
                 }
                 if (_dateIsAtEndOfPeriod(day['date'], afterPeriods)) {
                   return BarTooltipItem(
-                    'Stopped working from home'.i18n,
+                    'Stopped %s from home'.i18n.fill([
+                      I18n.of(context).locale.languageCode == 'en'
+                          ? AppTexts().working
+                          : AppTexts().work
+                    ]),
                     TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

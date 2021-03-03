@@ -12,6 +12,7 @@ const analyticsRoutes = require('./routes/analytics')
 const stepsRoutes = require('./routes/steps')
 const usersRoutes = require('./routes/users')
 const groupsRoutes = require('./routes/groups')
+const eventsRoutes = require('./routes/events')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
@@ -22,9 +23,16 @@ app.use(async (_, __, next) => {
   await db.inited()
   next()
 })
+app.use(async (req, _, next) => {
+  if (!req.headers['app-name']) {
+    req.headers['app-name'] = 'WFH Movement'
+  }
+  next()
+})
 
 app.use('/analytics', analyticsRoutes)
 app.use('/groups', groupsRoutes)
+app.use('/events', eventsRoutes)
 app.use(stepsRoutes)
 app.use(usersRoutes)
 
@@ -52,23 +60,6 @@ app.post('/feedback', async (req, res) => {
 app.get('/deeplink', async (req, res) =>
   res.redirect(`wfhmovement://localhost?${querystring.encode(req.query)}`)
 )
-app.get('/events', async (req, res) => {
-  const { language } = req.headers
-  if (language === 'sv') {
-    return res.send([
-      {
-        date: '2020-03-16',
-        text: 'Rekommendationer att jobba hemifrån.',
-      },
-    ])
-  }
-  res.send([
-    {
-      date: '2020-03-16',
-      text: 'Swedish recommendations to work from home.',
-    },
-  ])
-})
 
 if (process.env.NODE_ENV !== 'production')
   app.listen(PORT, () => console.log(`listening on ${PORT}`))
