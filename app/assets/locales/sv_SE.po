@@ -63,17 +63,17 @@ msgstr "Du & andra"
 msgid "Today & before"
 msgstr "Idag & tidigare"
 
-msgid "Mine and other\'s difference in movement before and after working from home."
-msgstr "Din och andras förändring i rörelse före och efter att ni började arbeta hemifrån."
+msgid "Mine and other\'s difference in movement before and after %s from home."
+msgstr "Din och andras förändring i rörelse före och efter att ni började %s hemifrån."
 
-msgid "My change in movement compared to others before and after working from home."
-msgstr "Min förändring i rörelse jämfört med andra efter att jag började arbeta hemifrån."
+msgid "My change in movement compared to others before and after %s from home."
+msgstr "Min förändring i rörelse jämfört med andra efter att jag började %s hemifrån."
 
-msgid "Check out how my change in movement compares to others working from home.\nTry yourself by downloading the app https://hci-gu.github.io/wfh-movement"
-msgstr "Se hur min rörelse förändrats jämfört med andra under distansarbetet.\nTesta själv genom att ladda ner appen https://hci-gu.github.io/wfh-movement"
+msgid "Check out how my change in movement compares to others %s from home.\nTry yourself by downloading the app https://hci-gu.github.io/wfh-movement"
+msgstr "Se hur min rörelse förändrats jämfört med andra under %s.\nTesta själv genom att ladda ner appen https://hci-gu.github.io/wfh-movement"
 
-msgid "This is how my movement has changed after working from home."
-msgstr "Det här är hur min rörelse har förändrats sedan jag började jobba hemifrån."
+msgid "This is how my movement has changed after %s from home."
+msgstr "Det här är hur min rörelse har förändrats sedan jag började %s hemifrån."
 
 msgid "increase"
 msgstr "ökning"
@@ -96,8 +96,8 @@ msgstr "du"
 msgid "Today %s have taken "
 msgstr "Idag har %s tagit "
 
-msgid " steps so far. On a typical %s, before working from home, %s had normally taken "
-msgstr " steg. På en typisk %s innan började jobba hemifrån hade %s normalt tagit "
+msgid " steps so far. On a typical %s, before %s from home, %s had normally taken "
+msgstr " steg. På en typisk %s innan %s hade %s normalt tagit "
 
 msgid " steps at this time of day."
 msgstr " steg vid den här tiden."
@@ -114,8 +114,8 @@ msgstr "Det här är hur %s rörelse har förändrats efter hemarbete."
 msgid "Above you see how %s from home has affected people’s movement throughout the day."
 msgstr "Ovan kan du se hur %s har påverkat hur människor rör sig över dagen."
 
-msgid "Above you can see how your activity has changed over a typical day, before and after working from home."
-msgstr "Här kan du se hur din rörelse har förändrats över en typisk dag före och efter du började arbeta hemifrån."
+msgid "Above you can see how your activity has changed over a typical day, before and after %s from home."
+msgstr "Här kan du se hur din rörelse har förändrats över en typisk dag före och efter du började %s hemifrån."
 
 msgid "\nTry yourself by downloading the app https://hci-gu.github.io/#/wfh-movement"
 msgstr "\nTesta själv genom att ladda ner appen https://hci-gu.github.io/wfh-movement"
@@ -173,6 +173,9 @@ msgstr "Åldersspann"
 
 msgid "Education"
 msgstr "Utbildning"
+
+msgid "Year"
+msgstr "År"
 
 msgid "Occupation"
 msgstr "Sysselsättning"
@@ -303,11 +306,11 @@ msgstr "Användar-id kopierat till urklipp"
 msgid "User id: %s"
 msgstr "Användar-id: %s"
 
-msgid "Started working from home"
-msgstr "Började arbeta hemifrån"
+msgid "Started %s from home"
+msgstr "Började %s hemifrån"
 
-msgid "Stopped working from home"
-msgstr "Slutade arbeta hemifrån"
+msgid "Stopped %s from home"
+msgstr "Slutade %s hemifrån"
 
 msgid "steps"
 msgstr "Steg"

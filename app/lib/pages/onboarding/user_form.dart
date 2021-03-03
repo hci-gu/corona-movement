@@ -124,8 +124,8 @@ class UserForm extends HookWidget {
                 ),
               ),
             ),
-            if (form.education == 'High school') SizedBox(width: 25),
-            if (form.education == 'High school')
+            if (form.education == 'High school'.i18n) SizedBox(width: 25),
+            if (form.education == 'High school'.i18n)
               Container(
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: UserFormField(

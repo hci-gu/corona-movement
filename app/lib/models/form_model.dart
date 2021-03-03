@@ -1,3 +1,4 @@
+import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
 
 import 'package:flutter/foundation.dart';
@@ -94,6 +95,13 @@ var formAtom = Atom('form', FormModel());
 
 var formDoneSelector = Selector('form-done-selector', (GetStateValue get) {
   FormModel form = get(formAtom);
+
+  if (EnvironmentConfig.APP_NAME == 'SFH Movement') {
+    return form.country != null &&
+        form.gender != null &&
+        form.age != null &&
+        form.education != null;
+  }
 
   return form.country != null &&
       form.gender != null &&

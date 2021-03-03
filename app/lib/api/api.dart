@@ -143,7 +143,9 @@ Future setUserFormData(String userId, FormModel form) async {
       'country': form.country,
       'gender': form.gender,
       'ageRange': form.ageRange,
+      'age': form.age,
       'education': form.education,
+      'educationYear': form.educationYear,
       'occupation': form.occupation,
     }),
   );

@@ -50,8 +50,13 @@ class DetailedSteps extends HookWidget {
                         ? AppTexts().working
                         : AppTexts().teleworking,
                   ])
-                : 'Above you can see how your activity has changed over a typical day, before and after working from home.'
-                    .i18n,
+                : 'Above you can see how your activity has changed over a typical day, before and after %s from home.'
+                    .i18n
+                    .fill([
+                    I18n.of(context).locale.languageCode == 'en'
+                        ? AppTexts().working
+                        : AppTexts().work,
+                  ]),
           ),
           if (user.id != 'all') DaySelect(),
           ShareButton(
