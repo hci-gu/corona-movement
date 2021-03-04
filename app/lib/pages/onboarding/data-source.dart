@@ -58,11 +58,7 @@ class DataSource extends HookWidget {
               style: TextStyle(fontSize: 12),
             ),
             _dataInformation(context, onboarding.dataSource),
-            Text(
-              'Any data stored will be removed upon opting out of the study by deleting your account.'
-                  .i18n,
-              style: TextStyle(fontSize: 12),
-            ),
+            _dataRemovalInformation(context),
             SizedBox(height: 20),
             if (onboarding.error != null)
               Padding(
@@ -172,6 +168,40 @@ class DataSource extends HookWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _dataRemovalInformation(BuildContext context) {
+    List<String> texts = [
+      'Any data stored will be removed upon opting out of the study by deleting your account.'
+          .i18n,
+      'You delete your data by going to the app settings available after completing the onboarding process and pressing the button \"Delete data\"'
+          .i18n,
+      'All data is stored securely on servers within the European Union (EU) and not shared with third parties.'
+          .i18n
+    ];
+
+    return GestureDetector(
+      onTap: () => AppWidgets.showAlert(
+        context,
+        'About your data'.i18n,
+        texts.join('\n\n'),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 20,
+          ),
+          SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              texts.first,
+              style: TextStyle(fontSize: 12),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -144,6 +144,12 @@ msgstr "Den här appen är en del av ett forskningsprojekt vid Göteborgs Univer
 msgid "Any data stored will be removed upon opting out of the study by deleting your account."
 msgstr "All lagrad data tas bort om du väljer att gå ur studien genom att radera ditt konto."
 
+msgid "You delete your data by going to the app settings available after completing the onboarding process and pressing the button \"Delete data\""
+msgstr "Du raderar din data genom att gå till appens inställningar som finns tillgängliga efter introduktionen är avklarad och trycker på knappen \"Ta bort data\"."
+
+msgid "All data is stored securely on servers within the European Union (EU) and not shared with third parties."
+msgstr "All data är säkert lagraad på servrar inom Europeiska unionen (EU) och inte delat med några tredje parter."
+
 msgid "So far we\'ve found data until %s"
 msgstr "Hittills har vi hittat data från %s"
 
