@@ -93,9 +93,6 @@ class GarminClient {
     if (claimResponse.statusCode != 200) {
       throw GarminException('Failed to get session through auth ticket URL');
     }
-    List<Cookie> cookies =
-        CookieJar().loadForRequest(Uri.parse('https://connect.garmin.com'));
-    print(cookies);
 
     // Step 4: Get user displayName
     await getDisplayName();
@@ -105,7 +102,6 @@ class GarminClient {
     Response response = await dio
         .get('https://connect.garmin.com/modern/currentuser-service/user/info');
     displayName = response.data['displayName'];
-    print(response);
   }
 
   Future<List<Map<String, dynamic>>> fetchSteps(String dateString) async {

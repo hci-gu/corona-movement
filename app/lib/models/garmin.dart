@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:wfhmovement/api/api.dart' as api;
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/garmin_client.dart';
@@ -52,9 +53,16 @@ Action garminAuthorizationAction = (get) async {
 Action garminGetAvailableData = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   GarminModel model = get(garminAtom);
-  List<Map<String, dynamic>> steps =
-      await model.client.fetchSteps(StepsModel.fromDate);
-  onboarding.setAvailableData(steps);
+  List<List<DatePeriod>> datePeriods = get(userPeriodsSelector);
+  DateTime firstWfhDate = datePeriods.last.first.from;
+  DateTime monthBefore = firstWfhDate.subtract(Duration(days: 30));
+  DateTime monthAfter = firstWfhDate.add(Duration(days: 30));
+
+  List<Map<String, dynamic>> steps = await model.client
+      .fetchSteps(monthBefore.toIso8601String().substring(0, 10));
+  List<Map<String, dynamic>> stepsAfter = await model.client
+      .fetchSteps(monthAfter.toIso8601String().substring(0, 10));
+  onboarding.setAvailableData([...steps, ...stepsAfter]);
 };
 
 Future syncHealthData(GarminClient garminClient, OnboardingModel onboarding,

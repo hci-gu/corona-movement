@@ -63,7 +63,7 @@ class OnboardingModel extends ValueNotifier {
         initialDataDate = DateTime.fromMillisecondsSinceEpoch(
           steps.first['date_from'],
         );
-        initialDataDate = DateTime.fromMillisecondsSinceEpoch(
+        lastDataDate = DateTime.fromMillisecondsSinceEpoch(
           steps.last['date_from'],
         );
       } else {
