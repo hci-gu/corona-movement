@@ -569,3 +569,21 @@ msgstr "Om den här vyn"
 
 msgid "Sometimes the app does not receive your latest steps when you sync depending on datasource and devices used.\n\nThis affects the number you see here ( can be 0 ), but not the average you see elsewhere in the app."
 msgstr "Ibland får appen inte dina senaste steg när du synkar data beroende på datakälla och enheter som används.\n\nDet påverkar numret du ser här ( kan vara 0 ), men inte snittet som visas på andra ställen i appen."
+
+msgid "About the study"
+msgstr "Om studien"
+
+msgid "To participate in the study you will upload historical step data through chosen datasource as well as providing some details about yourself in a form."
+msgstr "För att delta i studien kommer du att ladda upp historisk stegdata genom vald datakälla samt tillhandahålla några detaljer om dig själv genom ett formulär."
+
+msgid "The data collection process will continue until at least 2021-10-01"
+msgstr "Datainsamlingsprocessen fortsätter till minst 2021-10-01"
+
+msgid "We have not identified any potential risks for participants in this study, all collected data is anonymized and you can withdraw from the study at any time without any consequences."
+msgstr "Vi har inte identifierat några potentiella risker för deltagare i denna studie, all insamlad data är anonymiserad och du kan när som helst dra dih ur studien utan några konsekvenser."
+
+msgid "If you have any questions you can email sebastian.andreasson@ait.gu.se."
+msgstr "Om du har några frågor kan du skicka e-post till sebastian.andreasson@ait.gu.se."
+
+msgid "Read more about participation."
+msgstr "Läs mer om deltagande."

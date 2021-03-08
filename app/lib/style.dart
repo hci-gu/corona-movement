@@ -114,7 +114,12 @@ class AppWidgets {
       context: context,
       builder: (BuildContext alertContext) => AlertDialog(
         title: Text(title),
-        content: Text(text),
+        content: Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
         actions: [
           FlatButton(
             child: Text('Close'.i18n),

@@ -59,6 +59,8 @@ class DataSource extends HookWidget {
             ),
             _dataInformation(context, onboarding.dataSource),
             _dataRemovalInformation(context),
+            SizedBox(height: 10),
+            _readMore(context),
             SizedBox(height: 20),
             if (onboarding.error != null)
               Padding(
@@ -107,6 +109,40 @@ class DataSource extends HookWidget {
       return _noData(context, onboarding, getHealthAuthorization);
     }
     return null;
+  }
+
+  Widget _readMore(BuildContext context) {
+    return GestureDetector(
+      onTap: () => AppWidgets.showAlert(
+        context,
+        'About the study'.i18n,
+        [
+          'To participate in the study you will upload historical step data through chosen datasource as well as providing some details about yourself in a form.'
+              .i18n,
+          'The data collection process will continue until at least 2021-10-01'
+              .i18n,
+          'We have not identified any potential risks for participants in this study, all collected data is anonymized and you can withdraw from the study at any time without any consequences.'
+              .i18n,
+          'If you have any questions you can email sebastian.andreasson@ait.gu.se.'
+              .i18n,
+        ].join('\n\n'),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 20,
+          ),
+          SizedBox(width: 8),
+          Text(
+            'Read more about participation.'.i18n,
+            style: TextStyle(
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _dataInformation(BuildContext context, String dataSource) {
