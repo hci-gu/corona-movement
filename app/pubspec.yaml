@@ -2,18 +2,18 @@ name: wfhmovement
 description: A new Flutter project.
 publish_to: 'none'
 
-version: 1.11.6+62
+version: 1.12.4+67
 
 environment:
-  sdk: '>=2.6.0 <3.0.0'
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  cupertino_icons: ^0.1.2
-  flutter_svg: ^0.18.1
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^0.19.3
   http: ^0.12.0+4
   # health: ^2.0.9
   flutter_hooks: ^0.9.0
@@ -29,17 +29,15 @@ dependencies:
   intl: any
   path_provider: ^1.6.14
   share: ^0.6.5
-  feedback: ^0.3.0
-  image: ^2.1.14
   package_info: ^0.4.3
   country_list_pick: ^1.0.0+5
   auto_size_text: ^2.1.0
   flutter_web_auth: ^0.2.4
-  pull_to_refresh: ^1.6.2
+  pull_to_refresh: ^1.6.4
   flutter_native_timezone: ^1.0.4
   uni_links: ^0.4.0
   clipboard: ^0.1.2+8
-  i18n_extension: ^1.5.1
+  i18n_extension: ^4.0.0
   after_layout: ^1.0.7+2
   health:
     path: ../health_package
