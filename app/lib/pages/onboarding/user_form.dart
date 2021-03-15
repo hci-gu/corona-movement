@@ -172,11 +172,12 @@ class UserForm extends HookWidget {
       keyboardType: type == 'age' ? TextInputType.number : TextInputType.text,
       controller: controller,
       decoration: InputDecoration(
-        hintText: 'Your %s (optional)'.i18n.fill([type]),
+        hintText: 'Your %s'.i18n.fill([type.i18n]) +
+            (type != 'age' ? ' (${'optional'.i18n})' : ''),
       ),
       onChanged: (val) {
         if (parseFunction != null) {
-          onChange(type, parseFunction(val));
+          onChange(type, parseFunction(val.length > 0 ? val : '0'));
         } else {
           onChange(type, val);
         }
