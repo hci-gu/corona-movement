@@ -100,7 +100,7 @@ var formDoneSelector = Selector('form-done-selector', (GetStateValue get) {
     return form.country != null &&
         form.gender != null &&
         form.age != null &&
-        form.age >= 16 &&
+        form.age >= 15 &&
         form.education != null;
   }
 

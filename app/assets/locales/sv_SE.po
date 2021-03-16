@@ -270,8 +270,8 @@ msgstr "Formuläret har inte fyllts i"
 msgid "Please fill out the fields above to proceed."
 msgstr "Fyll i fälten ovan för att fortsätta."
 
-msgid "You have to be 16 or older to proceed."
-msgstr "Du måste vara 16 eller äldre för att fortsätta."
+msgid "You have to be 15 or older to proceed."
+msgstr "Du måste vara 15 eller äldre för att fortsätta."
 
 msgid "Back"
 msgstr "Tillbaka"
@@ -417,8 +417,8 @@ msgstr "Kod för att gå med i grupp (valfritt)"
 msgid "Found data from %s."
 msgstr "Hittade data från %s."
 
-msgid "I agree to share my data with you and verify that I\'m 16 or older."
-msgstr "Jag godkänner att dela min data med er och verifierar att jag är 16 eller äldre."
+msgid "I agree to share my data with you and verify that I\'m 15 or older."
+msgstr "Jag godkänner att dela min data med er och verifierar att jag är 15 eller äldre."
 
 msgid "Get started!"
 msgstr "Sätt igång!"

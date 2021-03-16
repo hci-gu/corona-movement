@@ -94,8 +94,8 @@ class SyncData extends HookWidget {
                 }
                 String description =
                     'Please fill out the fields above to proceed.'.i18n;
-                if (form.age != null && form.age < 16) {
-                  description = 'You have to be 16 or older to proceed.'.i18n;
+                if (form.age != null && form.age < 15) {
+                  description = 'You have to be 15 or older to proceed.'.i18n;
                 }
                 AppWidgets.showAlert(
                   context,

@@ -332,7 +332,7 @@ class DataSource extends HookWidget {
             Container(
               width: MediaQuery.of(context).size.width * 0.7,
               child: Text(
-                'I agree to share my data with you and verify that I\'m 16 or older.'
+                'I agree to share my data with you and verify that I\'m 15 or older.'
                     .i18n,
                 maxLines: 3,
               ),
