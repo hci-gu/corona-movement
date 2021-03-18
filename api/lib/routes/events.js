@@ -5,15 +5,39 @@ const sfhEvents = (language) => {
   if (language === 'sv') {
     return [
       {
-        date: '2020-03-16',
-        text: 'Rekommendationer att studera hemifrån.',
+        date: '2020-03-18',
+        text: 'Distansundervisning börjar.',
+      },
+      {
+        date: '2020-04-02',
+        text: 'Distansundervisning avbryts för gymnasieskolorna.',
+      },
+      {
+        date: '2020-08-17',
+        text: 'Skolorna öppnar efter sommarlovet.',
+      },
+      {
+        date: '2020-12-07',
+        text: 'Gymnasieskolorna stänger återigen.',
       },
     ]
   }
   return [
     {
-      date: '2020-03-16',
-      text: 'Swedish recommendations to study from home.',
+      date: '2020-03-18',
+      text: 'Distance education starts.',
+    },
+    {
+      date: '2020-04-02',
+      text: 'Distance education is canceled for high scool.',
+    },
+    {
+      date: '2020-08-17',
+      text: 'The schools open after the summer holidays.',
+    },
+    {
+      date: '2020-12-07',
+      text: 'High schools close again',
     },
   ]
 }
