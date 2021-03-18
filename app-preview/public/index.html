@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="%PUBLIC_URL%/">
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: none;
+      }
+      .mobile-iframe {
+        display: none;
+      }
+      .phone {
+        margin: 100px auto;
+        position: relative;
+        width: 360px;
+        height: 756px;
+        background: none;
+        padding-top: 8px;
+        background: none;
+      }
+      .phone-inner {
+        background: none;
+        margin: 0 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 8px);
+        overflow: hidden;
+        box-shadow: -10px 10px 63px -6px rgba(0,0,0,0.49);
+        border-radius: 51px;
+      }
+      .phone > img {
+        top: 0;
+        z-index: -1;
+        position: absolute;
+        width: 100%;
+      }
+
+      @media (max-width: 940px) {
+        .mobile-iframe {
+          display: block;
+          width: 100vw;
+          height: 100vh;
+        }
+        .phone {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
