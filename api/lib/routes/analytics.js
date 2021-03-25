@@ -17,7 +17,14 @@ router.get('/totalSteps', reqToken, (_, res) => {
 
 router.get('/userRegistrations', reqToken, async (_, res) => {
   const users = await db.getAllUsers()
-  res.json(users.filter((u) => u.created).map(({ created }) => created))
+  res.json(
+    users
+      .filter((u) => u.created)
+      .map((u) => ({
+        app: u.appName ? u.appName : 'WFH Movement',
+        date: u.created,
+      }))
+  )
 })
 
 router.get('/dashboard', reqToken, async (_, res) => {
