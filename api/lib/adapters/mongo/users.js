@@ -138,7 +138,15 @@ module.exports = {
   joinGroup,
   leaveGroup,
   usersInGroup,
-  count: ({ from = new Date('2020-01-01') }) =>
-    collection.count({ created: { $gt: from } }),
+  count: ({ from = new Date('2020-01-01'), params }) => {
+    let query = { created: { $gt: from } }
+    if (params) {
+      query = {
+        ...query,
+        ...params,
+      }
+    }
+    return collection.count(query)
+  },
   beforePeriodsForUser,
 }

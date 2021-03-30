@@ -27,23 +27,38 @@ router.get('/userRegistrations', reqToken, async (_, res) => {
   )
 })
 
-router.get('/dashboard', reqToken, async (_, res) => {
+const getUsersNumbersForApp = async (app) => {
   const today = moment().startOf('day').toDate()
   const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate()
 
+  return {
+    users: await db.userCount({ params: app }),
+    usersToday: await db.userCount({ from: today, params: app }),
+    usersLastSevenDays: await db.userCount({ from: oneWeekAgo, params: app }),
+  }
+}
+
+router.get('/dashboard', reqToken, async (_, res) => {
+  const apps = [
+    null,
+    {
+      $or: [
+        { appName: { $eq: 'WFH Movement' } },
+        { appName: { $exists: false } },
+      ],
+    },
+    { appName: 'SFH Movement' },
+  ]
+  const [all, wfh, sfh] = await Promise.all(apps.map(getUsersNumbersForApp))
+
   res.send({
-    users: await db.userCount({}),
-    usersToday: await db.userCount({ from: today }),
-    usersLastSevenDays: await db.userCount({ from: oneWeekAgo }),
-    sessions: await db.analyticsCount({ event: 'openApp' }),
-    sessionsToday: await db.analyticsCount({
-      event: 'openApp',
-      from: today,
-    }),
-    sessionsLastSevenDays: await db.analyticsCount({
-      event: 'openApp',
-      from: oneWeekAgo,
-    }),
+    ...all,
+    'WFH Movement': {
+      ...wfh,
+    },
+    'SFH Movement': {
+      ...sfh,
+    },
   })
 })
 
