@@ -1,3 +1,4 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,24 @@ void main() async {
   runApp(I18n(
     child: Provider(
       create: (context) => StateStore(),
-      child: AppInit(),
+      child: MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en'),
+          Locale('sv'),
+        ],
+        title: 'Work from home movement',
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+          primarySwatch: Colors.amber,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: AppInit(),
+      ),
     ),
   ));
 }

@@ -9,8 +9,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.2\n"
 "Last-Translator: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: sv_SE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);"
+"Language: sv_SE"
 
 msgid "Monday"
 msgstr "Måndag"
@@ -596,3 +596,6 @@ msgstr "Om du har några frågor kan du skicka e-post till sebastian.andreasson@
 
 msgid "Read more about participation."
 msgstr "Läs mer om deltagande."
+
+msgid "The comparison with %s will show up here once enough people have joined the group."
+msgstr "Jämförelsen med %s kommer att dyka upp här när tillräckligt många har gått med i gruppen."
