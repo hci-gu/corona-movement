@@ -152,6 +152,13 @@ module.exports = {
         users.map(async (u) => {
           const estimationDifference = u.stepsEstimate - u.stepsChange
 
+          let compareDate
+          if (u.compareDate) {
+            compareDate = u.compareDate
+          } else if (u.afterPeriods && u.afterPeriods.length) {
+            compareDate = u.afterPeriods[0].from
+          }
+
           return {
             id: u._id,
             initialDataDate: u.initialDataDate,

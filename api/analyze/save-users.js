@@ -1,4 +1,5 @@
 const elastic = require('../lib/adapters/elastic/index')
+const userUtils = require('./user-utils')
 
 const run = async (db) => {
   console.log('save-users: start')

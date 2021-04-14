@@ -238,6 +238,13 @@ const summaryForGroup = async (groupId) => {
   }
 }
 
+const applyGroupToSummary = async (groupId, summary) => {
+  const groupSummary = await summaryForGroup(groupId)
+  if (groupSummary) {
+    summary[groupSummary.name] = groupSummary.data
+  }
+}
+
 const getSummary = async ({ id }) => {
   let user
   let userSummary = { before: null, after: null }
@@ -260,10 +267,11 @@ const getSummary = async ({ id }) => {
   }
 
   if (user && user.group) {
-    const groupSummary = await summaryForGroup(user.group)
-    if (groupSummary) {
-      summary[groupSummary.name] = groupSummary.data
-    }
+    applyGroupToSummary(user.group, summary)
+  } else if (user && user.groups) {
+    await Promise.all(
+      user.groups.map((groupId) => applyGroupToSummary(groupId, summary))
+    )
   }
 
   return summary

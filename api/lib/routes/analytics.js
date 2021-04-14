@@ -11,8 +11,9 @@ const reqToken = (req, _, next) => {
   next()
 }
 
-router.get('/totalSteps', reqToken, (_, res) => {
-  res.json(db.getTotalSteps())
+router.get('/totalSteps', reqToken, async (_, res) => {
+  const response = await db.getTotalSteps()
+  res.json(response)
 })
 
 router.get('/userRegistrations', reqToken, async (_, res) => {
