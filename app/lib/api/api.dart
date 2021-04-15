@@ -27,7 +27,7 @@ Map<String, String> getHeaders([String languageCode = 'en']) {
 
 Future postJsonData(String userId, List<Map<String, dynamic>> data,
     bool createAggregation) async {
-  var url = '$API_URL/health-data';
+  var url = Uri.parse('$API_URL/health-data');
   var response = await http
       .post(
         url,
@@ -69,7 +69,7 @@ Future<UserResponse> register(
     String dataSource,
     String code,
     bool workedFromHome) async {
-  const url = '$API_URL/register';
+  var url = Uri.parse('$API_URL/register');
   var response = await http.post(
     url,
     headers: getHeaders(),
@@ -89,7 +89,7 @@ Future<UserResponse> register(
 }
 
 Future<UserResponse> getUser(String userId) async {
-  var url = '$API_URL/user/$userId';
+  var url = Uri.parse('$API_URL/user/$userId');
   var response = await http.get(
     url,
     headers: getHeaders(),
@@ -101,7 +101,7 @@ Future<UserResponse> getUser(String userId) async {
 }
 
 Future<bool> deleteUser(String userId) async {
-  var url = '$API_URL/user/$userId';
+  var url = Uri.parse('$API_URL/user/$userId');
   var response = await http.delete(
     url,
     headers: getHeaders(),
@@ -112,7 +112,7 @@ Future<bool> deleteUser(String userId) async {
 
 Future updateUserAfterPeriods(
     String userId, List<DatePeriod> afterPeriods) async {
-  var url = '$API_URL/user/$userId';
+  var url = Uri.parse('$API_URL/user/$userId');
   await http.patch(
     url,
     headers: getHeaders(),
@@ -124,7 +124,7 @@ Future updateUserAfterPeriods(
 }
 
 Future updateUserEstimate(String userId, double stepsEstimate) async {
-  var url = '$API_URL/user/$userId';
+  var url = Uri.parse('$API_URL/user/$userId');
   await http.patch(
     url,
     headers: getHeaders(),
@@ -135,7 +135,7 @@ Future updateUserEstimate(String userId, double stepsEstimate) async {
 }
 
 Future setUserFormData(String userId, FormModel form) async {
-  var url = '$API_URL/user/$userId';
+  var url = Uri.parse('$API_URL/user/$userId');
   await http.patch(
     url,
     headers: getHeaders(),
@@ -153,8 +153,8 @@ Future setUserFormData(String userId, FormModel form) async {
 
 Future<List<HealthData>> getSteps(
     String userId, DateTime from, DateTime to) async {
-  var url =
-      '$API_URL/$userId/hours?from=${from.toIso8601String().substring(0, 10)}&to=${to.toIso8601String().substring(0, 10)}';
+  var url = Uri.parse(
+      '$API_URL/$userId/hours?from=${from.toIso8601String().substring(0, 10)}&to=${to.toIso8601String().substring(0, 10)}');
   var response = await http.get(
     url,
     headers: getHeaders(),
@@ -170,7 +170,7 @@ Future<List<HealthData>> getSteps(
 }
 
 Future<AllUserData> getDataForAllUser() async {
-  var url = '$API_URL/all';
+  var url = Uri.parse('$API_URL/all');
   var response = await http.get(url, headers: getHeaders());
 
   AllUserData data = AllUserData.fromJson(json.decode(response.body));
@@ -178,7 +178,7 @@ Future<AllUserData> getDataForAllUser() async {
 }
 
 Future<HealthComparison> getComparison(String userId) async {
-  var url = '$API_URL/$userId/summary';
+  var url = Uri.parse('$API_URL/$userId/summary');
   var response = await http.get(
     url,
     headers: getHeaders(),
@@ -190,7 +190,7 @@ Future<HealthComparison> getComparison(String userId) async {
 }
 
 Future<LatestUpload> getLatestUpload(String userId) async {
-  var url = '$API_URL/$userId/last-upload';
+  var url = Uri.parse('$API_URL/$userId/last-upload');
   var response = await http.get(
     url,
     headers: getHeaders(),
@@ -201,7 +201,7 @@ Future<LatestUpload> getLatestUpload(String userId) async {
 }
 
 Future<Group> getGroup(String groupId) async {
-  var url = '$API_URL/groups/$groupId';
+  var url = Uri.parse('$API_URL/groups/$groupId');
   var response = await http.get(
     url,
     headers: getHeaders(),
@@ -211,7 +211,7 @@ Future<Group> getGroup(String groupId) async {
 }
 
 Future<Group> getAndjoinGroup(String groupCode, String userId) async {
-  var url = '$API_URL/groups/code/$groupCode';
+  var url = Uri.parse('$API_URL/groups/code/$groupCode');
   var response = await http.get(
     url,
     headers: getHeaders(),
@@ -227,7 +227,7 @@ Future<Group> getAndjoinGroup(String groupCode, String userId) async {
 }
 
 Future<bool> joinGroup(String groupId, String userId) async {
-  var url = '$API_URL/groups/$groupId/join';
+  var url = Uri.parse('$API_URL/groups/$groupId/join');
   var response = await http.post(
     url,
     headers: getHeaders(),
@@ -240,7 +240,7 @@ Future<bool> joinGroup(String groupId, String userId) async {
 }
 
 Future<bool> leaveGroup(String groupId, String userId) async {
-  var url = '$API_URL/groups/$groupId/$userId';
+  var url = Uri.parse('$API_URL/groups/$groupId/$userId');
   var response = await http.delete(
     url,
     headers: getHeaders(),
@@ -251,7 +251,7 @@ Future<bool> leaveGroup(String groupId, String userId) async {
 Future<bool> feedback(String text, Uint8List screenshot) async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-  const url = '$API_URL/feedback';
+  var url = Uri.parse('$API_URL/feedback');
   var response = await http.post(
     url,
     headers: getHeaders(),
@@ -276,7 +276,7 @@ Future sendAnalyticsEvent(String event,
     [Map<String, dynamic> parameters, String userId]) async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-  const url = '$API_URL/analytics';
+  var url = Uri.parse('$API_URL/analytics');
   await http.post(
     url,
     headers: getHeaders(),
@@ -295,7 +295,7 @@ Future sendAnalyticsEvent(String event,
 }
 
 Future<List<DateEvent>> getEvents(String languageCode) async {
-  var url = '$API_URL/events';
+  var url = Uri.parse('$API_URL/events');
   var response = await http.get(
     url,
     headers: getHeaders(languageCode),

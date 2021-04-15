@@ -1,5 +1,5 @@
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:wfhmovement/models/app_model.dart';

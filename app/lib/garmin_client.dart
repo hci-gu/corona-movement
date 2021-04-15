@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:dio_retry/dio_retry.dart';
 
 class GarminException implements Exception {
   String message;
@@ -36,14 +35,7 @@ class GarminClient {
   GarminClient(this.username, this.password);
 
   Future<void> connect() async {
-    dio = Dio()
-      ..interceptors.add(CookieManager(CookieJar()))
-      ..interceptors.add(RetryInterceptor(
-          dio: dio,
-          options: RetryOptions(
-            retries: 5,
-            retryInterval: Duration(seconds: 10),
-          )));
+    dio = Dio()..interceptors.add(CookieManager(CookieJar()));
 
     await _authenticate();
   }
