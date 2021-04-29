@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const moment = require('moment')
 const db = require('../adapters/db')
+const userUtils = require('../../analyze/user-utils')
 
 const reqToken = (req, _, next) => {
   const token = req.headers.authorization
@@ -61,6 +62,30 @@ router.get('/dashboard', reqToken, async (_, res) => {
       ...sfh,
     },
   })
+})
+
+let userCache
+router.get('/users', reqToken, async (_, res) => {
+  let timer = new Date()
+  if (userCache) return res.send(userCache)
+  const database = await db.getDB()
+  userUtils.init(database)
+  const users = await userUtils.getUsers()
+  userCache = users
+  console.log('respond', new Date() - timer)
+  res.send(users)
+})
+
+router.get('/save-users', async (req, res) => {
+  const { offset, limit } = req.query
+  const database = await db.getDB()
+  userUtils.init(database)
+
+  await userUtils.saveUsers(
+    offset ? parseInt(offset) : undefined,
+    limit ? parseInt(limit) : undefined
+  )
+  res.send('DONE')
 })
 
 router.post('/analytics', async (req, res) => {

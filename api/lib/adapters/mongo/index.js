@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb')
 const userCollection = require('./users')
 const stepsCollection = require('./steps')
 const aggregatedStepsCollection = require('./aggregatedSteps')
+const aggregatedUsersCollection = require('./aggregatedUsers')
 const codesCollection = require('./codes')
 const feedbackCollection = require('./feedback')
 const analyticsCollection = require('./analytics')
@@ -28,6 +29,7 @@ const init = async () => {
     userCollection.init(db),
     stepsCollection.init(db),
     aggregatedStepsCollection.init(db),
+    aggregatedUsersCollection.init(db),
     codesCollection.init(db),
     feedbackCollection.init(db),
     analyticsCollection.init(db),
@@ -37,20 +39,33 @@ const init = async () => {
   inited = true
 }
 
+const getDB = async () => {
+  const client = await MongoClient.connect(process.env.CONNECT_TO, options)
+  return client.db(DB_NAME)
+}
+
 module.exports = {
   // steps
   saveSteps: stepsCollection.save,
   getLastUpload: stepsCollection.getLastUpload,
   removeStepsForUser: stepsCollection.removeStepsForUser,
   getTotalSteps: stepsCollection.getTotalSteps,
+  getTotalStepsForUser: stepsCollection.getTotalStepsForUser,
   insertSteps: stepsCollection.insertSteps,
   getAverageDayForPeriod: stepsCollection.getHoursForDay,
   getDaysForUser: stepsCollection.getDaysForUser,
   // aggregatedSteps
   saveAggregatedSteps: aggregatedStepsCollection.saveSteps,
   saveAggregatedSummary: aggregatedStepsCollection.saveSummary,
+  saveAggregatedDays: aggregatedStepsCollection.saveDays,
   getHours: aggregatedStepsCollection.getSteps,
   getSummary: aggregatedStepsCollection.getSummary,
+  getDays: aggregatedStepsCollection.getDays,
+  getAllSummariesMap: aggregatedStepsCollection.getAllSummariesMap,
+  getAllDaysMap: aggregatedStepsCollection.getAllDaysMap,
+  // aggregatedUsers
+  saveAggregatedUser: aggregatedUsersCollection.saveUser,
+  getAggregatedUsers: aggregatedUsersCollection.getUsers,
   // users
   createUser: userCollection.create,
   getUser: userCollection.get,
@@ -80,4 +95,5 @@ module.exports = {
   getAllDays: allUserCollection.getDays,
   getAllSummary: allUserCollection.getSummary,
   saveAllUser: allUserCollection.save,
+  getDB,
 }

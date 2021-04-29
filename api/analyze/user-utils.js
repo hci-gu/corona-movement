@@ -4,6 +4,10 @@ const {
   userEstimatedWrong,
   estimatedHigherThanResult,
   estimatedLowerThanResult,
+  daysWithDataForUser,
+  translateEducation,
+  translateGender,
+  translateAgeRange,
 } = require('./utils')
 
 let localDB
@@ -11,53 +15,64 @@ const init = (db) => {
   localDB = db
 }
 
-const filterUser = (u) =>
-  u.stepsBefore > 0 &&
-  u.stepsAfter > 0 &&
-  u.stepDataPoints > 2500 &&
-  u.ageRange != undefined
+const mapUsers = (users, summariesMap, daysMap) => {
+  return users.map((u) => {
+    const userId = u._id.toString()
+    const summary = summariesMap[userId]
+    const days = daysMap[userId]
+    const totalSteps = 0
+    const daysInfo = daysWithDataForUser(days)
 
-const mapUsers = (users) => {
-  return Promise.all(
-    users.map(async (u) => {
-      const summary = await mongo.getSummary({ id: u._id.toString() })
-      const stepDataPoints = await stepDataPointCountForUser(u)
+    let before = null,
+      after = null
+    if (summary && summary.user) {
+      before = summary.user.before
+      after = summary.user.after
+    }
+    const stepsChange = getPercentageChange(before, after)
+    const estimatedWrong = userEstimatedWrong(u.stepsEstimate, stepsChange)
 
-      const { before, after } = summary.user
-      const stepsChange = getPercentageChange(before, after)
-      const estimatedWrong = userEstimatedWrong(u.stepsEstimate, stepsChange)
-
-      return {
-        ...u,
-        stepsChange,
-        stepsBefore: before,
-        stepsAfter: after,
-        stepDataPoints,
-        estimatedWrong,
-        estimatedHigher: estimatedHigherThanResult(
-          u.stepsEstimate,
-          stepsChange
-        ),
-        estimatedLower: estimatedLowerThanResult(u.stepsEstimate, stepsChange),
-      }
-    })
-  )
+    return {
+      ...u,
+      ageRange: translateAgeRange(u.ageRange),
+      gender: translateGender(u.gender),
+      education: translateEducation(u.education),
+      stepsChange,
+      stepsBefore: before,
+      stepsAfter: after,
+      daysWithData: daysInfo.daysWithData,
+      missingDays: daysInfo.period - daysInfo.daysWithData,
+      period: daysInfo.period,
+      estimatedWrong,
+      estimatedHigher: estimatedHigherThanResult(u.stepsEstimate, stepsChange),
+      estimatedLower: estimatedLowerThanResult(u.stepsEstimate, stepsChange),
+      totalSteps,
+      days: daysInfo.days,
+      wfhPeriods: u.afterPeriods ? u.afterPeriods.length : 0,
+    }
+  })
 }
 
-const stepDataPointCountForUser = (u) => {
-  return localDB.collection('steps').find({ id: u._id.toString() }).count()
-}
+const getUsers = async () => mongo.getAggregatedUsers()
 
-const getUsers = async () => {
-  const users = await localDB.collection('users').find().toArray()
-  const _users = users.filter((u) => u.stepsEstimate != undefined)
-  const mapped = await mapUsers(_users)
+const saveUsers = async (offset = 0, limit = 100) => {
+  const users = await localDB
+    .collection('users')
+    .find()
+    .limit(limit)
+    .skip(offset * limit)
+    .toArray()
+  const allSummariesMap = await mongo.getAllSummariesMap()
+  const allDaysMap = await mongo.getAllDaysMap()
 
-  return mapped.filter(filterUser)
+  const mapped = mapUsers(users, allSummariesMap, allDaysMap)
+
+  await Promise.all(mapped.map((u) => mongo.saveAggregatedUser(u)))
 }
 
 module.exports = {
   mapUsers,
   getUsers,
+  saveUsers,
   init,
 }

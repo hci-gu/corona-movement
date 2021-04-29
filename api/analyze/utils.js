@@ -1,3 +1,6 @@
+const { DataSync } = require('aws-sdk')
+const moment = require('moment')
+
 const promiseSeries = (items, method) => {
   const results = []
 
@@ -36,10 +39,95 @@ const estimatedLowerThanResult = (estimate, change) => {
   return estimate < change
 }
 
+const daysWithDataForUser = (days) => {
+  if (!days || !days.length)
+    return {
+      period: 0,
+      daysWithData: 0,
+    }
+
+  const firstDay = days[0].date
+  const lastDay = days[days.length - 1].date
+
+  const daysMap = days.reduce((acc, curr) => {
+    acc[curr.date] = curr.value
+    return acc
+  }, {})
+
+  const diff = moment(lastDay).diff(firstDay, 'days')
+
+  let daysWithEmpty = []
+  let daysWithData = 0
+  Array.from({ length: diff }).map((_, i) => {
+    const date = moment(firstDay).add(i, 'days').format('YYYY-MM-DD')
+    if (daysMap[date]) {
+      daysWithData++
+      daysWithEmpty.push({
+        date,
+        value: daysMap[date],
+      })
+    } else {
+      daysWithEmpty.push({
+        date,
+        value: 0,
+      })
+    }
+  })
+
+  return {
+    period: diff,
+    daysWithData,
+    days: daysWithEmpty,
+  }
+}
+
+const translateGender = (gender) => {
+  switch (gender) {
+    case 'Female':
+    case 'Kvinna':
+      return 'Female'
+    case 'Male':
+    case 'Man':
+      return 'Male'
+    default:
+      return gender
+  }
+}
+
+const translateEducation = (education) => {
+  switch (education) {
+    case 'Kandidatexamen':
+      return "Bachelor's Degree"
+    case 'Masterexamen':
+      return "Master's Degree"
+    case 'Doktorsexamen':
+      return 'PhD'
+    case 'Yrkeshögskola':
+      return 'Trade/Vocational School'
+    case 'Ingen högre utbildning':
+      return 'No higher education'
+    default:
+      return education
+  }
+}
+
+const translateAgeRange = (ageRange) => {
+  switch (ageRange) {
+    case 'Vill inte uppge':
+      return 'Prefer not to say	'
+    default:
+      return ageRange
+  }
+}
+
 module.exports = {
   promiseSeries,
   getPercentageChange,
   userEstimatedWrong,
   estimatedHigherThanResult,
   estimatedLowerThanResult,
+  daysWithDataForUser,
+  translateGender,
+  translateEducation,
+  translateAgeRange,
 }

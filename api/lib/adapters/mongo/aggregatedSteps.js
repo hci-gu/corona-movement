@@ -134,6 +134,17 @@ const saveSteps = async ({ id, timezone }) => {
   }
 }
 
+const saveDays = async ({ id }) => {
+  try {
+    const data = await stepsCollection.getDaysForUser({ id })
+
+    await save({ id, type: 'days', data })
+  } catch (e) {
+    console.log(e)
+  }
+  return getDays({ id })
+}
+
 const saveSummary = async (id) => {
   if (id === 'all') return
   try {
@@ -167,6 +178,21 @@ const getSteps = async ({ id }) => {
   const doc = await collection.findOne({
     id,
     type: 'steps',
+  })
+
+  if (!doc) {
+    return {
+      result: null,
+    }
+  }
+
+  return doc.data
+}
+
+const getDays = async ({ id }) => {
+  const doc = await collection.findOne({
+    id,
+    type: 'days',
   })
 
   if (!doc) {
@@ -266,15 +292,32 @@ const getSummary = async ({ id }) => {
     others,
   }
 
-  if (user && user.group) {
-    applyGroupToSummary(user.group, summary)
-  } else if (user && user.groups) {
+  if (user && user.groups) {
     await Promise.all(
       user.groups.map((groupId) => applyGroupToSummary(groupId, summary))
     )
+  } else if (user && user.group) {
+    await applyGroupToSummary(user.group, summary)
   }
 
   return summary
+}
+
+const getAllSummariesMap = async () => {
+  const docs = await collection.find({ type: 'summary' }).toArray()
+  return docs.reduce((acc, curr) => {
+    acc[curr.id] = {
+      user: curr.data,
+    }
+    return acc
+  }, {})
+}
+const getAllDaysMap = async () => {
+  const docs = await collection.find({ type: 'days' }).toArray()
+  return docs.reduce((acc, curr) => {
+    acc[curr.id] = curr.data
+    return acc
+  }, {})
 }
 
 module.exports = {
@@ -285,7 +328,11 @@ module.exports = {
   },
   collection,
   saveSteps,
+  saveDays,
   saveSummary,
   getSteps,
+  getDays,
   getSummary,
+  getAllSummariesMap,
+  getAllDaysMap,
 }

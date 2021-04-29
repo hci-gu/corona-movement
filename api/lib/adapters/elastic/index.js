@@ -69,6 +69,11 @@ const createIndex = async (index) => {
         estimatedWrong: { type: 'bool' },
         estimatedHigher: { type: 'bool' },
         estimatedLower: { type: 'bool' },
+        daysWithData: { type: 'integer' },
+        period: { type: 'integer' },
+        missingDays: { type: 'integer' },
+        totalSteps: { type: 'integer' },
+        wfhPeriods: { type: 'integer' },
       }
     default:
       return
@@ -179,6 +184,11 @@ module.exports = {
             estimatedWrong: u.estimatedWrong,
             estimatedHigher: u.estimatedHigher,
             estimatedLower: u.estimatedLower,
+            daysWithData: u.daysWithData,
+            period: u.period,
+            missingDays: u.missingDays,
+            totalSteps: u.totalSteps,
+            wfhPeriods: u.wfhPeriods,
           }
         })
       )

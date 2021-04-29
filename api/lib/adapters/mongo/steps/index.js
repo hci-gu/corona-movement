@@ -110,6 +110,27 @@ const getTotalSteps = async () => {
   return result[0].value
 }
 
+const getTotalStepsForUser = async (id) => {
+  const result = await collection
+    .aggregate([
+      {
+        $match: { id },
+      },
+      {
+        $group: {
+          _id: 'total',
+          value: { $sum: '$value' },
+        },
+      },
+    ])
+    .toArray()
+
+  if (result && result[0]) {
+    return result[0].value
+  }
+  return 0
+}
+
 const insertSteps = (steps) => collection.insertMany(steps)
 
 const getDailySteps = (id) => {
@@ -160,6 +181,7 @@ module.exports = {
   stepDataPointCountForUser,
   removeStepsForUser,
   getTotalSteps,
+  getTotalStepsForUser,
   getDailySteps,
   insertSteps,
   // summary for user

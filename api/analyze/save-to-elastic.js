@@ -15,13 +15,13 @@ const run = async () => {
   await elastic.createIndex()
 
   // users
-  // await saveUsers(localDB)
+  await saveUsers(localDB)
 
   // average daily steps hour breakdown
   // await saveAvgDaySteps(localDB)
 
   // all days for users
-  await saveDailySteps(localDB)
+  // await saveDailySteps(localDB)
 
   // save steps
 }
