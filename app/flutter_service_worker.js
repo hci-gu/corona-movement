@@ -294,8 +294,8 @@ const RESOURCES = {
 "assets/assets/png/garmin_logo.png": "68ee5e478b3880fcca025ba2d0471fcb",
 "assets/assets/png/gu_logo.png": "6b87c4abbb349fb884c8db37b78758c4",
 "assets/FontManifest.json": "85b83969d7a710d72374320177da3791",
-"index.html": "ef9226e32f52294904e81575697ef356",
-"/": "ef9226e32f52294904e81575697ef356"
+"index.html": "80ac2ebf65f01ea35143dc1436da5f0a",
+"/": "80ac2ebf65f01ea35143dc1436da5f0a"
 };
 
 // The application shell files that are downloaded before a service worker can
