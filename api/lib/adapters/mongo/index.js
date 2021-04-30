@@ -66,6 +66,7 @@ module.exports = {
   // aggregatedUsers
   saveAggregatedUser: aggregatedUsersCollection.saveUser,
   getAggregatedUsers: aggregatedUsersCollection.getUsers,
+  clearAggregatedUsers: aggregatedUsersCollection.clearUsers,
   // users
   createUser: userCollection.create,
   getUser: userCollection.get,

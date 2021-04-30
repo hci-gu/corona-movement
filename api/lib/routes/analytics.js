@@ -3,6 +3,7 @@ const router = express.Router()
 const moment = require('moment')
 const db = require('../adapters/db')
 const userUtils = require('../../analyze/user-utils')
+const mongo = require('../adapters/mongo')
 
 const reqToken = (req, _, next) => {
   const token = req.headers.authorization
@@ -64,15 +65,12 @@ router.get('/dashboard', reqToken, async (_, res) => {
   })
 })
 
-let userCache
-router.get('/users', reqToken, async (_, res) => {
-  let timer = new Date()
-  if (userCache) return res.send(userCache)
-  const database = await db.getDB()
-  userUtils.init(database)
-  const users = await userUtils.getUsers()
-  userCache = users
-  console.log('respond', new Date() - timer)
+router.get('/users', async (req, res) => {
+  const { limit, offset } = req.query
+  const users = await mongo.getAggregatedUsers({
+    offset: offset ? parseInt(offset) : undefined,
+    limit: limit ? parseInt(limit) : undefined,
+  })
   res.send(users)
 })
 
@@ -85,6 +83,11 @@ router.get('/save-users', async (req, res) => {
     offset ? parseInt(offset) : undefined,
     limit ? parseInt(limit) : undefined
   )
+  res.send('DONE')
+})
+
+router.get('/clear-users', async (req, res) => {
+  await mongo.clearAggregatedUsers()
   res.send('DONE')
 })
 
