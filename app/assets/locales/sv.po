@@ -599,3 +599,21 @@ msgstr "Läs mer om deltagande."
 
 msgid "The comparison with %s will show up here once enough people have joined the group."
 msgstr "Jämförelsen med %s kommer att dyka upp här när tillräckligt många har gått med i gruppen."
+
+msgid "Fitbit requires you to wait 1 hour between each time you fetch more than 150 days worth of steps."
+msgstr "Med Fitbit behöver man vänta 1 timma mellan varje gång man hämtar mer än 150 dagar utav stegdata."
+
+msgid "You can try again in %s minutes."
+msgstr "Du kan försöka igen om %s minuter."
+
+msgid "Fetching data from fitbit"
+msgstr "Att hämta data från Fitbit"
+
+msgid "Fetching steps over a longer period of time from Fitbit takes a bit longer, since Fitbit only allows a max of 150 days per hour."
+msgstr "Att hämta steg över en längre period från Fitbit tar lite längre tid eftersom Fitbit bara tillåter 150 anrop i timmen."
+
+msgid "So when you proceed we will fetch the maximum number of days we can and then when you\'re done filling out the form in the next step there will be a button to allow you to come back and continue syncing until you have reached your latest data from Fitbit."
+msgstr "Så när du fortsätter kommer vi hämta så mycket data som möjligt och när du är klar med att fylla i formuläret i nästa steg kommer det finnas en knapp som låter dig komma tillbaka och synka tills du har din senaste stegdata från Fitbit."
+
+msgid "Fetching your data from Fitbit needs to be done over time."
+msgstr "Hämtning av data från Fitbit behöver göras i omgångar."

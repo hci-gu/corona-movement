@@ -109,10 +109,11 @@ class SyncSteps extends HookWidget {
       child: Column(
         children: [
           Text(
-            'Fitbit requires you to wait 1 hour between each time you fetch more than 150 days worth of steps.',
+            'Fitbit requires you to wait 1 hour between each time you fetch more than 150 days worth of steps.'
+                .i18n,
           ),
           SizedBox(height: 10),
-          Text('You can try again in $minutesLeft minutes.')
+          Text('You can try again in %s minutes.'.i18n.fill([minutesLeft]))
         ],
       ),
     );
