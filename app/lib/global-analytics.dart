@@ -5,7 +5,7 @@ class GlobalAnalytics {
 
   init(String id) {
     userId = id;
-    if (userId != null) sendEvent('openApp');
+    sendEvent('openApp');
   }
 
   sendEvent(String event, [Map<String, dynamic> parameters]) {

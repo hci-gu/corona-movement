@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:wfhmovement/config.dart';
 import 'package:wfhmovement/i18n.dart';
@@ -61,6 +62,8 @@ class DataSource extends HookWidget {
             _dataRemovalInformation(context),
             SizedBox(height: 10),
             _readMore(context),
+            if (onboarding.dataSource == 'Fitbit') SizedBox(height: 10),
+            if (onboarding.dataSource == 'Fitbit') _fitbitInformation(context),
             SizedBox(height: 20),
             if (onboarding.error != null)
               Padding(
@@ -101,6 +104,8 @@ class DataSource extends HookWidget {
     }
     if ((onboarding.availableData.length > 500) ||
         (onboarding.dataSource == 'Garmin' &&
+            onboarding.initialDataDate != null) ||
+        (onboarding.dataSource == 'Fitbit' &&
             onboarding.initialDataDate != null)) {
       return _hasData(
           context, onboarding, user, register, consent, uploadSteps);
@@ -140,6 +145,38 @@ class DataSource extends HookWidget {
               fontSize: 13,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _fitbitInformation(BuildContext context) {
+    return GestureDetector(
+      onTap: () => AppWidgets.showAlert(
+        context,
+        'Fetching data from fitbit'.i18n,
+        [
+          'Fetching steps over a longer period of time from Fitbit takes a bit longer, since Fitbit only allows a max of 150 days per hour.'
+              .i18n,
+          'So when you proceed we will fetch the maximum number of days we can and then when you\'re done filling out the form in the next step there will be a button to allow you to come back and continue syncing until you have reached your latest data from Fitbit.'
+              .i18n,
+        ].join('\n\n'),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 20,
+          ),
+          SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              'Fetching your data from Fitbit needs to be done over time.'.i18n,
+              style: TextStyle(
+                fontSize: 13,
+              ),
+            ),
+          )
         ],
       ),
     );

@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:wfhmovement/api/responses.dart';
 import 'package:wfhmovement/i18n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
+import 'package:wfhmovement/models/fitbit.dart';
 import 'package:wfhmovement/models/garmin.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api/api.dart' as api;
@@ -12,6 +14,7 @@ class OnboardingModel extends ValueNotifier {
   DateTime date;
   String division;
   String dataSource;
+  String accessToken;
   List<dynamic> availableData = [];
   List<dynamic> dataChunks = [];
   DateTime initialDataDate;
@@ -66,6 +69,10 @@ class OnboardingModel extends ValueNotifier {
         lastDataDate = DateTime.fromMillisecondsSinceEpoch(
           steps.last['date_from'],
         );
+      } else if (dataSource == 'Fitbit') {
+        List<FitbitDay> days = steps;
+        initialDataDate = DateTime.parse(days.first.date);
+        lastDataDate = DateTime.parse(days.last.date);
       } else {
         initialDataDate = steps.first.dateFrom;
         lastDataDate = steps.last.dateFrom;
@@ -124,6 +131,11 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
+  setAccessToken(String token) {
+    accessToken = token;
+    notifyListeners();
+  }
+
   reset() {
     date = null;
     division = null;
@@ -141,7 +153,7 @@ class OnboardingModel extends ValueNotifier {
     notifyListeners();
   }
 
-  static List dataSources = ['Google fit', 'Apple health', 'Garmin'];
+  static List dataSources = ['Google fit', 'Apple health', 'Garmin', 'Fitbit'];
 }
 
 int chunkSize = 750;
@@ -151,6 +163,8 @@ Action getHealthAuthorizationAction = (get) async {
   OnboardingModel onboarding = get(onboardingAtom);
   if (onboarding.dataSource == 'Garmin') {
     return garminAuthorizationAction(get);
+  } else if (onboarding.dataSource == 'Fitbit') {
+    return fitbitAuthorizationAction(get);
   }
   try {
     onboarding.setAuthorized(false);
@@ -215,6 +229,8 @@ Action getAvailableStepsAction = (get) async {
   onboarding.setFetching(true);
   if (onboarding.dataSource == 'Garmin') {
     return garminGetAvailableData(get);
+  } else if (onboarding.dataSource == 'Fitbit') {
+    return fitbitGetAvailableData(get);
   }
   try {
     await onboarding.health.requestAuthorization([HealthDataType.STEPS]);
@@ -260,6 +276,8 @@ Action uploadStepsAction = (get) async {
 
   if (onboarding.dataSource == 'Garmin') {
     return garminGetAndUploadSteps(get);
+  } else if (onboarding.dataSource == 'Fitbit') {
+    return fitbitGetAndUploadSteps(get);
   }
 
   try {

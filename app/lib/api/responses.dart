@@ -206,6 +206,9 @@ class LatestUpload {
     var sthlm = tz.getLocation('Europe/Stockholm');
     date = tz.TZDateTime.parse(sthlm, '${json['date']}');
     dataSource = json['platform_type'];
+    if (dataSource == null) {
+      dataSource = json['platform'];
+    }
   }
 
   factory LatestUpload.fromJson(Map<String, dynamic> json) {
@@ -240,5 +243,35 @@ class Group {
 
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(json);
+  }
+}
+
+class FitbitDay {
+  String date;
+  int value;
+
+  FitbitDay(Map<String, dynamic> json) {
+    date = json['dateTime'];
+    String stringValue = json['value'];
+    value = int.parse(stringValue, radix: 10);
+  }
+
+  factory FitbitDay.fromJson(Map<String, dynamic> json) {
+    return FitbitDay(json);
+  }
+}
+
+class FitbitStep {
+  DateTime dateTime;
+  int value;
+
+  FitbitStep(String date, Map<String, dynamic> json) {
+    String timeString = json['time'];
+    dateTime = DateTime.parse('${date}T$timeString');
+    value = json['value'];
+  }
+
+  factory FitbitStep.fromJson(String date, Map<String, dynamic> json) {
+    return FitbitStep(date, json);
   }
 }

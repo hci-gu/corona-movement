@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wfhmovement/global-analytics.dart';
 import 'package:wfhmovement/models/form_model.dart';
 import 'package:wfhmovement/models/onboarding_model.dart';
+import 'package:wfhmovement/models/fitbit.dart';
 import 'package:wfhmovement/models/recoil.dart';
 import 'package:wfhmovement/api/api.dart' as api;
 import 'package:wfhmovement/api/responses.dart';
@@ -27,6 +28,7 @@ class User extends ValueNotifier {
   bool gaveEstimate = false;
   bool deeplinkOpen = false;
   DateTime lastSync;
+  DateTime rateLimitTimeStamp;
   double stepsEstimate = 0.0;
   bool workedFromHome;
 
@@ -110,6 +112,11 @@ class User extends ValueNotifier {
     notifyListeners();
   }
 
+  setRateLimitTimeStamp(DateTime timestamp) {
+    rateLimitTimeStamp = timestamp;
+    notifyListeners();
+  }
+
   reset() {
     inited = true;
     id = null;
@@ -126,6 +133,7 @@ class User extends ValueNotifier {
     beforePeriods = null;
     afterPeriods = null;
     workedFromHome = null;
+    rateLimitTimeStamp = null;
     stepsEstimate = 0.0;
 
     notifyListeners();
@@ -271,6 +279,12 @@ Action syncStepsAction = (get) async {
         return user.setLoading(false);
       }
       if (user.dataSource != null) user.setAwaitingDataSource(true);
+    } else if (user.dataSource == 'Fitbit') {
+      if (DateTime.now().difference(from).inDays == 0) {
+        user.setLastSync();
+        return user.setLoading(false);
+      }
+      return fitbitSyncSteps(get);
     } else {
       HealthFactory health = HealthFactory();
       List<HealthDataPoint> steps = await health.getHealthDataFromTypes(

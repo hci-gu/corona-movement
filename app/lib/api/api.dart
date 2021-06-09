@@ -200,6 +200,14 @@ Future<LatestUpload> getLatestUpload(String userId) async {
   return LatestUpload.fromJson(data);
 }
 
+Future processStepsOnAbort(String userId) async {
+  var url = Uri.parse('$API_URL/$userId/update');
+  var response = await http.get(
+    url,
+    headers: getHeaders(),
+  );
+}
+
 Future<Group> getGroup(String groupId) async {
   var url = Uri.parse('$API_URL/groups/$groupId');
   var response = await http.get(
