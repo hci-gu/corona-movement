@@ -91,7 +91,25 @@ router.get('/clear-users', async (req, res) => {
   res.send('DONE')
 })
 
-router.post('/analytics', async (req, res) => {
+const getAnalyticsForUser = async (user) => {
+  const analyticsInfo = await db.getEventsForUser(user._id.toString())
+
+  return {
+    id: user._id,
+    created: user.created,
+    events: analyticsInfo,
+  }
+}
+
+router.get('/usage-analytics', async (req, res) => {
+  const users = await db.getAllUsers()
+
+  const usersWithEvents = await Promise.all(users.map(getAnalyticsForUser))
+
+  res.send(usersWithEvents.filter((u) => !!u.events))
+})
+
+router.post('/', async (req, res) => {
   await db.saveAnalyticsEvent(req.body)
 
   res.sendStatus(200)

@@ -57,11 +57,12 @@ const remove = async (id) => {
   return res.deletedCount === 1
 }
 
-const getAllExcept = async (id, code) => {
+const getAllExcept = async (id = '', code) => {
+  const query = id ? { _id: { $ne: ObjectId(id) } } : {}
   if (code) {
-    return collection.find({ _id: { $ne: ObjectId(id) }, code }).toArray()
+    return collection.find({ ...query, code }).toArray()
   }
-  return collection.find({ _id: { $ne: ObjectId(id) } }).toArray()
+  return collection.find(query).toArray()
 }
 
 const insert = (d) => collection.insert(d)
@@ -78,6 +79,9 @@ const joinGroup = async ({ id, groupId }) => {
 
   return update({ id, update: { group: groupId } })
 }
+
+const joinGroups = async ({ id, groupIds }) =>
+  update({ id, update: { groups: groupIds } })
 
 const leaveGroup = async ({ id, groupId }) =>
   collection.update({ _id: ObjectId(id) }, { $unset: { group: 1 } })
@@ -136,6 +140,7 @@ module.exports = {
   remove,
   getAllExcept,
   joinGroup,
+  joinGroups,
   leaveGroup,
   usersInGroup,
   count: ({ from = new Date('2020-01-01'), params }) => {

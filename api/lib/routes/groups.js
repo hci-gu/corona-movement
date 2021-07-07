@@ -44,6 +44,19 @@ router.post('/:id/join', async (req, res) => {
     res.sendStatus(404)
   }
 })
+router.post('/join-multiple', async (req, res) => {
+  const { ids, userId } = req.body
+
+  try {
+    await db.joinGroups({
+      id: userId,
+      groupIds: ids,
+    })
+    res.sendStatus(200)
+  } catch (err) {
+    res.sendStatus(404)
+  }
+})
 
 router.post('/', async (req, res) => {
   const { name } = req.body

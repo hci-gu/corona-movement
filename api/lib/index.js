@@ -13,6 +13,7 @@ const stepsRoutes = require('./routes/steps')
 const usersRoutes = require('./routes/users')
 const groupsRoutes = require('./routes/groups')
 const eventsRoutes = require('./routes/events')
+const fitbitRoutes = require('./routes/fitbit')
 
 const PORT = process.env.PORT ? process.env.PORT : 4000
 
@@ -40,9 +41,6 @@ app.get('/', (_, res) => res.send('hello'))
 app.get('/fitbit/callback', (_, res) => res.redirect('wfhmovement:/'))
 
 app.get('/should-unlock', async (_, res) => {
-  db.saveAnalyticsEvent({
-    event: 'openApp',
-  })
   res.send(false)
 })
 app.post('/unlock', async (req, res) => {

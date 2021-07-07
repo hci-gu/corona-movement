@@ -17,6 +17,22 @@ module.exports = {
       ...body,
     })
   },
+  getEventsForUser: async (userId) => {
+    const result = await collection.find({ userId }).toArray()
+
+    if (!result.length) {
+      return null
+    }
+
+    return result.reduce((acc, curr) => {
+      if (acc[curr.event]) {
+        acc[curr.event]++
+      } else {
+        acc[curr.event] = 1
+      }
+      return acc
+    }, {})
+  },
   removeAnalyticsForUser: async (userId) => {
     await collection.deleteMany({ userId })
     await collection.insert({

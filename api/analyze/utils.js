@@ -39,7 +39,7 @@ const estimatedLowerThanResult = (estimate, change) => {
   return estimate < change
 }
 
-const daysWithDataForUser = (days) => {
+const allDaysForUser = (days) => {
   if (!days || !days.length)
     return {
       period: 0,
@@ -56,29 +56,23 @@ const daysWithDataForUser = (days) => {
 
   const diff = moment(lastDay).diff(firstDay, 'days')
 
-  let daysWithEmpty = []
-  let daysWithData = 0
+  let allDays = []
   Array.from({ length: diff }).map((_, i) => {
     const date = moment(firstDay).add(i, 'days').format('YYYY-MM-DD')
     if (daysMap[date]) {
-      daysWithData++
-      daysWithEmpty.push({
+      allDays.push({
         date,
         value: daysMap[date],
       })
     } else {
-      daysWithEmpty.push({
+      allDays.push({
         date,
         value: 0,
       })
     }
   })
 
-  return {
-    period: diff,
-    daysWithData,
-    days: daysWithEmpty,
-  }
+  return allDays
 }
 
 const translateGender = (gender) => {
@@ -126,7 +120,7 @@ module.exports = {
   userEstimatedWrong,
   estimatedHigherThanResult,
   estimatedLowerThanResult,
-  daysWithDataForUser,
+  allDaysForUser,
   translateGender,
   translateEducation,
   translateAgeRange,

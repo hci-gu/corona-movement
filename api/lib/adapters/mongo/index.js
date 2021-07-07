@@ -76,6 +76,7 @@ module.exports = {
   getAllUsers: () => userCollection.getAllExcept(),
   userCount: userCollection.count,
   joinGroup: userCollection.joinGroup,
+  joinGroups: userCollection.joinGroups,
   leaveGroup: userCollection.leaveGroup,
   // codes
   codeExists: codesCollection.codeExists,
@@ -83,6 +84,7 @@ module.exports = {
   saveAnalyticsEvent: analyticsCollection.saveEvent,
   removeAnalyticsForUser: analyticsCollection.removeAnalyticsForUser,
   analyticsCount: analyticsCollection.count,
+  getEventsForUser: analyticsCollection.getEventsForUser,
   inited: async () => {
     if (!inited) await init()
     return true
