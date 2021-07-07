@@ -34,6 +34,7 @@ class Home extends HookWidget {
     var getStepsChart = useAction(getStepsAction);
     var getStepsComparison = useAction(getStepsComparisonAction);
     var deleteUser = useAction(deleteUserAction);
+
     useEffect(() {
       getStepsChart();
       getStepsComparison();

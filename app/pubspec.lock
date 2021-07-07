@@ -223,7 +223,7 @@ packages:
       path: "../health_package"
       relative: true
     source: path
-    version: "3.0.2"
+    version: "3.0.2+1"
   http:
     dependency: "direct main"
     description:

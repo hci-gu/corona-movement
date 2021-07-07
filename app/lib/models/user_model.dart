@@ -258,13 +258,9 @@ Future uploadChunks(String userId, List chunks) async {
 
 Action getUserLatestUploadAction = (get) async {
   User user = get(userAtom);
-  user.setLoading(true);
 
   LatestUpload latestUpload = await api.getLatestUpload(user.id);
-
   user.setLatestUpload(latestUpload);
-
-  user.setLoading(false);
 };
 
 Action syncStepsAction = (get) async {

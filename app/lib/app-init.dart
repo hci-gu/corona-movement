@@ -24,18 +24,20 @@ class _LanguageSetterState extends State<LanguageSetter>
     with AfterLayoutMixin<LanguageSetter> {
   @override
   void afterFirstLayout(BuildContext context) async {
-    String language = widget.user.languageOverride != null
-        ? widget.user.languageOverride
-        : Localizations.localeOf(context).languageCode;
-    I18n.of(context).locale = Locale(language);
-    AppTexts().init(EnvironmentConfig.APP_NAME);
-    widget.appModel.setlocale(I18n.of(context).locale);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      String language = widget.user.languageOverride != null
+          ? widget.user.languageOverride
+          : Localizations.localeOf(context).languageCode;
+      I18n.of(context).locale = Locale(language);
+      AppTexts().init(EnvironmentConfig.APP_NAME);
+      widget.appModel.setlocale(I18n.of(context).locale);
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) => App(),
-      ),
-    );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => App(),
+        ),
+      );
+    });
   }
 
   @override

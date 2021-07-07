@@ -25,7 +25,7 @@ Action fitbitGetAvailableData = (get) async {
 
   DateTime firstWfhDate = datePeriods.last.first.from;
   String dateBefore = firstWfhDate
-      .subtract(Duration(days: 365))
+      .subtract(Duration(days: 290))
       .toIso8601String()
       .substring(0, 10);
   String now = DateTime.now().toIso8601String().substring(0, 10);

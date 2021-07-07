@@ -18,16 +18,6 @@ class DaysBarChart extends HookWidget {
   final ScrollController scrollController = ScrollController(
     initialScrollOffset: 0,
   );
-  final List emptyDays = List.generate(
-    200,
-    (index) => {
-      'value': 0.1,
-      'date': DateTime.parse(StepsModel.fromDate)
-          .add(Duration(days: index))
-          .toIso8601String()
-          .substring(0, 10)
-    },
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +53,17 @@ class DaysBarChart extends HookWidget {
                 globalAnalytics.sendEvent('dayBarChartScroll');
               }
             }
+            return true;
           },
           child: ListView(
             controller: scrollController,
             padding: EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
             scrollDirection: Axis.horizontal,
             children: [
-              _barChart(context, days.length > 0 ? days : emptyDays, user,
-                  afterPeriods, days.length == 0),
+              days.length > 0
+                  ? _barChart(
+                      context, days, user, afterPeriods, days.length == 0)
+                  : _loading(context),
             ],
           ),
         ),
@@ -88,7 +81,7 @@ class DaysBarChart extends HookWidget {
   }
 
   Widget _barChart(
-      BuildContext context, days, user, List<DatePeriod> afterPeriods,
+      BuildContext context, List days, user, List<DatePeriod> afterPeriods,
       [bool empty]) {
     double maxValue = days.length > 0
         ? days.fold(
@@ -113,6 +106,7 @@ class DaysBarChart extends HookWidget {
                 BarChartRodData rod,
                 int rodIndex,
               ) {
+                if (groupIndex >= days.length) return null;
                 var day = days[groupIndex];
                 if (_dateIsAtStartOfPeriod(day['date'], afterPeriods)) {
                   return BarTooltipItem(
@@ -165,16 +159,21 @@ class DaysBarChart extends HookWidget {
               margin: 10,
               getTitles: (double value) {
                 DateTime date;
+                int index = value.toInt();
+                if (index >= days.length) {
+                  return '';
+                }
                 try {
-                  date = DateTime.parse(days[value.toInt()]['date']);
+                  var day = days[value.toInt()];
+                  date = DateTime.parse(day['date']);
                   if (date.weekday == 1) {
                     return _labelforDate(date);
                   }
                 } catch (_) {
-                  return null;
+                  return '';
                 }
 
-                return null;
+                return '';
               },
               rotateAngle: -10,
             ),
@@ -280,5 +279,15 @@ class DaysBarChart extends HookWidget {
       }
     });
     return barGroups;
+  }
+
+  Widget _loading(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 200,
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

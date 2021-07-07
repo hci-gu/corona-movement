@@ -46,58 +46,59 @@ class SyncSteps extends HookWidget {
         ],
       );
     }
-    int diff = DateTime.now()
-        .difference(DateTime.parse(user.latestUploadDate.toIso8601String()))
-        .inHours;
-    bool syncedRecently = user.lastSync != null &&
-        DateTime.now().difference(user.lastSync).inMinutes < 5;
-    if (diff <= 1 || syncedRecently) {
-      return Container();
-    }
-    bool fitbitRatelimited =
-        user.dataSource == 'Fitbit' && user.rateLimitTimeStamp != null;
 
-    if (user.awaitingDataSource) {
-      return Column(
-        children: [
-          Text('Login with your Garmin credentials'.i18n),
-          GarminLogin(),
-          StyledButton(
-            icon: Icons.sync,
-            title: 'Sync Garmin',
-            onPressed: () {
-              garminSyncSteps();
-            },
-          )
-        ],
+    if (user.latestUploadDate != null) {
+      int diff = DateTime.now()
+          .difference(DateTime.parse(user.latestUploadDate.toIso8601String()))
+          .inHours;
+      bool syncedRecently = user.lastSync != null &&
+          DateTime.now().difference(user.lastSync).inMinutes < 5;
+      if (diff <= 1 || syncedRecently) {
+        return Container();
+      }
+      bool fitbitRatelimited =
+          user.dataSource == 'Fitbit' && user.rateLimitTimeStamp != null;
+
+      if (user.awaitingDataSource) {
+        return Column(
+          children: [
+            Text('Login with your Garmin credentials'.i18n),
+            GarminLogin(),
+            StyledButton(
+              icon: Icons.sync,
+              title: 'Sync Garmin',
+              onPressed: () {
+                garminSyncSteps();
+              },
+            )
+          ],
+        );
+      }
+      var dateString =
+          DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate);
+
+      return Center(
+        child: Column(
+          children: [
+            AppWidgets.chartDescription(
+              'You have steps up until %s,\n press the button below to sync them.'
+                  .i18n
+                  .fill([dateString]),
+            ),
+            if (fitbitRatelimited) _fitbitRateLimit(user),
+            StyledButton(
+              icon: Icons.sync,
+              title: 'Sync steps'.i18n,
+              onPressed: () {
+                globalAnalytics.sendEvent('syncSteps');
+                syncSteps();
+              },
+            ),
+          ],
+        ),
       );
     }
-    var dateString =
-        DateFormat('yyyy-MM-dd HH:mm').format(user.latestUploadDate);
-
-    return Center(
-      child: Column(
-        children: [
-          AppWidgets.chartDescription(
-            'You have steps up until %s,\n press the button below to sync them.'
-                .i18n
-                .fill([dateString]),
-          ),
-          if (fitbitRatelimited) _fitbitRateLimit(user),
-          StyledButton(
-            icon: Icons.sync,
-            title: 'Sync steps'.i18n,
-            onPressed: () {
-              if (fitbitRatelimited) {
-                // return;
-              }
-              globalAnalytics.sendEvent('syncSteps');
-              syncSteps();
-            },
-          ),
-        ],
-      ),
-    );
+    return Container();
   }
 
   Widget _fitbitRateLimit(User user) {

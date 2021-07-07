@@ -2,7 +2,7 @@ name: wfhmovement
 description: A new Flutter project.
 publish_to: 'none'
 
-version: 1.12.8+71
+version: 1.13.2+75
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -15,7 +15,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_svg: ^0.19.3
   http: ^0.13.1
-  # health: ^2.0.9
   flutter_hooks: ^0.16.0
   shared_preferences: ^2.0.5
   provider: ^5.0.0
