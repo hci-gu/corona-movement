@@ -9,6 +9,7 @@ const feedbackCollection = require('./feedback')
 const analyticsCollection = require('./analytics')
 const groupsCollection = require('./groups')
 const allUserCollection = require('./allUser')
+const datasetCollection = require('./dataset')
 
 let caBundle = fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem`)
 let inited
@@ -35,6 +36,7 @@ const init = async () => {
     analyticsCollection.init(db),
     groupsCollection.init(db),
     allUserCollection.init(db),
+    datasetCollection.init(db),
   ])
   inited = true
 }
@@ -99,4 +101,10 @@ module.exports = {
   getAllSummary: allUserCollection.getSummary,
   saveAllUser: allUserCollection.save,
   getDB,
+  // dataset
+  createDataset: datasetCollection.create,
+  getDataset: datasetCollection.get,
+  listDatasets: datasetCollection.list,
+  fillDataset: datasetCollection.fill,
+  removeDataset: datasetCollection.remove,
 }
