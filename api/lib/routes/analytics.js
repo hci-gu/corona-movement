@@ -114,6 +114,7 @@ router.post('/dataset/:id/rows', async (req, res) => {
   const database = await db.getDB()
   dataset.init(database)
   const rows = await dataset.createRows(parseInt(offset), parseInt(limit))
+  console.log(`${rows.length}/${limit}`)
 
   if (!rows.length) {
     res.statusCode = 404

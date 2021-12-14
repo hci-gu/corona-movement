@@ -3,7 +3,7 @@ require('dotenv').config()
 const axios = require('axios')
 const moment = require('moment')
 
-const DATASET_NAME = 'all-days-occupation'
+const DATASET_NAME = '24-before-24-after'
 const DATASET_ID = `${DATASET_NAME}-${moment().format('YYYY-MM-DD')}`
 const LIMIT = 100
 
@@ -18,6 +18,7 @@ const api = axios.create({
 })
 
 const fill = async (offset = 0) => {
+  console.time('fill_' + offset)
   console.log('fill', offset)
   try {
     await api.post(
@@ -26,7 +27,9 @@ const fill = async (offset = 0) => {
   } catch (e) {
     console.log(e)
     await wait(1000)
+    process.exit(0)
   }
+  console.timeEnd('fill_' + offset)
   return fill(offset + 1)
 }
 
